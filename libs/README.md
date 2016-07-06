@@ -1,0 +1,1 @@
+This folder means to keep all the third party libraries used on buiding this software.
