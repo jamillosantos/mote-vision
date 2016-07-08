@@ -102,6 +102,7 @@ set(SOURCE_FILES
 	src/main.cpp
 
 	src/capture/devices/device.hpp
+	src/capture/devices/image.hpp
 	)
 
 add_executable(vision ${SOURCE_FILES})
