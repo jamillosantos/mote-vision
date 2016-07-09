@@ -5,6 +5,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
 # Configuration
 set(THIRD_PARTY_LIBRARIES "${CMAKE_SOURCE_DIR}/libs" CACHE FILEPATH "Third party libraries directory")
+set(TEST_OUTPUT ${CMAKE_BINARY_DIR}/tests CACHE FILEPATH "Output directory of tests")
 
 # Simple-Web-Server
 set(SWS_VERSION "v2.0"
@@ -30,11 +31,100 @@ set(GTEST_REPO_URL "git@github.com:google/googletest.git"
 set(GTEST_DIR "${THIRD_PARTY_LIBRARIES}/googletest"
 	CACHE STRING "GTest destiny folder")
 
+# libboost
+set(BOOST_VERSION "1.61.0"
+	CACHE STRING "GTest library's version")
+string(REPLACE "."
+	"_" BOOST_VERSION_UNDERSCORE
+	${BOOST_VERSION})
+set(BOOST_DIR "${THIRD_PARTY_LIBRARIES}/boost_${BOOST_VERSION_UNDERSCORE}"
+	CACHE STRING "GTest destiny folder")
+set(BOOST_DOWNLOAD_MD5 "6095876341956f65f9d35939ccea1a9f"
+	CACHE STRING "Boost library download MD5 hash for integrity verification")
+set(BOOST_REQUIRED_COMPONENTS "system;filesystem"
+	CACHE STRING "Boost library download MD5 hash for integrity verification")
 message("")
 
 message("Git")
 find_package(Git REQUIRED)
 message("-- Exe at: ${GIT_EXECUTABLE}")
+message("")
+
+message("Boost")
+find_package(Boost ${BOOST_VERSION} COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
+if (NOT ${Boost_FOUND})
+	if (NOT EXISTS ${BOOST_DIR})
+		set(BOOST_FILE_URL http://downloads.sourceforge.net/project/boost/boost/${BOOST_VERSION}/boost_${BOOST_VERSION_UNDERSCORE}.tar.bz2)
+		set(BOOST_TMP_FILE /tmp/libboost.tar.bz2)
+		if (EXISTS ${BOOST_TMP_FILE})
+			message("-- ${BOOST_TMP_FILE} was found")
+			file(MD5 ${BOOST_TMP_FILE} BOOST_TMP_FILE_MD5)
+			if (NOT ${BOOST_TMP_FILE_MD5} STREQUAL ${BOOST_DOWNLOAD_MD5})
+				file(REMOVE ${BOOST_TMP_FILE_MD5})
+				message(WARNING "Cannot verify the MD5 hash of the downloaded file.")
+				message("-- Downloading libboost ${BOOST_VERSION} (${BOOST_FILE_URL})")
+				file(DOWNLOAD ${BOOST_FILE_URL} /tmp/libboost.tar.bz2 SHOW_PROGRESS EXPECTED_MD5 ${BOOST_DOWNLOAD_MD5})
+			endif()
+		else()
+			message("-- Downloading libboost ${BOOST_VERSION} (${BOOST_FILE_URL})")
+			file(DOWNLOAD ${BOOST_FILE_URL} /tmp/libboost.tar.bz2 SHOW_PROGRESS)
+		endif()
+		message("-- Checking integrity ...")
+		file(MD5 ${BOOST_TMP_FILE} BOOST_TMP_FILE_MD5)
+		if (${BOOST_TMP_FILE_MD5} STREQUAL ${BOOST_DOWNLOAD_MD5})
+			message("-- OK")
+		else()
+			file(REMOVE ${BOOST_TMP_FILE_MD5})
+			file(REMOVE_RECURSE ${BOOST_DIR})
+			message(FATAL_ERROR "Cannot verify the MD5 hash of the downloaded file.")
+		endif()
+		message("-- Extracting to ${THIRD_PARTY_LIBRARIES} ...")
+		execute_process(
+			COMMAND tar xf ${BOOST_TMP_FILE}
+			WORKING_DIRECTORY ${THIRD_PARTY_LIBRARIES}
+			RESULT_VARIABLE TAR_RESULT
+			OUTPUT_VARIABLE TARGET_OUTPUT
+		)
+		if (${TAR_RESULT} EQUAL "0")
+			message("-- OK")
+		else()
+			file(REMOVE_RECURSE ${BOOST_DIR})
+			message(FATAL_ERROR "Cannot extract libboost.")
+		endif()
+	endif()
+
+	if (NOT EXISTS ${BOOST_DIR}/b2)
+		message("-- Bootstrapping libboost")
+		execute_process(
+			COMMAND sh bootstrap.sh
+			WORKING_DIRECTORY ${BOOST_DIR}
+			RESULT_VARIABLE BOOST_RESULT
+		)
+		if (${BOOST_RESULT} EQUAL 0)
+			message("-- Ok")
+		else()
+			file(REMOVE_RECURSE "${BOOST_DIR}/install")
+			message(FATAL_ERROR "Cannot extract libboost.")
+		endif()
+	endif()
+	if (NOT EXISTS ${BOOST_DIR}/install)
+		message("-- Compiling and installing libboost")
+		file(MAKE_DIRECTORY ${BOOST_DIR}/install)
+		execute_process(
+			COMMAND "${BOOST_DIR}/b2" "--prefix=${BOOST_DIR}/install" install
+			WORKING_DIRECTORY ${BOOST_DIR}
+			RESULT_VARIABLE BOOST_RESULT
+		)
+		if (${BOOST_RESULT} GREATER 0)
+			file(REMOVE_RECURSE "${BOOST_DIR}/install")
+			message(FATAL_ERROR "Cannot build libboost. ${BOOST_OUTPUT}")
+		endif()
+	endif()
+	set(BOOST_ROOT "${BOOST_DIR}/install/")
+	find_package(Boost ${BOOST_VERSION} REQUIRED COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
+	message("-- Include dir: ${Boost_INCLUDE_DIRS}")
+	message("-- Libraries: ${Boost_LIBRARIES}")
+endif()
 message("")
 
 message("Simple-Web-Server")
@@ -213,12 +303,15 @@ set(SOURCE_FILES
 
 	src/capture/devices/device.hpp
 	src/capture/devices/image.hpp
-	)
+	test/src/capture/devices/image.cpp)
 
 add_executable(vision ${SOURCE_FILES})
 
-target_link_libraries(vision
+set(vision_libraries
 	${OpenCV_LIBS}
-
 	jsoncpp
+	)
+
+target_link_libraries(vision
+	$vision_libraries
 	)
