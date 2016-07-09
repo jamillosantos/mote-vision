@@ -5,7 +5,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
 # Configuration
 set(THIRD_PARTY_LIBRARIES "${CMAKE_SOURCE_DIR}/libs" CACHE FILEPATH "Third party libraries directory")
+set(THIRD_PARTY_LIBRARIES "/home/jsantos/projects/mote/vision/libs")
+set(TEST ON CACHE FILEPATH "Enable testing for this build")
 set(TEST_OUTPUT ${CMAKE_BINARY_DIR}/tests CACHE FILEPATH "Output directory of tests")
+set(TEST_RESOURCE_DIR ${CMAKE_SOURCE_DIR}/test/resource CACHE FILEPATH "Resource folder for tests")
+add_definitions(-DTEST_RESOURCE_DIR="${TEST_RESOURCE_DIR}")
 
 # Simple-Web-Server
 set(SWS_VERSION "v2.0"
@@ -38,11 +42,20 @@ string(REPLACE "."
 	"_" BOOST_VERSION_UNDERSCORE
 	${BOOST_VERSION})
 set(BOOST_DIR "${THIRD_PARTY_LIBRARIES}/boost_${BOOST_VERSION_UNDERSCORE}"
-	CACHE STRING "GTest destiny folder")
+	CACHE STRING "Boost destiny folder")
 set(BOOST_DOWNLOAD_MD5 "6095876341956f65f9d35939ccea1a9f"
 	CACHE STRING "Boost library download MD5 hash for integrity verification")
 set(BOOST_REQUIRED_COMPONENTS "system;filesystem"
-	CACHE STRING "Boost library download MD5 hash for integrity verification")
+	CACHE STRING "Boost library components")
+message("")
+
+# OpenCV
+set(OPENCV_VERSION "2.4.13"
+	CACHE STRING "OpenCV library's version")
+set(OPENCV_DIR "${THIRD_PARTY_LIBRARIES}/opencv"
+	CACHE STRING "OpenCV destiny folder")
+set(OPENCV_DOWNLOAD_MD5 "6095876341956f65f9d35939ccea1a9f"
+	CACHE STRING "OpenCV library download MD5 hash for integrity verification")
 message("")
 
 message("Git")
@@ -54,6 +67,7 @@ message("Boost")
 find_package(Boost ${BOOST_VERSION} COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
 if (NOT ${Boost_FOUND})
 	if (NOT EXISTS ${BOOST_DIR})
+		set("-- Cannot find ${BOOST_DIR}")
 		set(BOOST_FILE_URL http://downloads.sourceforge.net/project/boost/boost/${BOOST_VERSION}/boost_${BOOST_VERSION_UNDERSCORE}.tar.bz2)
 		set(BOOST_TMP_FILE /tmp/libboost.tar.bz2)
 		if (EXISTS ${BOOST_TMP_FILE})
@@ -123,6 +137,7 @@ if (NOT ${Boost_FOUND})
 	set(BOOST_ROOT "${BOOST_DIR}/install/")
 	find_package(Boost ${BOOST_VERSION} REQUIRED COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
 	message("-- Include dir: ${Boost_INCLUDE_DIRS}")
+	include_directories(${Boost_INCLUDE_DIRS})
 	message("-- Libraries: ${Boost_LIBRARIES}")
 endif()
 message("")
@@ -299,19 +314,59 @@ message("-- Libs: ${OpenCV_LIBS}")
 message("")
 
 set(SOURCE_FILES
-	src/main.cpp
 
 	src/capture/devices/device.hpp
 	src/capture/devices/image.hpp
-	test/src/capture/devices/image.cpp)
+	test/src/capture/devices/image_test.cpp
+	test/src/resources.hpp
+	)
 
-add_executable(vision ${SOURCE_FILES})
+add_executable(vision
+	src/main.cpp
+
+	${SOURCE_FILES}
+	)
 
 set(vision_libraries
-	${OpenCV_LIBS}
-	jsoncpp
+	"${OpenCV_LIBS};${jsoncpp};${Boost_LIBRARIES}"
 	)
 
 target_link_libraries(vision
-	$vision_libraries
+	${vision_libraries}
 	)
+
+if (TEST)
+	message("Tests")
+	enable_testing()
+	include_directories(${CMAKE_SOURCE_DIR}/src)
+	file(GLOB_RECURSE TEST_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} test/src/*_test.cpp)
+	foreach (testSrc ${TEST_SRCS})
+		get_filename_component(testName ${testSrc} NAME_WE)
+		string(REPLACE "test/src/" "" testPackage "${testSrc}")
+		string(REPLACE "${testName}.cpp" "" testPackage "${testPackage}")
+		string(REPLACE "/" "_" testPackage "${testPackage}")
+		string(REPLACE "_test" "" testName "${testName}")
+		set(testName "${testPackage}${testName}")
+		message("-- ${testSrc} as ${testName}")
+
+		add_executable(${testName}
+			test/src/resources.hpp
+			${testSrc}
+			${SOURCE_FILES}
+			)
+
+		target_link_libraries(${testName}
+			${gtest}
+			gtest_main
+			${vision_libraries}
+			)
+
+		set_target_properties(${testName} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TEST_OUTPUT})
+
+		add_test(
+			NAME ${testName}
+			WORKING_DIRECTORY ${TEST_OUTPUT}
+			COMMAND ${TEST_OUTPUT}/${testName}
+			)
+	endforeach (testSrc)
+endif()
