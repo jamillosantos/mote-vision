@@ -9,4 +9,6 @@ CTestTestfile.cmake
 /libs/jsoncpp/
 /libs/sws/
 /libs/googletest/
-/libs/boost_1_61_0/
+/libs/boost_*/
+/libs/opencv-*/
+/libs/opencv_contrib-*/

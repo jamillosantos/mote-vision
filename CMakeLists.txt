@@ -50,12 +50,16 @@ set(BOOST_REQUIRED_COMPONENTS "system;filesystem"
 message("")
 
 # OpenCV
-set(OPENCV_VERSION "2.4.13"
+set(OPENCV_VERSION "3.1.0"
 	CACHE STRING "OpenCV library's version")
-set(OPENCV_DIR "${THIRD_PARTY_LIBRARIES}/opencv"
+set(OPENCV_DIR "${THIRD_PARTY_LIBRARIES}/opencv-${OPENCV_VERSION}"
 	CACHE STRING "OpenCV destiny folder")
-set(OPENCV_DOWNLOAD_MD5 "6095876341956f65f9d35939ccea1a9f"
+set(OPENCV_DOWNLOAD_MD5 "70e1dd07f0aa06606f1bc0e3fa15abd3"
 	CACHE STRING "OpenCV library download MD5 hash for integrity verification")
+set(OPENCVCONTRIB_DIR "${THIRD_PARTY_LIBRARIES}/opencv_contrib-${OPENCV_VERSION}"
+	CACHE STRING "OpenCV Contrib destiny folder")
+set(OPENCVCONTRIB_DOWNLOAD_MD5 "a822839ad3ab79ff837c16785ea9dd10"
+	CACHE STRING "OpenCV Contrib library download MD5 hash for integrity verification")
 message("")
 
 message("Git")
@@ -63,34 +67,36 @@ find_package(Git REQUIRED)
 message("-- Exe at: ${GIT_EXECUTABLE}")
 message("")
 
+function(download result url md5 file)
+	if (EXISTS ${file})
+		file(MD5 ${file} file_md5)
+		if (NOT ${file_md5} STREQUAL ${md5})
+			file(REMOVE ${file})
+			file(DOWNLOAD ${url} ${file} SHOW_PROGRESS)
+		endif()
+	else()
+		file(DOWNLOAD ${url} ${file} SHOW_PROGRESS)
+	endif()
+	file(MD5 ${file} file_md5)
+	if (${file_md5} STREQUAL ${md5})
+		set(${result} ${file} PARENT_SCOPE)
+	else()
+		set(${result} "ERROR" PARENT_SCOPE)
+	endif()
+endfunction(download)
+
 message("Boost")
 find_package(Boost ${BOOST_VERSION} COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
 if (NOT ${Boost_FOUND})
 	if (NOT EXISTS ${BOOST_DIR})
-		set("-- Cannot find ${BOOST_DIR}")
+		message("-- Cannot find ${BOOST_DIR}")
 		set(BOOST_FILE_URL http://downloads.sourceforge.net/project/boost/boost/${BOOST_VERSION}/boost_${BOOST_VERSION_UNDERSCORE}.tar.bz2)
 		set(BOOST_TMP_FILE /tmp/libboost.tar.bz2)
-		if (EXISTS ${BOOST_TMP_FILE})
-			message("-- ${BOOST_TMP_FILE} was found")
-			file(MD5 ${BOOST_TMP_FILE} BOOST_TMP_FILE_MD5)
-			if (NOT ${BOOST_TMP_FILE_MD5} STREQUAL ${BOOST_DOWNLOAD_MD5})
-				file(REMOVE ${BOOST_TMP_FILE_MD5})
-				message(WARNING "Cannot verify the MD5 hash of the downloaded file.")
-				message("-- Downloading libboost ${BOOST_VERSION} (${BOOST_FILE_URL})")
-				file(DOWNLOAD ${BOOST_FILE_URL} /tmp/libboost.tar.bz2 SHOW_PROGRESS EXPECTED_MD5 ${BOOST_DOWNLOAD_MD5})
-			endif()
+		download(BOOST_RESULT ${BOOST_FILE_URL} ${BOOST_DOWNLOAD_MD5} ${BOOST_TMP_FILE})
+		if (${BOOST_RESULT} STREQUAL "ERROR")
+			message(FATAL_ERROR "Cannot get ${BOOST_FILE_URL}.")
 		else()
-			message("-- Downloading libboost ${BOOST_VERSION} (${BOOST_FILE_URL})")
-			file(DOWNLOAD ${BOOST_FILE_URL} /tmp/libboost.tar.bz2 SHOW_PROGRESS)
-		endif()
-		message("-- Checking integrity ...")
-		file(MD5 ${BOOST_TMP_FILE} BOOST_TMP_FILE_MD5)
-		if (${BOOST_TMP_FILE_MD5} STREQUAL ${BOOST_DOWNLOAD_MD5})
 			message("-- OK")
-		else()
-			file(REMOVE ${BOOST_TMP_FILE_MD5})
-			file(REMOVE_RECURSE ${BOOST_DIR})
-			message(FATAL_ERROR "Cannot verify the MD5 hash of the downloaded file.")
 		endif()
 		message("-- Extracting to ${THIRD_PARTY_LIBRARIES} ...")
 		execute_process(
@@ -309,7 +315,89 @@ endif()
 message("")
 
 message("OpenCV")
-find_package(OpenCV REQUIRED)
+if (NOT EXISTS ${OPENCV_DIR})
+	set("-- Cannot find ${OPENCV_DIR}")
+	set(OPENCV_FILE_URL https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.tar.gz)
+	set(OPENCV_TMP_FILE /tmp/opencv_${OPENCV_VERSION}.tar.gz)
+	download(OPENCV_RESULT ${OPENCV_FILE_URL} ${OPENCV_DOWNLOAD_MD5} ${OPENCV_TMP_FILE})
+	if (${OPENCV_RESULT} STREQUAL "ERROR")
+		message(FATAL_ERROR "Cannot get ${OPENCV_FILE_URL}.")
+	else()
+		message("-- OK")
+	endif()
+	message("-- Extracting to ${THIRD_PARTY_LIBRARIES} ...")
+	execute_process(
+		COMMAND tar xf ${OPENCV_RESULT}
+		WORKING_DIRECTORY ${THIRD_PARTY_LIBRARIES}
+		RESULT_VARIABLE TAR_RESULT
+		OUTPUT_VARIABLE TARGET_OUTPUT
+	)
+	if (${TAR_RESULT} EQUAL "0")
+		message("-- OK")
+	else()
+		file(REMOVE_RECURSE ${BOOST_DIR})
+		message(FATAL_ERROR "Cannot extract OpenCV.")
+	endif()
+endif()
+if (NOT EXISTS ${OPENCVCONTRIB_DIR})
+	message("-- Cannot find ${OPENCVCONTRIB_DIR}")
+	set(OPENCVCONTRIB_FILE_URL https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.tar.gz)
+	set(OPENCVCONTRIB_TMP_FILE /tmp/opencv_contrib-${OPENCV_VERSION}.tar.gz)
+	download(OPENCV_RESULT ${OPENCVCONTRIB_FILE_URL} ${OPENCVCONTRIB_DOWNLOAD_MD5} ${OPENCVCONTRIB_TMP_FILE})
+	if (${OPENCV_RESULT} STREQUAL "ERROR")
+		message(FATAL_ERROR "Cannot get ${OPENCVCONTRIB_FILE_URL}.")
+	else()
+		message("-- OK")
+	endif()
+	message("-- Extracting to ${THIRD_PARTY_LIBRARIES} ...")
+	execute_process(
+		COMMAND tar xf ${OPENCV_RESULT}
+		WORKING_DIRECTORY ${THIRD_PARTY_LIBRARIES}
+		RESULT_VARIABLE TAR_RESULT
+		OUTPUT_VARIABLE TARGET_OUTPUT
+	)
+	if (${TAR_RESULT} EQUAL "0")
+		message("-- OK")
+	else()
+		file(REMOVE_RECURSE ${OPENCV_DIR})
+		message(FATAL_ERROR "Cannot extract OpenCV.")
+	endif()
+endif()
+if (NOT EXISTS ${OPENCV_DIR}/build)
+	message("-- CMaking ...")
+	file(MAKE_DIRECTORY ${OPENCV_DIR}/build)
+	execute_process(
+		COMMAND cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=${OPENCV_DIR}/install -D OPENCV_EXTRA_MODULES_PATH=${OPENCVCONTRIB_DIR}/modules ${OPENCV_DIR}
+		WORKING_DIRECTORY ${OPENCV_DIR}/build
+		RESULT_VARIABLE OPENCV_RESULT
+	)
+	if (${OPENCV_RESULT} EQUAL 0)
+		message("-- OK")
+	else()
+		file(REMOVE_RECURSE "${OPENCV_DIR}/build")
+		message(FATAL_ERROR "Cannot cmake opencv.")
+	endif()
+endif()
+if (NOT EXISTS ${OPENCV_DIR}/install)
+	message("-- Compiling and installing opencv")
+	file(MAKE_DIRECTORY ${OPENCV_DIR}/install)
+	execute_process(
+		COMMAND make install
+		WORKING_DIRECTORY ${OPENCV_DIR}/build
+		RESULT_VARIABLE OPENCV_RESULT
+	)
+	if (${OPENCV_RESULT} GREATER 0)
+		file(REMOVE_RECURSE "${OPENCV_DIR}/install")
+		message(FATAL_ERROR "Cannot build opencv.")
+	endif()
+endif()
+find_package(OpenCV ${OPENCV_VERSION} REQUIRED PATHS "${OPENCV_DIR}/install/share/OpenCV/")
+if (NOT ${OpenCV_FOUND})
+	message(FATAL_ERROR "Cannot find OpenCv.")
+endif()
+message("-- Include dir: ${OpenCV_INCLUDE_DIRS}")
+include_directories(${OpenCV_INCLUDE_DIRS})
+message("-- Version: ${OpenCV_VERSION}")
 message("-- Libs: ${OpenCV_LIBS}")
 message("")
 
