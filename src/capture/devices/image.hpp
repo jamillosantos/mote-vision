@@ -6,8 +6,10 @@
 #ifndef MOTE_VISION_CAPTURE_IMAGE_HPP
 #define MOTE_VISION_CAPTURE_IMAGE_HPP
 
-#include <highgui.h>
 #include "device.hpp"
+#include <opencv2/opencv.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
 
 namespace mote
 {
@@ -28,9 +30,8 @@ public:
 
 	bool open(const std::string &filename)
 	{
-
-		this->_opened = true;
 		this->_filename = filename;
+		this->_opened = boost::filesystem::exists(boost::filesystem::path(filename));
 		return true;
 	}
 
@@ -44,7 +45,7 @@ public:
 		return this->read(image, CV_LOAD_IMAGE_COLOR);
 	}
 
-	virtual bool read(cv::Mat &image, int flags = 1)
+	virtual bool read(cv::Mat &image, int flags)
 	{
 		image = cv::imread(this->_filename, flags);
 		return image.data;
