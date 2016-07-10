@@ -178,74 +178,74 @@ message("-- Include dir: ${SWS_INCLUDE_DIR}")
 include_directories(${SWS_INCLUDE_DIR})
 message("")
 
-message("JSONCPP")
-if (NOT EXISTS ${JSONCPP_DIR})
-	message("-- Clonning JSON-CPP (${JSONCPP_REPO_URL}) ... into ${JSONCPP_DIR}")
-	execute_process(
-		COMMAND "${GIT_EXECUTABLE}" clone ${JSONCPP_REPO_URL} jsoncpp
-		WORKING_DIRECTORY ${THIRD_PARTY_LIBRARIES}
-		ERROR_VARIABLE GIT_ERROR
-		RESULT_VARIABLE GIT_RESULT
-	)
-	if (${GIT_RESULT} EQUAL 0)                                 # if success
-		message("-- Checking JSON-CPP to ${JSONCPP_VERSION}")
-		execute_process(                                       # checkout to v2.0
-			COMMAND "${GIT_EXECUTABLE}" checkout ${JSONCPP_VERSION}
-			WORKING_DIRECTORY ${JSONCPP_DIR}
-			RESULT_VARIABLE GIT_RESULT
-			ERROR_VARIABLE GIT_ERROR
-			)
-		if (${GIT_RESULT} GREATER 0)                           # git checkout failed
-			file(REMOVE_RECURSE ${JSONCPP_DIR})
-			message(FATAL_ERROR "Cannot checkout JSON-CPP to ${JSONCPP_VERSION}: ${GIT_ERROR}.")
-		else()                                                 # git checkout success
-			message("-- CMaking ...")
-			file(MAKE_DIRECTORY "${JSONCPP_DIR}/build")
-			file(MAKE_DIRECTORY "${JSONCPP_DIR}/build/debug")
-			file(MAKE_DIRECTORY "${JSONCPP_DIR}/install")
-			file(MAKE_DIRECTORY "${JSONCPP_DIR}/install/debug")
-			execute_process(
-				COMMAND cmake -DCMAKE_INSTALL_PREFIX=../../install/debug -DBUILD_SHARED_LIBS=ON -config Debug ../..
-				WORKING_DIRECTORY "${JSONCPP_DIR}/build/debug"
-				OUTPUT_VARIABLE CMAKE_OUTPUT
-				RESULT_VARIABLE CMAKE_RESULT
-			)
-			if (${CMAKE_RESULT} EQUAL 0)
-				message("-- Making ...")
-				execute_process(
-					COMMAND make install
-					WORKING_DIRECTORY "${JSONCPP_DIR}/build/debug"
-					OUTPUT_VARIABLE MAKE_OUTPUT
-					RESULT_VARIABLE MAKE_RESULT
-				)
-				if (MAKE_RESULT GREATER 0)
-					file(REMOVE_RECURSE ${JSONCPP_DIR})
-					message(FATAL_ERROR "Cannot make JSON-CPP.")
-				else()
-					message("-- Success!")
-				endif()
-			else()
-				file(REMOVE_RECURSE ${JSONCPP_DIR})
-				message(FATAL_ERROR "Cannot cmake JSON-CPP.")
-			endif()
-		endif()
-	else()
-		message(FATAL_ERROR "Cannot clone JSON-CPP: ${GIT_ERROR}")
-	endif()
-endif()
-find_library(jsoncpp jsoncpp
-	HINTS "${JSONCPP_DIR}/install/debug/lib"
-	NO_DEFAULT_PATH
-	)
-if (${jsoncpp} STREQUAL "jsoncpp-NOTFOUND")
-	message(FATAL_ERROR "Cannot find jsoncpp at '${JSONCPP_DIR}/install/debug/lib'.")
-else()
-	message("-- JSONCPP found at ${jsoncpp}")
-	set(JSONCPP_INCLUDE_DIR "${JSONCPP_DIR}/install/debug/include")
-	message("-- Include directory: ${JSONCPP_INCLUDE_DIR}")
-	include_directories(${JSONCPP_INCLUDE_DIR})
-endif()
-message("")
+#message("JSONCPP")
+#if (NOT EXISTS ${JSONCPP_DIR})
+#	message("-- Clonning JSON-CPP (${JSONCPP_REPO_URL}) ... into ${JSONCPP_DIR}")
+#	execute_process(
+#		COMMAND "${GIT_EXECUTABLE}" clone ${JSONCPP_REPO_URL} jsoncpp
+#		WORKING_DIRECTORY ${THIRD_PARTY_LIBRARIES}
+#		ERROR_VARIABLE GIT_ERROR
+#		RESULT_VARIABLE GIT_RESULT
+#	)
+#	if (${GIT_RESULT} EQUAL 0)                                 # if success
+#		message("-- Checking JSON-CPP to ${JSONCPP_VERSION}")
+#		execute_process(                                       # checkout to v2.0
+#			COMMAND "${GIT_EXECUTABLE}" checkout ${JSONCPP_VERSION}
+#			WORKING_DIRECTORY ${JSONCPP_DIR}
+#			RESULT_VARIABLE GIT_RESULT
+#			ERROR_VARIABLE GIT_ERROR
+#			)
+#		if (${GIT_RESULT} GREATER 0)                           # git checkout failed
+#			file(REMOVE_RECURSE ${JSONCPP_DIR})
+#			message(FATAL_ERROR "Cannot checkout JSON-CPP to ${JSONCPP_VERSION}: ${GIT_ERROR}.")
+#		else()                                                 # git checkout success
+#			message("-- CMaking ...")
+#			file(MAKE_DIRECTORY "${JSONCPP_DIR}/build")
+#			file(MAKE_DIRECTORY "${JSONCPP_DIR}/build/debug")
+#			file(MAKE_DIRECTORY "${JSONCPP_DIR}/install")
+#			file(MAKE_DIRECTORY "${JSONCPP_DIR}/install/debug")
+#			execute_process(
+#				COMMAND cmake -DCMAKE_INSTALL_PREFIX=../../install/debug -DBUILD_SHARED_LIBS=ON -config Debug ../..
+#				WORKING_DIRECTORY "${JSONCPP_DIR}/build/debug"
+#				OUTPUT_VARIABLE CMAKE_OUTPUT
+#				RESULT_VARIABLE CMAKE_RESULT
+#			)
+#			if (${CMAKE_RESULT} EQUAL 0)
+#				message("-- Making ...")
+#				execute_process(
+#					COMMAND make install
+#					WORKING_DIRECTORY "${JSONCPP_DIR}/build/debug"
+#					OUTPUT_VARIABLE MAKE_OUTPUT
+#					RESULT_VARIABLE MAKE_RESULT
+#				)
+#				if (MAKE_RESULT GREATER 0)
+#					file(REMOVE_RECURSE ${JSONCPP_DIR})
+#					message(FATAL_ERROR "Cannot make JSON-CPP.")
+#				else()
+#					message("-- Success!")
+#				endif()
+#			else()
+#				file(REMOVE_RECURSE ${JSONCPP_DIR})
+#				message(FATAL_ERROR "Cannot cmake JSON-CPP.")
+#			endif()
+#		endif()
+#	else()
+#		message(FATAL_ERROR "Cannot clone JSON-CPP: ${GIT_ERROR}")
+#	endif()
+#endif()
+#find_library(jsoncpp jsoncpp
+#	HINTS "${JSONCPP_DIR}/install/debug/lib"
+#	NO_DEFAULT_PATH
+#	)
+#if (${jsoncpp} STREQUAL "jsoncpp-NOTFOUND")
+#	message(FATAL_ERROR "Cannot find jsoncpp at '${JSONCPP_DIR}/install/debug/lib'.")
+#else()
+#	message("-- JSONCPP found at ${jsoncpp}")
+#	set(JSONCPP_INCLUDE_DIR "${JSONCPP_DIR}/install/debug/include")
+#	message("-- Include directory: ${JSONCPP_INCLUDE_DIR}")
+#	include_directories(${JSONCPP_INCLUDE_DIR})
+#endif()
+#message("")
 
 message("GTest")
 if (NOT EXISTS ${GTEST_DIR})
@@ -300,23 +300,12 @@ if (NOT EXISTS ${GTEST_DIR})
 		message(FATAL_ERROR "Cannot clone GTest: ${GIT_ERROR}")
 	endif()
 endif()
-find_library(gtest gtest
-	HINTS "${GTEST_DIR}/build/debug"
-	NO_DEFAULT_PATH
-	)
-if (${gtest} STREQUAL "gtest-NOTFOUND")
-	message(FATAL_ERROR "Cannot find gtest.")
-else()
-	message("-- GTest found at ${gtest}")
-	set(GTEST_INCLUDE_DIR "${GTEST_DIR}/include")
-	message("-- Include directory: ${GTEST_INCLUDE_DIR}")
-	include_directories(${GTEST_INCLUDE_DIR})
-endif()
+add_subdirectory(libs/googletest)
 message("")
 
 message("OpenCV")
 if (NOT EXISTS ${OPENCV_DIR})
-	set("-- Cannot find ${OPENCV_DIR}")
+	message("-- Cannot find ${OPENCV_DIR}")
 	set(OPENCV_FILE_URL https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.tar.gz)
 	set(OPENCV_TMP_FILE /tmp/opencv_${OPENCV_VERSION}.tar.gz)
 	download(OPENCV_RESULT ${OPENCV_FILE_URL} ${OPENCV_DOWNLOAD_MD5} ${OPENCV_TMP_FILE})
@@ -405,8 +394,6 @@ set(SOURCE_FILES
 
 	src/capture/devices/device.hpp
 	src/capture/devices/image.hpp
-	test/src/capture/devices/image_test.cpp
-	test/src/resources.hpp
 	)
 
 add_executable(vision
@@ -416,7 +403,7 @@ add_executable(vision
 	)
 
 set(vision_libraries
-	"${OpenCV_LIBS};${jsoncpp};${Boost_LIBRARIES}"
+	"${OpenCV_LIBS};${jsoncpp};${Boost_LIBRARIES};pthread"
 	)
 
 target_link_libraries(vision
@@ -444,8 +431,7 @@ if (TEST)
 			)
 
 		target_link_libraries(${testName}
-			${gtest}
-			gtest_main
+			gtest gtest_main
 			${vision_libraries}
 			)
 
