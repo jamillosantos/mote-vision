@@ -8,7 +8,6 @@ os:
 before_install:
 - echo $LANG
 - echo $LC_ALL
-- if [ $TRAVIS_OS_NAME == linux ]; then ./scripts/llvm.sh; fi
 - mkdir -p build/debug
 - cd build/debug
 - cmake -config Debug ../..
