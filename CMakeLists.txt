@@ -1,22 +1,24 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.4)
 project(mote_vision)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
 # Configuration
 set(THIRD_PARTY_LIBRARIES "${CMAKE_SOURCE_DIR}/libs" CACHE FILEPATH "Third party libraries directory")
-set(TEST ON CACHE FILEPATH "Enable testing for this build")
+set(ENABLE_TEST ON CACHE FILEPATH "Enable testing for this build")
 set(TEST_OUTPUT ${CMAKE_BINARY_DIR}/tests CACHE FILEPATH "Output directory of tests")
 set(TEST_RESOURCE_DIR ${CMAKE_SOURCE_DIR}/test/resources CACHE FILEPATH "Resource folder for tests")
 add_definitions(-DTEST_RESOURCE_DIR="${TEST_RESOURCE_DIR}")
 
 # Simple-Web-Server
-set(SWS_VERSION "v2.0"
+set(SWS_VERSION "2.0"
 	CACHE STRING "Simple-Web-Server version")
-set(SWS_REPO_URL "git@github.com:eidheim/Simple-Web-Server.git"
+set(SWS_URL "https://github.com/eidheim/Simple-Web-Server/archive/v${SWS_VERSION}.tar.gz"
 	CACHE STRING "Simple-Web-Server git repository URL")
-set(SWS_DIR "${THIRD_PARTY_LIBRARIES}/sws"
+set(SWS_DIR "${THIRD_PARTY_LIBRARIES}/Simple-Web-Server-${SWS_VERSION}"
 	CACHE STRING "Simple-Web-Server destiny folder")
+set(SWS_MD5 "619e34dc172a8fa2ae8385b5dcedd5f4"
+	CACHE STRING "Simple-Web-Server download MD5 hash for integrity verification")
 
 # JSONCPP
 set(JSONCPP_VERSION "1.7.3"
@@ -81,95 +83,30 @@ function(download result url md5 file)
 		set(${result} ${file} PARENT_SCOPE)
 	else()
 		set(${result} "ERROR" PARENT_SCOPE)
+		message(WARNING "MD5 verification failed.")
 	endif()
 endfunction(download)
 
-message("Boost")
-find_package(Boost ${BOOST_VERSION} COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
-if (NOT ${Boost_FOUND})
-	if (NOT EXISTS ${BOOST_DIR})
-		message("-- Cannot find ${BOOST_DIR}")
-		set(BOOST_FILE_URL http://downloads.sourceforge.net/project/boost/boost/${BOOST_VERSION}/boost_${BOOST_VERSION_UNDERSCORE}.tar.bz2)
-		set(BOOST_TMP_FILE /tmp/libboost.tar.bz2)
-		download(BOOST_RESULT ${BOOST_FILE_URL} ${BOOST_DOWNLOAD_MD5} ${BOOST_TMP_FILE})
-		if (${BOOST_RESULT} STREQUAL "ERROR")
-			message(FATAL_ERROR "Cannot get ${BOOST_FILE_URL}.")
-		else()
-			message("-- OK")
-		endif()
-		message("-- Extracting to ${THIRD_PARTY_LIBRARIES} ...")
-		execute_process(
-			COMMAND tar xf ${BOOST_TMP_FILE}
-			WORKING_DIRECTORY ${THIRD_PARTY_LIBRARIES}
-			RESULT_VARIABLE TAR_RESULT
-			OUTPUT_VARIABLE TARGET_OUTPUT
-		)
-		if (${TAR_RESULT} EQUAL "0")
-			message("-- OK")
-		else()
-			file(REMOVE_RECURSE ${BOOST_DIR})
-			message(FATAL_ERROR "Cannot extract libboost.")
-		endif()
-	endif()
-
-	if (NOT EXISTS ${BOOST_DIR}/b2)
-		message("-- Bootstrapping libboost")
-		execute_process(
-			COMMAND sh bootstrap.sh
-			WORKING_DIRECTORY ${BOOST_DIR}
-			RESULT_VARIABLE BOOST_RESULT
-		)
-		if (${BOOST_RESULT} EQUAL 0)
-			message("-- Ok")
-		else()
-			file(REMOVE_RECURSE "${BOOST_DIR}/install")
-			message(FATAL_ERROR "Cannot extract libboost.")
-		endif()
-	endif()
-	if (NOT EXISTS ${BOOST_DIR}/install)
-		message("-- Compiling and installing libboost")
-		file(MAKE_DIRECTORY ${BOOST_DIR}/install)
-		execute_process(
-			COMMAND "${BOOST_DIR}/b2" "--prefix=${BOOST_DIR}/install" install
-			WORKING_DIRECTORY ${BOOST_DIR}
-			RESULT_VARIABLE BOOST_RESULT
-		)
-		if (${BOOST_RESULT} GREATER 0)
-			file(REMOVE_RECURSE "${BOOST_DIR}/install")
-			message(FATAL_ERROR "Cannot build libboost. ${BOOST_OUTPUT}")
-		endif()
-	endif()
-	set(BOOST_ROOT "${BOOST_DIR}/install/")
-	find_package(Boost ${BOOST_VERSION} REQUIRED COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
-	message("-- Include dir: ${Boost_INCLUDE_DIRS}")
-	include_directories(${Boost_INCLUDE_DIRS})
-	message("-- Libraries: ${Boost_LIBRARIES}")
-endif()
-message("")
-
 message("Simple-Web-Server")
 if (NOT EXISTS ${SWS_DIR})
-	message("-- Cloning Simple-Web-Server (${SWS_REPO_URL}) into ${THIRD_PARTY_LIBRARIES}/sws")
-	execute_process(
-		COMMAND "${GIT_EXECUTABLE}" clone ${SWS_REPO_URL} sws
-		WORKING_DIRECTORY ${THIRD_PARTY_LIBRARIES}
-		ERROR_VARIABLE GIT_ERROR
-		RESULT_VARIABLE GIT_RESULT
-	)
-	if (${GIT_RESULT} EQUAL 0)                                 # if success
-		message("-- Checking Simple-Web-Server out to '${SWS_VERSION}'")
-		execute_process(                                       # checkout to v2.0
-			COMMAND "${GIT_EXECUTABLE}" checkout ${SWS_VERSION}
-			WORKING_DIRECTORY ${SWS_DIR}
-			RESULT_VARIABLE GIT_RESULT
-			ERROR_VARIABLE GIT_ERROR
-		)
-		if (${GIT_RESULT} GREATER 0)
-			file(REMOVE_RECURSE ${SWS_DIR})
-			message(FATAL_ERROR "Cannot checkout Simple-Web-Server to ${SWS_VERSION}: ${GIT_ERROR}.")
-		endif()
+	set(SWS_TMP_FILE /tmp/sws.tar.gz)
+	message("-- Downloading Simple-Web-Server (${SWS_URL})")
+	download(SWS_RESULT ${SWS_URL} ${SWS_MD5} ${SWS_TMP_FILE})
+	if (${SWS_RESULT} STREQUAL "ERROR")
+		message(FATAL_ERROR "Cannot download Simple-Web-Server.")
 	else()
-		message(FATAL_ERROR "Cannot clone Simple-Web-Server: ${GIT_ERROR}")
+		message("-- Extracting Simple-Web-Server to '${SWS_DIR}'")
+		execute_process(                                       # checkout to v2.0
+			COMMAND tar xf ${SWS_TMP_FILE}
+			WORKING_DIRECTORY ${THIRD_PARTY_LIBRARIES}
+			RESULT_VARIABLE SWS_RESULT
+			ERROR_VARIABLE SWS_ERROR
+			)
+		if (${SWS_RESULT} EQUAL 0)
+			message("-- OK")
+		else()
+			message(FATAL_ERROR "Cannot extract Simple-Web-Server.")
+		endif()
 	endif()
 endif()
 set(SWS_INCLUDE_DIR ${SWS_DIR})
@@ -389,6 +326,69 @@ message("-- Version: ${OpenCV_VERSION}")
 message("-- Libs: ${OpenCV_LIBS}")
 message("")
 
+message("Boost")
+find_package(Boost ${BOOST_VERSION} COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
+if (NOT ${Boost_FOUND})
+	if (NOT EXISTS ${BOOST_DIR})
+		message("-- Cannot find ${BOOST_DIR}")
+		set(BOOST_FILE_URL http://downloads.sourceforge.net/project/boost/boost/${BOOST_VERSION}/boost_${BOOST_VERSION_UNDERSCORE}.tar.bz2)
+		set(BOOST_TMP_FILE /tmp/libboost.tar.bz2)
+		download(BOOST_RESULT ${BOOST_FILE_URL} ${BOOST_DOWNLOAD_MD5} ${BOOST_TMP_FILE})
+		if (${BOOST_RESULT} STREQUAL "ERROR")
+			message(FATAL_ERROR "Cannot get ${BOOST_FILE_URL}.")
+		else()
+			message("-- OK")
+		endif()
+		message("-- Extracting to ${THIRD_PARTY_LIBRARIES} ...")
+		execute_process(
+			COMMAND tar xf ${BOOST_TMP_FILE}
+			WORKING_DIRECTORY ${THIRD_PARTY_LIBRARIES}
+			RESULT_VARIABLE TAR_RESULT
+			OUTPUT_VARIABLE TARGET_OUTPUT
+		)
+		if (${TAR_RESULT} EQUAL "0")
+			message("-- OK")
+		else()
+			file(REMOVE_RECURSE ${BOOST_DIR})
+			message(FATAL_ERROR "Cannot extract libboost.")
+		endif()
+	endif()
+
+	if (NOT EXISTS ${BOOST_DIR}/b2)
+		message("-- Bootstrapping libboost")
+		execute_process(
+			COMMAND sh bootstrap.sh
+			WORKING_DIRECTORY ${BOOST_DIR}
+			RESULT_VARIABLE BOOST_RESULT
+		)
+		if (${BOOST_RESULT} EQUAL 0)
+			message("-- Ok")
+		else()
+			file(REMOVE_RECURSE "${BOOST_DIR}/install")
+			message(FATAL_ERROR "Cannot extract libboost.")
+		endif()
+	endif()
+	if (NOT EXISTS ${BOOST_DIR}/install)
+		message("-- Compiling and installing libboost")
+		file(MAKE_DIRECTORY ${BOOST_DIR}/install)
+		execute_process(
+			COMMAND "${BOOST_DIR}/b2" "--prefix=${BOOST_DIR}/install" install
+			WORKING_DIRECTORY ${BOOST_DIR}
+			RESULT_VARIABLE BOOST_RESULT
+		)
+		if (${BOOST_RESULT} GREATER 0)
+			file(REMOVE_RECURSE "${BOOST_DIR}/install")
+			message(FATAL_ERROR "Cannot build libboost. ${BOOST_OUTPUT}")
+		endif()
+	endif()
+	set(BOOST_ROOT "${BOOST_DIR}/install/")
+	find_package(Boost ${BOOST_VERSION} REQUIRED COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
+	message("-- Include dir: ${Boost_INCLUDE_DIRS}")
+	include_directories(${Boost_INCLUDE_DIRS})
+	message("-- Libraries: ${Boost_LIBRARIES}")
+endif()
+message("")
+
 set(SOURCE_FILES
 
 	src/capture/devices/device.hpp
@@ -410,7 +410,7 @@ target_link_libraries(vision
 	${vision_libraries}
 	)
 
-if (TEST)
+if (ENABLE_TEST)
 	message("Tests")
 	enable_testing()
 	include_directories(${CMAKE_SOURCE_DIR}/src)
