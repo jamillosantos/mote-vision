@@ -236,7 +236,9 @@ if (NOT EXISTS ${GTEST_DIR})
 		message(FATAL_ERROR "Cannot clone GTest: ${GIT_ERROR}")
 	endif()
 endif()
-add_subdirectory(libs/googletest)
+if (EXISTS libs/googletest)
+	add_subdirectory(libs/googletest)
+endif()
 message("")
 
 message("OpenCV")
@@ -420,7 +422,7 @@ if (ENABLE_TEST)
 		test/src/resources.hpp
 		${TEST_SRCS}
 		${SOURCE_FILES}
-		src/main.cpp)
+		)
 	set_target_properties(run_tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TEST_OUTPUT})
 	target_link_libraries(run_tests
 		gtest gtest_main
