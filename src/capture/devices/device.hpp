@@ -23,7 +23,7 @@ public:
 	/**
 	 * Return if the device is open.
 	 */
-	virtual bool isOpen() = 0;
+	virtual bool isOpened() = 0;
 
 	/**
 	 * Closes the device and release the device.
