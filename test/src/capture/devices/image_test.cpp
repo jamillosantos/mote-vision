@@ -8,22 +8,22 @@
 #include <capture/devices/image.hpp>
 #include "../../resources.hpp"
 
-TEST(Image, isOpen)
+TEST(Image, isOpened)
 {
 	mote::capture::devices::Image imageDevice;
-	ASSERT_FALSE(imageDevice.isOpen());
+	ASSERT_FALSE(imageDevice.isOpened());
 	imageDevice.open(Resources::lena().jpg().string());
-	ASSERT_TRUE(imageDevice.isOpen());
+	ASSERT_TRUE(imageDevice.isOpened());
 }
 
 TEST(Image, close)
 {
 	mote::capture::devices::Image imageDevice;
-	ASSERT_FALSE(imageDevice.isOpen());
+	ASSERT_FALSE(imageDevice.isOpened());
 	imageDevice.open(Resources::lena().jpg().string());
-	ASSERT_TRUE(imageDevice.isOpen());
+	ASSERT_TRUE(imageDevice.isOpened());
 	imageDevice.close();
-	ASSERT_FALSE(imageDevice.isOpen());
+	ASSERT_FALSE(imageDevice.isOpened());
 }
 
 TEST(Image, read_image_png)

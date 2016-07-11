@@ -35,7 +35,7 @@ public:
 		return true;
 	}
 
-	virtual bool isOpen() override
+	virtual bool isOpened() override
 	{
 		return this->_opened;
 	}
