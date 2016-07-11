@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.0)
 project(mote_vision)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
@@ -394,6 +394,7 @@ set(SOURCE_FILES
 
 	src/capture/devices/device.hpp
 	src/capture/devices/image.hpp
+	src/capture/devices/camera.hpp
 	)
 
 add_executable(vision
@@ -415,32 +416,20 @@ if (TEST)
 	enable_testing()
 	include_directories(${CMAKE_SOURCE_DIR}/src)
 	file(GLOB_RECURSE TEST_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} test/src/*_test.cpp)
-	foreach (testSrc ${TEST_SRCS})
-		get_filename_component(testName ${testSrc} NAME_WE)
-		string(REPLACE "test/src/" "" testPackage "${testSrc}")
-		string(REPLACE "${testName}.cpp" "" testPackage "${testPackage}")
-		string(REPLACE "/" "_" testPackage "${testPackage}")
-		string(REPLACE "_test" "" testName "${testName}")
-		set(testName "${testPackage}${testName}")
-		message("-- ${testSrc} as ${testName}")
 
-		add_executable(${testName}
-			test/src/resources.hpp
-			${testSrc}
-			${SOURCE_FILES}
-			)
-
-		target_link_libraries(${testName}
-			gtest gtest_main
-			${vision_libraries}
-			)
-
-		set_target_properties(${testName} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TEST_OUTPUT})
-
-		add_test(
-			NAME ${testName}
-			WORKING_DIRECTORY ${TEST_OUTPUT}
-			COMMAND ${TEST_OUTPUT}/${testName}
-			)
-	endforeach (testSrc)
+	add_executable(run_tests
+		test/src/resources.hpp
+		${TEST_SRCS}
+		${SOURCE_FILES}
+		src/main.cpp)
+	set_target_properties(run_tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TEST_OUTPUT})
+	target_link_libraries(run_tests
+		gtest gtest_main
+		${vision_libraries}
+		)
+	add_test(
+		NAME run_tests
+		WORKING_DIRECTORY ${TEST_OUTPUT}
+		COMMAND run_tests
+		)
 endif()
