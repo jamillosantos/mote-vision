@@ -1,0 +1,20 @@
+language: cpp
+sudo: required
+compiler:
+- clang
+- gcc
+os:
+- linux
+before_install:
+- echo $LANG
+- echo $LC_ALL
+- if [ $TRAVIS_OS_NAME == linux ]; then ./scripts/llvm.sh; fi
+install: make cmake
+script:
+- mkdir -p build/debug
+- cd build/debug
+- cmake -config Debug ../..
+- make
+branches:
+  only:
+  - master
