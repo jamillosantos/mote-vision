@@ -48,7 +48,7 @@ set(BOOST_DIR "${THIRD_PARTY_LIBRARIES}/boost_${BOOST_VERSION_UNDERSCORE}"
 	CACHE STRING "Boost destiny folder")
 set(BOOST_DOWNLOAD_MD5 "6095876341956f65f9d35939ccea1a9f"
 	CACHE STRING "Boost library download MD5 hash for integrity verification")
-set(BOOST_REQUIRED_COMPONENTS "system;filesystem"
+set(BOOST_REQUIRED_COMPONENTS "system;filesystem;regex"
 	CACHE STRING "Boost library components")
 message("")
 
@@ -394,6 +394,8 @@ set(SOURCE_FILES
 	src/capture/devices/device.hpp
 	src/capture/devices/image.hpp
 	src/capture/devices/camera.hpp
+	src/http/server.hpp
+	src/http/config.hpp
 	)
 
 add_executable(vision

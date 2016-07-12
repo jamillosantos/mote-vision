@@ -5,8 +5,23 @@
 
 #include <iostream>
 
+#include <http/server.hpp>
+
+using namespace mote;
+
 int main()
 {
-	std::cout << "Hello world!" << std::endl;
+	http::Config config;
+	std::cout << "Starting http server at " << config.port << " ..." << std::endl;
+	http::Server server(config);
+	try
+	{
+		server.start();
+	}
+	catch (std::exception &e)
+	{
+		std::cerr << "Error starting HTTP Server: " << e.what() << std::endl;
+		return 1;
+	}
 	return 0;
 }
