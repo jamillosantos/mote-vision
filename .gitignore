@@ -7,8 +7,8 @@ cmake_install.cmake
 install_manifest.txt
 CTestTestfile.cmake
 /libs/jsoncpp/
-/libs/sws/
 /libs/googletest/
 /libs/boost_*/
 /libs/opencv-*/
 /libs/opencv_contrib-*/
+/libs/Simple-Web-Server-*/
