@@ -31,9 +31,11 @@ set(JSONCPP_DIR "${THIRD_PARTY_LIBRARIES}/jsoncpp"
 # GTest
 set(GTEST_VERSION "release-1.7.0"
 	CACHE STRING "GTest library's version")
-set(GTEST_REPO_URL "git@github.com:google/googletest.git"
+set(GTEST_URL "https://github.com/google/googletest/archive/${GTEST_VERSION}.tar.gz"
 	CACHE STRING "GTest library's git repository URL")
-set(GTEST_DIR "${THIRD_PARTY_LIBRARIES}/googletest"
+set(GTEST_MD5 "4ff6353b2560df0afecfbda3b2763847"
+	CACHE STRING "Google Test download MD5 hash for integrity verification")
+set(GTEST_DIR "${THIRD_PARTY_LIBRARIES}/googletest-${GTEST_VERSION}"
 	CACHE STRING "GTest destiny folder")
 
 # libboost
@@ -185,24 +187,22 @@ message("")
 
 message("GTest")
 if (NOT EXISTS ${GTEST_DIR})
-	message("-- Clonning GTest (${GTEST_REPO_URL}) ... into ${GTEST_DIR}")
-	execute_process(
-		COMMAND "${GIT_EXECUTABLE}" clone ${GTEST_REPO_URL} googletest
-		WORKING_DIRECTORY ${THIRD_PARTY_LIBRARIES}
-		ERROR_VARIABLE GIT_ERROR
-		RESULT_VARIABLE GIT_RESULT
-	)
-	if (${GIT_RESULT} EQUAL 0)                                 # if success
-		message("-- Checking out to ${GTEST_VERSION} ...")
+	message("-- Downloading GTest (${GTEST_URL})")
+	set(GTEST_TMP_FILE /tmp/gtest.tar.gz)
+	download(GTEST_RESULT ${GTEST_URL} ${GTEST_MD5} ${GTEST_TMP_FILE})
+	if (${GTEST_RESULT} EQUAL "ERROR")
+		message(FATAL_ERROR "Cannot download GTest.")
+	else()
+		message("-- Extracting Google Test to ${GTEST_DIR} ...")
 		execute_process(                                       # checkout to v2.0
-			COMMAND "${GIT_EXECUTABLE}" checkout ${GTEST_VERSION}
-			WORKING_DIRECTORY ${GTEST_DIR}
-			RESULT_VARIABLE GIT_RESULT
-			ERROR_VARIABLE GIT_ERROR
+			COMMAND tar xf ${GTEST_TMP_FILE}
+			WORKING_DIRECTORY ${THIRD_PARTY_LIBRARIES}
+			RESULT_VARIABLE GTEST_RESULT
+			ERROR_VARIABLE GTEST_ERROR
 			)
-		if (${GIT_RESULT} GREATER 0)                           # git checkout failed
+		if (${GTEST_RESULT} GREATER 0)                           # git checkout failed
 			file(REMOVE_RECURSE ${GTEST_DIR})
-			message(FATAL_ERROR "Cannot checkout GTest to ${GTEST_VERSION}: ${GIT_ERROR}.")
+			message(FATAL_ERROR "Cannot extract GTest: ${GTEST_ERROR}.")
 		else()                                                 # git checkout success
 			file(MAKE_DIRECTORY "${GTEST_DIR}/build")
 			file(MAKE_DIRECTORY "${GTEST_DIR}/build/debug")
@@ -232,8 +232,6 @@ if (NOT EXISTS ${GTEST_DIR})
 				message(FATAL_ERROR "Cannot cmake GTest.")
 			endif()
 		endif()
-	else()
-		message(FATAL_ERROR "Cannot clone GTest: ${GIT_ERROR}")
 	endif()
 endif()
 if (EXISTS libs/googletest)
