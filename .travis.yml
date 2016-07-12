@@ -1,8 +1,18 @@
 language: cpp
 sudo: required
 compiler:
-- gcc-5
+- gcc
 #- clang
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env: COMPILER=g++-5
 os:
 - linux
 dist: trusty
@@ -12,13 +22,11 @@ addons:
     # add PPAs with more up-to-date toolchains
     - ubuntu-toolchain-r-test
     - llvm-toolchain-precise-3.6
-    - boost-latest
     packages:
     # install toolchains
     - gcc-5
     - g++-5
     - clang-3.6
-    - libboost1.61-all-dev
 before_install:
 - echo $LANG
 - echo $LC_ALL
