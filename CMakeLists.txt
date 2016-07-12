@@ -9,6 +9,7 @@ set(ENABLE_TEST ON CACHE FILEPATH "Enable testing for this build")
 set(TEST_OUTPUT ${CMAKE_BINARY_DIR}/tests CACHE FILEPATH "Output directory of tests")
 set(TEST_RESOURCE_DIR ${CMAKE_SOURCE_DIR}/test/resources CACHE FILEPATH "Resource folder for tests")
 add_definitions(-DTEST_RESOURCE_DIR="${TEST_RESOURCE_DIR}")
+add_definitions(-DBOOST_LOG_DYN_LINK=1)
 
 # Simple-Web-Server
 set(SWS_VERSION "2.0"
@@ -48,7 +49,7 @@ set(BOOST_DIR "${THIRD_PARTY_LIBRARIES}/boost_${BOOST_VERSION_UNDERSCORE}"
 	CACHE STRING "Boost destiny folder")
 set(BOOST_DOWNLOAD_MD5 "6095876341956f65f9d35939ccea1a9f"
 	CACHE STRING "Boost library download MD5 hash for integrity verification")
-set(BOOST_REQUIRED_COMPONENTS "system;filesystem;regex"
+set(BOOST_REQUIRED_COMPONENTS "system;filesystem;regex;log_setup;log"
 	CACHE STRING "Boost library components")
 message("")
 
@@ -396,6 +397,8 @@ set(SOURCE_FILES
 	src/capture/devices/camera.hpp
 	src/http/server.hpp
 	src/http/config.hpp
+	src/procs/videostream.hpp
+	src/application.hpp
 	)
 
 add_executable(vision

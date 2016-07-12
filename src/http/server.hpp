@@ -8,6 +8,7 @@
 
 #include <memory>
 #include <server_http.hpp>
+#include <boost/log/trivial.hpp>
 #include "../../libs/Simple-Web-Server-2.0/server_http.hpp"
 #include "config.hpp"
 
@@ -46,6 +47,7 @@ public:
 
 	void stop()
 	{
+		BOOST_LOG_TRIVIAL(trace) << "Stopping HTTP Server...";
 		this->_server->stop();
 		this->_server.release();
 	}

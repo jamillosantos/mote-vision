@@ -3,25 +3,23 @@
  * @date July 11, 2016
  */
 
-#include <iostream>
-
 #include <http/server.hpp>
+#include "application.hpp"
+
+#include <boost/log/trivial.hpp>
 
 using namespace mote;
 
+Application app;
+
+void handleInt(int sig)
+{
+	BOOST_LOG_TRIVIAL(trace) << "Interruption received";
+	app.stop();
+}
+
 int main()
 {
-	http::Config config;
-	std::cout << "Starting http server at " << config.port << " ..." << std::endl;
-	http::Server server(config);
-	try
-	{
-		server.start();
-	}
-	catch (std::exception &e)
-	{
-		std::cerr << "Error starting HTTP Server: " << e.what() << std::endl;
-		return 1;
-	}
-	return 0;
+	signal(SIGINT, handleInt);
+	return app.run();
 }
