@@ -6,6 +6,7 @@ Makefile
 cmake_install.cmake
 install_manifest.txt
 CTestTestfile.cmake
+/bin/
 /libs/jsoncpp/
 /libs/googletest-*/
 /libs/boost_*/
