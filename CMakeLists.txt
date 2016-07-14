@@ -390,8 +390,16 @@ if (NOT ${Boost_FOUND})
 endif()
 message("")
 
-set(SOURCE_FILES
+find_package(OpenSSL REQUIRED)
+message("-- OpenSSL")
+message("--   include dir: ${OPENSSL_INCLUDE_DIR}")
+message("--   SSL libraries: ${OPENSSL_SSL_LIBRARIES}")
+message("--   crypto libraries: ${OPENSSL_CRYPTO_LIBRARIES}")
+message("")
+include_directories(${OPENSSL_INCLUDE_DIR})
 
+
+set(SOURCE_FILES
 	src/capture/devices/device.hpp
 	src/capture/devices/image.hpp
 	src/capture/devices/camera.hpp
@@ -399,6 +407,7 @@ set(SOURCE_FILES
 	src/http/config.hpp
 	src/procs/videostream.hpp
 	src/application.hpp
+	src/http/response.hpp
 	)
 
 add_executable(vision
@@ -408,7 +417,7 @@ add_executable(vision
 	)
 
 set(vision_libraries
-	"${OpenCV_LIBS};${jsoncpp};${Boost_LIBRARIES};pthread"
+	"${OpenCV_LIBS};${jsoncpp};${Boost_LIBRARIES};pthread;${OPENSSL_SSL_LIBRARIES};${OPENSSL_CRYPTO_LIBRARIES}"
 	)
 
 target_link_libraries(vision
@@ -426,7 +435,9 @@ if (ENABLE_TEST)
 		${TEST_SRCS}
 		${SOURCE_FILES}
 		)
-	set_target_properties(run_tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TEST_OUTPUT})
+	set_target_properties(run_tests PROPERTIES
+		RUNTIME_OUTPUT_DIRECTORY ${TEST_OUTPUT}
+		)
 	target_link_libraries(run_tests
 		gtest gtest_main
 		${vision_libraries}
