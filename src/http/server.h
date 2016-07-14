@@ -10,7 +10,7 @@
 #include <server_http.hpp>
 #include <boost/log/trivial.hpp>
 #include "../../libs/Simple-Web-Server-2.0/server_http.hpp"
-#include "config.hpp"
+#include "config.h"
 
 namespace mote
 {

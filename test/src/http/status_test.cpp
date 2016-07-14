@@ -4,7 +4,7 @@
  */
 
 #include <gtest/gtest.h>
-#include <http/response.hpp>
+#include <http/response.h>
 
 #define HTTP_STATUS_CODE 123
 #define HTTP_STATUS_TEXT "Test Text"
@@ -18,15 +18,15 @@ GTEST_TEST(HttpStatus, constructor)
 
 GTEST_TEST(HttpStatus, constructor_copy)
 {
-	mote::http::Status status(mote::http::OK);
-	ASSERT_EQ(mote::http::OK.value, status.value);
-	ASSERT_EQ(mote::http::OK.text, status.text);
+	mote::http::Status status(mote::http::Status::OK);
+	ASSERT_EQ(mote::http::Status::OK.value, status.value);
+	ASSERT_EQ(mote::http::Status::OK.text, status.text);
 }
 
 GTEST_TEST(HttpStatus, assign_operator)
 {
-	mote::http::Status status(mote::http::OK);
-	status = mote::http::BAD_REQUEST;
-	ASSERT_EQ(mote::http::BAD_REQUEST.value, status.value);
-	ASSERT_EQ(mote::http::BAD_REQUEST.text, status.text);
+	mote::http::Status status(mote::http::Status::OK);
+	status = mote::http::Status::BAD_REQUEST;
+	ASSERT_EQ(mote::http::Status::BAD_REQUEST.value, status.value);
+	ASSERT_EQ(mote::http::Status::BAD_REQUEST.text, status.text);
 }

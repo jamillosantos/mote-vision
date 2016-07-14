@@ -400,15 +400,18 @@ include_directories(${OPENSSL_INCLUDE_DIR})
 
 
 set(SOURCE_FILES
-	src/capture/devices/device.hpp
-	src/capture/devices/image.hpp
-	src/capture/devices/camera.hpp
-	src/http/server.hpp
-	src/http/config.hpp
-	src/procs/videostream.hpp
-	src/application.hpp
-	src/http/response.hpp
-	)
+	src/capture/devices/device.h
+	src/capture/devices/image.h
+	src/capture/devices/camera.h
+	src/http/server.h
+	src/http/config.h
+	src/procs/videostream.h
+	src/application.h
+	src/http/response.h
+	src/capture/devices/camera.cpp
+	src/capture/devices/device.cpp
+	src/capture/devices/image.cpp
+	src/http/config.cpp src/http/response.cpp src/http/server.cpp src/procs/videostream.cpp)
 
 add_executable(vision
 	src/main.cpp

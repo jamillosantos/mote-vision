@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 #include <boost/thread.hpp>
-#include <http/response.hpp>
+#include <http/response.h>
 
 #define HTTPRESPONSE_HEADER_NAME_1 "Content-Type"
 #define HTTPRESPONSE_HEADER_VALUE_1 "text/html"

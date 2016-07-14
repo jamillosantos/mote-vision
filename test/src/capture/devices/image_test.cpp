@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 #include <opencv2/opencv.hpp>
-#include <capture/devices/image.hpp>
+#include <capture/devices/image.h>
 #include "../../resources.hpp"
 
 TEST(Image, isOpened)

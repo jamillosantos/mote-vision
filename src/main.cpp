@@ -3,8 +3,8 @@
  * @date July 11, 2016
  */
 
-#include <http/server.hpp>
-#include "application.hpp"
+#include <http/server.h>
+#include "application.h"
 
 #include <boost/log/trivial.hpp>
 

@@ -20,14 +20,9 @@ namespace http
 class Config
 {
 public:
-	Config()
-		: Config(HTTP_CONFIG_DEFAULT_PORT, HTTP_CONFIG_DEFAULT_THREADS, HTTP_CONFIG_DEFAULT_REQUEST_TIMEOUT,
-			HTTP_CONFIG_DEFAULT_CONTENT_TIMEOUT)
-	{ }
+	Config();
 
-	Config(unsigned short port, size_t threads, long request_timeout, long timeout_content)
-		: port(port), threads(threads), request_timeout(request_timeout), content_timeout(timeout_content)
-	{ }
+	Config(unsigned short port, size_t threads, long request_timeout, long timeout_content);
 
 	unsigned short port;
 

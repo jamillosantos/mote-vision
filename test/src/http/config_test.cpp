@@ -4,7 +4,7 @@
  */
 
 #include <gtest/gtest.h>
-#include <http/config.hpp>
+#include <http/config.h>
 
 GTEST_TEST(HttpConfig, constructor_params)
 {

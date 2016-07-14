@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 #include <opencv2/opencv.hpp>
-#include <capture/devices/camera.hpp>
+#include <capture/devices/camera.h>
 
 GTEST_TEST(Camera, isOpened)
 {
