@@ -32,6 +32,7 @@ public:
 			camera.open(0);
 			this->_videoStream->start();
 			this->_server->start();
+			return 0;
 		}
 		catch (std::exception &e)
 		{
