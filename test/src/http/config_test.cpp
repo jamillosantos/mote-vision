@@ -6,7 +6,7 @@
 #include <gtest/gtest.h>
 #include <http/config.h>
 
-GTEST_TEST(HttpConfig, constructor_params)
+GTEST_TEST(http_config, constructor_params)
 {
 	mote::http::Config config(1, 2, 3, 4);
 	ASSERT_EQ(1, config.port);

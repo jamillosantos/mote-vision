@@ -7,7 +7,7 @@
 #include <opencv2/opencv.hpp>
 #include <capture/devices/camera.h>
 
-GTEST_TEST(Camera, isOpened)
+GTEST_TEST(capture_devices_camera, isOpened)
 {
 	mote::capture::devices::Camera cameraDevice;
 	ASSERT_FALSE(cameraDevice.isOpened());
@@ -17,11 +17,11 @@ GTEST_TEST(Camera, isOpened)
 	}
 	else
 	{
-		//
+		// TODO: Add warning
 	}
 }
 
-TEST(Camera, close)
+TEST(capture_devices_camera, close)
 {
 	mote::capture::devices::Camera cameraDevice;
 	ASSERT_FALSE(cameraDevice.isOpened());
@@ -31,7 +31,7 @@ TEST(Camera, close)
 	ASSERT_FALSE(cameraDevice.isOpened());
 }
 
-TEST(Camera, read_frame)
+TEST(capture_devices_camera, read_frame)
 {
 	mote::capture::devices::Camera cameraDevice;
 	if (cameraDevice.open(0))

@@ -8,7 +8,7 @@
 #include <capture/devices/image.h>
 #include "../../resources.hpp"
 
-TEST(Image, isOpened)
+TEST(capture_devices_image, isOpened)
 {
 	mote::capture::devices::Image imageDevice;
 	ASSERT_FALSE(imageDevice.isOpened());
@@ -16,7 +16,7 @@ TEST(Image, isOpened)
 	ASSERT_TRUE(imageDevice.isOpened());
 }
 
-TEST(Image, close)
+TEST(capture_devices_image, close)
 {
 	mote::capture::devices::Image imageDevice;
 	ASSERT_FALSE(imageDevice.isOpened());
@@ -26,7 +26,7 @@ TEST(Image, close)
 	ASSERT_FALSE(imageDevice.isOpened());
 }
 
-TEST(Image, read_image_png)
+TEST(capture_devices_image, read_image_png)
 {
 	mote::capture::devices::Image imageDevice;
 	imageDevice.open(Resources::lena().png().string());
@@ -43,7 +43,7 @@ TEST(Image, read_image_png)
 	imageDevice.close();
 }
 
-TEST(Image, read_image_jpg)
+TEST(capture_devices_image, read_image_jpg)
 {
 	mote::capture::devices::Image imageDevice;
 	imageDevice.open(Resources::lena().jpg().string());

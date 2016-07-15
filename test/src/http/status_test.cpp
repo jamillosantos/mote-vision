@@ -9,21 +9,21 @@
 #define HTTP_STATUS_CODE 123
 #define HTTP_STATUS_TEXT "Test Text"
 
-GTEST_TEST(HttpStatus, constructor)
+GTEST_TEST(http_status, constructor)
 {
 	mote::http::Status status(HTTP_STATUS_CODE, HTTP_STATUS_TEXT);
 	ASSERT_EQ(HTTP_STATUS_CODE, status.value);
 	ASSERT_EQ(HTTP_STATUS_TEXT, status.text);
 }
 
-GTEST_TEST(HttpStatus, constructor_copy)
+GTEST_TEST(http_status, constructor_copy)
 {
 	mote::http::Status status(mote::http::Status::OK);
 	ASSERT_EQ(mote::http::Status::OK.value, status.value);
 	ASSERT_EQ(mote::http::Status::OK.text, status.text);
 }
 
-GTEST_TEST(HttpStatus, assign_operator)
+GTEST_TEST(http_status, assign_operator)
 {
 	mote::http::Status status(mote::http::Status::OK);
 	status = mote::http::Status::BAD_REQUEST;

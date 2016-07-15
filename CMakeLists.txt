@@ -445,9 +445,17 @@ if (ENABLE_TEST)
 		gtest gtest_main
 		${vision_libraries}
 		)
-	add_test(
-		NAME run_tests
-		WORKING_DIRECTORY ${TEST_OUTPUT}
-		COMMAND run_tests
-		)
+	foreach (testSrc ${TEST_SRCS})
+		# get_filename_component(testName ${testSrc} NAME_WE)
+		string(REPLACE "test/src/" "" testPackage "${testSrc}")
+		string(REPLACE "_test.cpp" "" testPackage "${testPackage}")
+		string(REPLACE "/" "_" testPackage "${testPackage}")
+		message("-- ${testPackage}: ${testSrc}")
+		add_test(
+			NAME ${testPackage}
+			WORKING_DIRECTORY ${TEST_OUTPUT}
+			COMMAND run_tests --gtest_filter=${testPackage}.*
+			)
+	endforeach()
+	message("")
 endif()

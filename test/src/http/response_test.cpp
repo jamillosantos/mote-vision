@@ -12,7 +12,7 @@
 #define HTTPRESPONSE_HEADER_NAME_2 "User-Agent"
 #define HTTPRESPONSE_HEADER_VALUE_2 "Pseudo Browser"
 
-GTEST_TEST(HttpResponse, params)
+GTEST_TEST(http_response, params)
 {
 	std::stringbuf sbuf;
 	std::ostream originalResponse(&sbuf);
