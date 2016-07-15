@@ -23,34 +23,13 @@ private:
 	std::unique_ptr<HttpServer> _server;
 	Config _config;
 public:
-	Server(const Config& config)
-		: _config(config)
-	{ }
+	Server(const Config& config);
 
-	~Server()
-	{
-		if (this->_server)
-			this->stop();
-	}
+	~Server();
 
-	void start()
-	{
-		this->_server.reset(new HttpServer(this->_config.port, this->_config.threads, this->_config.request_timeout, this->_config.content_timeout));
+	void start();
 
-		this->_server->resource["^/"]["GET"] = [](std::shared_ptr<HttpServer::Response> response, std::shared_ptr<HttpServer::Request> request) {
-			std::string content = "The http server is working!";
-			*response << "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-Length: " << content.length() << "\r\n\r\n" << content;
-		};
-
-		this->_server->start();
-	}
-
-	void stop()
-	{
-		BOOST_LOG_TRIVIAL(trace) << "Stopping HTTP Server...";
-		this->_server->stop();
-		this->_server.release();
-	}
+	void stop();
 };
 }
 }
