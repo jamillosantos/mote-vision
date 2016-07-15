@@ -1,15 +1,46 @@
 cmake_minimum_required(VERSION 3.4)
 project(mote_vision)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall")
 
 # Configuration
+message("Configuration")
 set(THIRD_PARTY_LIBRARIES "${CMAKE_SOURCE_DIR}/libs" CACHE FILEPATH "Third party libraries directory")
-set(ENABLE_TEST ON CACHE FILEPATH "Enable testing for this build")
+set(ENABLE_TEST ON CACHE BOOL "Enable testing for this build")
 set(TEST_OUTPUT ${CMAKE_BINARY_DIR}/tests CACHE FILEPATH "Output directory of tests")
 set(TEST_RESOURCE_DIR ${CMAKE_SOURCE_DIR}/test/resources CACHE FILEPATH "Resource folder for tests")
+set(COVERAGE OFF CACHE BOOL "Enables coverage configuration")
+set(PROFILING OFF CACHE BOOL "Enables profiling configuration")
 add_definitions(-DTEST_RESOURCE_DIR="${TEST_RESOURCE_DIR}")
 add_definitions(-DBOOST_LOG_DYN_LINK=1)
+message("-- Libraries at ${THIRD_PARTY_LIBRARIES}")
+if (${ENABLE_TEST})
+	message("-- Tests enabled")
+	message("--   Tests output: ${TEST_OUTPUT}")
+	message("--   Resources at: ${TEST_RESOURCE_DIR}")
+else()
+	message("-- Tests disabled")
+endif()
+if (${COVERAGE})
+	message("-- Coverage enabled")
+	#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+	#set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
+	#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
+	set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} --coverage")
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
+else()
+	message("-- Coverage disabled")
+endif()
+
+if (${PROFILING})
+	message("-- Profiling enabled")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
+	set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -pg")
+else()
+	message("-- Profiling disabled")
+endif()
+message("")
 
 # Simple-Web-Server
 set(SWS_VERSION "2.0"
@@ -51,7 +82,6 @@ set(BOOST_DOWNLOAD_MD5 "6095876341956f65f9d35939ccea1a9f"
 	CACHE STRING "Boost library download MD5 hash for integrity verification")
 set(BOOST_REQUIRED_COMPONENTS "system;filesystem;regex;log_setup;log"
 	CACHE STRING "Boost library components")
-message("")
 
 # OpenCV
 set(OPENCV_VERSION "3.1.0"
@@ -64,7 +94,6 @@ set(OPENCVCONTRIB_DIR "${THIRD_PARTY_LIBRARIES}/opencv_contrib-${OPENCV_VERSION}
 	CACHE STRING "OpenCV Contrib destiny folder")
 set(OPENCVCONTRIB_DOWNLOAD_MD5 "a822839ad3ab79ff837c16785ea9dd10"
 	CACHE STRING "OpenCV Contrib library download MD5 hash for integrity verification")
-message("")
 
 message("Git")
 find_package(Git REQUIRED)
@@ -427,7 +456,7 @@ target_link_libraries(vision
 	${vision_libraries}
 	)
 
-if (ENABLE_TEST)
+if (${ENABLE_TEST})
 	message("Tests")
 	enable_testing()
 	include_directories(${CMAKE_SOURCE_DIR}/src)
