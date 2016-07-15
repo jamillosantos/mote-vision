@@ -10,6 +10,7 @@
 #include <capture/devices/camera.h>
 #include <procs/videostream.h>
 #include <boost/log/trivial.hpp>
+#include <http/server.h>
 
 namespace mote
 {
@@ -19,43 +20,9 @@ private:
 	std::unique_ptr<http::Server> _server;
 	std::unique_ptr<procs::VideoStream> _videoStream;
 public:
-	int run()
-	{
-		http::Config config;
-		BOOST_LOG_TRIVIAL(trace) << "Starting http server at " << config.port << " ...";
-		this->_server.reset(new http::Server(config));
+	int run();
 
-		capture::devices::Camera camera;
-		this->_videoStream.reset(new procs::VideoStream(camera));
-		try
-		{
-			camera.open(0);
-			this->_videoStream->start();
-			this->_server->start();
-			return 0;
-		}
-		catch (std::exception &e)
-		{
-			BOOST_LOG_TRIVIAL(fatal) << "Error starting HTTP Server: " << e.what();
-			return 1;
-		}
-	}
-
-	void stop()
-	{
-		BOOST_LOG_TRIVIAL(trace) << "Stopping application ...";
-
-		if (this->_videoStream)
-		{
-			this->_videoStream->stop();
-			this->_videoStream.reset();
-		}
-		if (this->_server)
-		{
-			this->_server->stop();
-			this->_server.reset();
-		}
-	}
+	void stop();
 };
 }
 
