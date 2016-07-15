@@ -44,4 +44,4 @@ script:
 notifications:
   slack:
     rooms:
-      - braso:tEALYg1H3830ANKkpnsWx1nv#travis-ci
+      - motehq:J9n6X9QdA9QFmF4wHfqouwlY#travis-ci
