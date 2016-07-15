@@ -6,6 +6,8 @@
 #ifndef MOTE_VISION_HTTP_RESPONSE_HPP
 #define MOTE_VISION_HTTP_RESPONSE_HPP
 
+#define HTTP_HEADER_CONTENT_TYPE "Content-Type"
+
 #include <server_https.hpp>
 
 namespace mote
@@ -13,6 +15,20 @@ namespace mote
 namespace http
 {
 
+/**
+ * Represents the status of the HTTP response.
+ *
+ * On the HTTP response we need to define the status of the response. Ex: 200 Ok, 404 Not Found, 500 Internal Server
+ * Error, etc.
+ *
+ * This class keeps both the integer code and the description text required on the HTTP protocol.
+ *
+ * Usually, you will not need to manually define the code and text of this class. You probably is going to use the
+ * built-in static declarations defined inside of the this class. Ex: `mote::http::Status::OK`,
+ * `mote::http::Status::NOT_FOUND`, `mote::http::Status::INTERNAL_SERVER_ERROR`, etc.
+ *
+ * Source of the codes and texts: https://httpstatuses.com/
+ */
 class Status
 {
 public:
@@ -80,7 +96,14 @@ public:
 	static Status NETWORK_AUTHENTICATION_REQUIRED;
 	static Status NETWORK_CONNECT_TIMEOUT_ERROR;
 
+	/**
+	 * Integer code of the status.
+	 */
 	int value;
+
+	/**
+	 * Text description of the status.
+	 */
 	std::string text;
 
 	Status(int value, const std::string &text);
@@ -90,13 +113,12 @@ public:
 	Status & operator=(const Status &status);
 };
 
-
 template<typename T>
 class Response
 {
 private:
 	/**
-	 * Based on Simple-Web-Server implementation.
+	 * Based on Simple-Web-Server implementation. It is used on the `std::unordered_multimap` declaration.
 	 */
 	class iequal_to
 	{
@@ -108,7 +130,7 @@ private:
 	};
 
 	/**
-	 * Based on Simple-Web-Server implementation.
+	 * Based on Simple-Web-Server implementation.  It is used on the `std::unordered_multimap` declaration.
 	 */
 	class ihash
 	{
@@ -128,12 +150,40 @@ private:
 	_Response &_response;
 
 	_Header _header;
+
+	std::stringstream out;
+
+	Status _status;
+
+	bool _flushed;
 public:
 	Response(_Response &response)
-		: _response(response), status(mote::http::Status::OK)
+		: _response(response), _status(mote::http::Status::OK), _flushed(false)
 	{ }
 
-	Status status;
+	/**
+	 * Status' property getter.
+	 *
+	 * The status of an HTTP request keeps the response code and text of the response itself. Ex: 200 Ok, 404 Not found.
+	 *
+	 * For using the status you should use the static definitions at `mote::http::Status::*`.
+	 *
+	 * @see mote::http::Status
+	 */
+	const Status &status()
+	{
+		return this->_status;
+	}
+
+	/**
+	 * Status' property setter.
+	 *
+	 * @see status()
+	 */
+	Response& status(const Status& status)
+	{
+		this->_status = status;
+	}
 
 	/**
 	 * Gets a header value.
@@ -180,6 +230,40 @@ public:
 	{
 		this->_header.insert(std::make_pair(header, value));
 		return *this;
+	}
+
+	/**
+	 * Content-type header getter.
+	 *
+	 * It is an alias for `header("Content-Type")`.
+	 *
+	 * @return Returns the `Content-type` header value.
+	 */
+	std::string contentType()
+	{
+		return this->header(HTTP_HEADER_CONTENT_TYPE);
+	}
+
+	/**
+	 * Content-type header setter.
+	 *
+	 * It is an alias for `header("Content-Type", value)`.
+	 *
+	 * @param value Value of th `Content-Type` header
+	 * @return Returns the own class instance
+	 */
+	Response& contentType(const std::string &value)
+	{
+		return this->header(HTTP_HEADER_CONTENT_TYPE, value);
+	}
+
+	/**
+	 * Operator implementation to enables iostream writing style.
+	 */
+	template <typename C>
+	Response& operator<<(const C& _)
+	{
+		this->out << _;
 	}
 };
 
