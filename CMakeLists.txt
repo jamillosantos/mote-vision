@@ -445,6 +445,10 @@ set(SOURCE_FILES
 	src/application.cpp
 	src/http/response.h
 	src/http/response.cpp
+	src/http/exceptions.h
+	src/http/exceptions.cpp
+	src/exceptions.h
+	src/exceptions.cpp
 	)
 
 add_executable(vision

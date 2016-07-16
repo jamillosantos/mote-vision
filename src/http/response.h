@@ -7,8 +7,10 @@
 #define MOTE_VISION_HTTP_RESPONSE_HPP
 
 #define HTTP_HEADER_CONTENT_TYPE "Content-Type"
+#define ENDH "\r\n"
 
 #include <server_https.hpp>
+#include "exceptions.h"
 
 namespace mote
 {
@@ -111,6 +113,11 @@ public:
 	Status(const Status &status);
 
 	Status & operator=(const Status &status);
+
+	std::string str()
+	{
+		return std::to_string(this->value) + " " + this->text;
+	}
 };
 
 template<typename T>
@@ -156,10 +163,31 @@ private:
 	Status _status;
 
 	bool _flushed;
+
+	bool _auto_flush;
+
+	void ensureNotFlushed()
+	{
+		if (this->_flushed)
+			throw already_been_flushed();
+	}
 public:
 	Response(_Response &response)
-		: _response(response), _status(mote::http::Status::OK), _flushed(false)
+		: _response(response), _status(mote::http::Status::OK), _flushed(false), _auto_flush(false)
 	{ }
+
+	~Response()
+	{
+		if (!this->_auto_flush)
+		{
+			if (!this->_flushed)
+			{
+				size_t len = this->out.tellp();
+				this->header("Content-Length", len);
+			}
+			this->flush();
+		}
+	}
 
 	/**
 	 * Status' property getter.
@@ -183,6 +211,7 @@ public:
 	Response& status(const Status& status)
 	{
 		this->_status = status;
+		return *this;
 	}
 
 	/**
@@ -209,12 +238,23 @@ public:
 	 */
 	Response& header(const std::string &header, const std::string &value)
 	{
+		this->ensureNotFlushed();
 		auto it = this->_header.find(header);
-		if (it == this->_header.cend())
-			this->_header.insert(std::make_pair(header, value));
-		else
-			it->second = value;
+		if (it != this->_header.cend())
+			this->_header.erase(it);
+		this->_header.insert(std::make_pair(header, value));
 		return *this;
+	}
+
+	/**
+	 * Any type implementation for header. It uses the `std::to_string` implementention, hence it is restricted to its
+	 * types implementations.
+	 *
+	 * @see header(std::string, std::string)
+	 */
+	Response& header(const std::string &header, size_t &value)
+	{
+		return this->header(header, std::to_string(value));
 	}
 
 	/**
@@ -228,6 +268,7 @@ public:
 	 */
 	Response & header_append(const std::string &header, const std::string &value)
 	{
+		this->ensureNotFlushed();
 		this->_header.insert(std::make_pair(header, value));
 		return *this;
 	}
@@ -263,7 +304,34 @@ public:
 	template <typename C>
 	Response& operator<<(const C& _)
 	{
-		this->out << _;
+		if (this->_auto_flush)
+		{
+			if (!this->_flushed)
+				this->flush();
+			this->_response << _;
+		}
+		else
+			this->out << _;
+	}
+
+	/**
+	 * Flushes the response.
+	 */
+	void flush()
+	{
+		if (this->_flushed)
+			this->_response << this->out.rdbuf();
+		else
+		{
+			this->_response << "HTTP/1.1 " << this->_status.value << " " << this->_status.text << ENDH;
+			for (const std::pair<std::string, std::string>& h : this->_header)
+			{
+				this->_response << h.first << " " << h.second << ENDH;
+			}
+			this->_response << ENDH;
+			this->_response << this->out.rdbuf();
+			this->_flushed = true;
+		}
 	}
 };
 
