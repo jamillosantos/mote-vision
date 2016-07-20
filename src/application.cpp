@@ -19,12 +19,12 @@ mote::Application& mote::Application::config(const Json::Value &json)
 int mote::Application::run()
 {
 	BOOST_LOG_TRIVIAL(trace) << "Starting http server at " << this->_config.http().port << " ...";
-	this->_server.reset(new http::Server(this->_config.http()));
 
 	capture::devices::Camera camera;
 	this->_videoStream.reset(new procs::VideoStream(camera));
 	try
 	{
+		this->_server.reset(new http::Server(this->_config.http(), *this->_videoStream));
 		camera.open(0);
 		this->_videoStream->start();
 		this->_server->start();

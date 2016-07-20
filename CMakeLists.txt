@@ -446,19 +446,34 @@ set(SOURCE_FILES
 	src/capture/devices/image.cpp
 	src/capture/devices/camera.h
 	src/capture/devices/camera.cpp
-	src/http/server.h
-	src/http/server.cpp
+
 	src/procs/videostream.h
 	src/procs/videostream.cpp
-	src/application.h
-	src/application.cpp
+
+	src/http/server.h
+	src/http/server.cpp
 	src/http/response.h
 	src/http/response.cpp
 	src/http/exceptions.h
 	src/http/exceptions.cpp
+	src/http/action.cpp
+	src/http/action.h
+	src/http/actions/index.cpp
+	src/http/actions/index.h
+
+	src/config/config.cpp
+	src/config/config.h
+	src/config/http.cpp
+	src/config/http.h
+	src/config/part.cpp
+	src/config/part.h
+
+	src/application.h
+	src/application.cpp
+
 	src/exceptions.h
 	src/exceptions.cpp
-	src/config/config.cpp src/config/config.h src/config/http.cpp src/config/http.h src/config/part.cpp src/config/part.h)
+	)
 
 add_executable(vision
 	src/main.cpp
