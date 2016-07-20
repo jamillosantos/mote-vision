@@ -80,7 +80,7 @@ set(BOOST_DIR "${THIRD_PARTY_LIBRARIES}/boost_${BOOST_VERSION_UNDERSCORE}"
 	CACHE STRING "Boost destiny folder")
 set(BOOST_DOWNLOAD_MD5 "6095876341956f65f9d35939ccea1a9f"
 	CACHE STRING "Boost library download MD5 hash for integrity verification")
-set(BOOST_REQUIRED_COMPONENTS "system;filesystem;regex;log_setup;log"
+set(BOOST_REQUIRED_COMPONENTS "system;filesystem;regex;log_setup;log;program_options"
 	CACHE STRING "Boost library components")
 
 # OpenCV
@@ -457,7 +457,7 @@ set(SOURCE_FILES
 	src/http/exceptions.cpp
 	src/exceptions.h
 	src/exceptions.cpp
-	src/config/config.cpp src/config/config.h src/config/http.cpp src/config/http.h)
+	src/config/config.cpp src/config/config.h src/config/http.cpp src/config/http.h src/config/part.cpp src/config/part.h)
 
 add_executable(vision
 	src/main.cpp
