@@ -88,12 +88,18 @@ set(OPENCV_VERSION "3.1.0"
 	CACHE STRING "OpenCV library's version")
 set(OPENCV_DIR "${THIRD_PARTY_LIBRARIES}/opencv-${OPENCV_VERSION}"
 	CACHE STRING "OpenCV destiny folder")
+set(OPENCV_FILE_URL https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.tar.gz
+	CACHE STRING "OpenCV library download URL")
 set(OPENCV_DOWNLOAD_MD5 "70e1dd07f0aa06606f1bc0e3fa15abd3"
 	CACHE STRING "OpenCV library download MD5 hash for integrity verification")
+
 set(OPENCVCONTRIB_DIR "${THIRD_PARTY_LIBRARIES}/opencv_contrib-${OPENCV_VERSION}"
 	CACHE STRING "OpenCV Contrib destiny folder")
 set(OPENCVCONTRIB_DOWNLOAD_MD5 "a822839ad3ab79ff837c16785ea9dd10"
 	CACHE STRING "OpenCV Contrib library download MD5 hash for integrity verification")
+set(OPENCVCONTRIB_FILE_URL https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.tar.gz
+	CACHE STRING "OpenCV Contrib library download URL")
+
 
 message("Git")
 find_package(Git REQUIRED)
@@ -105,9 +111,11 @@ function(download result url md5 file)
 		file(MD5 ${file} file_md5)
 		if (NOT ${file_md5} STREQUAL ${md5})
 			file(REMOVE ${file})
+			message("Downloading ${url}")
 			file(DOWNLOAD ${url} ${file} SHOW_PROGRESS)
 		endif()
 	else()
+		message("Downloading ${url}")
 		file(DOWNLOAD ${url} ${file} SHOW_PROGRESS)
 	endif()
 	file(MD5 ${file} file_md5)
@@ -147,60 +155,60 @@ include_directories(${SWS_INCLUDE_DIR})
 message("")
 
 message("JSONCPP")
-#if (NOT EXISTS ${JSONCPP_DIR})
-#	message("-- Clonning JSON-CPP (${JSONCPP_REPO_URL}) ... into ${JSONCPP_DIR}")
-#	execute_process(
-#		COMMAND "${GIT_EXECUTABLE}" clone ${JSONCPP_REPO_URL} jsoncpp
-#		WORKING_DIRECTORY ${THIRD_PARTY_LIBRARIES}
-#		ERROR_VARIABLE GIT_ERROR
-#		RESULT_VARIABLE GIT_RESULT
-#	)
-#	if (${GIT_RESULT} EQUAL 0)                                 # if success
-#		message("-- Checking JSON-CPP to ${JSONCPP_VERSION}")
-#		execute_process(                                       # checkout to v2.0
-#			COMMAND "${GIT_EXECUTABLE}" checkout ${JSONCPP_VERSION}
-#			WORKING_DIRECTORY ${JSONCPP_DIR}
-#			RESULT_VARIABLE GIT_RESULT
-#			ERROR_VARIABLE GIT_ERROR
-#			)
-#		if (${GIT_RESULT} GREATER 0)                           # git checkout failed
-#			file(REMOVE_RECURSE ${JSONCPP_DIR})
-#			message(FATAL_ERROR "Cannot checkout JSON-CPP to ${JSONCPP_VERSION}: ${GIT_ERROR}.")
-#		else()                                                 # git checkout success
-#			message("-- CMaking ...")
-#			file(MAKE_DIRECTORY "${JSONCPP_DIR}/build")
-#			file(MAKE_DIRECTORY "${JSONCPP_DIR}/build/debug")
-#			file(MAKE_DIRECTORY "${JSONCPP_DIR}/install")
-#			file(MAKE_DIRECTORY "${JSONCPP_DIR}/install/debug")
-#			execute_process(
-#				COMMAND cmake -DCMAKE_INSTALL_PREFIX=../../install/debug -DBUILD_SHARED_LIBS=ON -config Debug ../..
-#				WORKING_DIRECTORY "${JSONCPP_DIR}/build/debug"
-#				OUTPUT_VARIABLE CMAKE_OUTPUT
-#				RESULT_VARIABLE CMAKE_RESULT
-#			)
-#			if (${CMAKE_RESULT} EQUAL 0)
-#				message("-- Making ...")
-#				execute_process(
-#					COMMAND make install
-#					WORKING_DIRECTORY "${JSONCPP_DIR}/build/debug"
-#					OUTPUT_VARIABLE MAKE_OUTPUT
-#					RESULT_VARIABLE MAKE_RESULT
-#				)
-#				if (MAKE_RESULT GREATER 0)
-#					file(REMOVE_RECURSE ${JSONCPP_DIR})
-#					message(FATAL_ERROR "Cannot make JSON-CPP.")
-#				else()
-#					message("-- Success!")
-#				endif()
-#			else()
-#				file(REMOVE_RECURSE ${JSONCPP_DIR})
-#				message(FATAL_ERROR "Cannot cmake JSON-CPP.")
-#			endif()
-#		endif()
-#	else()
-#		message(FATAL_ERROR "Cannot clone JSON-CPP: ${GIT_ERROR}")
-#	endif()
-#endif()
+if (NOT EXISTS ${JSONCPP_DIR})
+	message("-- Clonning JSON-CPP (${JSONCPP_REPO_URL}) ... into ${JSONCPP_DIR}")
+	execute_process(
+		COMMAND "${GIT_EXECUTABLE}" clone ${JSONCPP_REPO_URL} jsoncpp
+		WORKING_DIRECTORY ${THIRD_PARTY_LIBRARIES}
+		ERROR_VARIABLE GIT_ERROR
+		RESULT_VARIABLE GIT_RESULT
+	)
+	if (${GIT_RESULT} EQUAL 0)                                 # if success
+		message("-- Checking JSON-CPP to ${JSONCPP_VERSION}")
+		execute_process(                                       # checkout to v2.0
+			COMMAND "${GIT_EXECUTABLE}" checkout ${JSONCPP_VERSION}
+			WORKING_DIRECTORY ${JSONCPP_DIR}
+			RESULT_VARIABLE GIT_RESULT
+			ERROR_VARIABLE GIT_ERROR
+			)
+		if (${GIT_RESULT} GREATER 0)                           # git checkout failed
+			file(REMOVE_RECURSE ${JSONCPP_DIR})
+			message(FATAL_ERROR "Cannot checkout JSON-CPP to ${JSONCPP_VERSION}: ${GIT_ERROR}.")
+		else()                                                 # git checkout success
+			message("-- CMaking ...")
+			file(MAKE_DIRECTORY "${JSONCPP_DIR}/build")
+			file(MAKE_DIRECTORY "${JSONCPP_DIR}/build/debug")
+			file(MAKE_DIRECTORY "${JSONCPP_DIR}/install")
+			file(MAKE_DIRECTORY "${JSONCPP_DIR}/install/debug")
+			execute_process(
+				COMMAND cmake -DCMAKE_INSTALL_PREFIX=../../install/debug -DBUILD_SHARED_LIBS=ON -config Debug ../..
+				WORKING_DIRECTORY "${JSONCPP_DIR}/build/debug"
+				OUTPUT_VARIABLE CMAKE_OUTPUT
+				RESULT_VARIABLE CMAKE_RESULT
+			)
+			if (${CMAKE_RESULT} EQUAL 0)
+				message("-- Making ...")
+				execute_process(
+					COMMAND make install
+					WORKING_DIRECTORY "${JSONCPP_DIR}/build/debug"
+					OUTPUT_VARIABLE MAKE_OUTPUT
+					RESULT_VARIABLE MAKE_RESULT
+				)
+				if (MAKE_RESULT GREATER 0)
+					file(REMOVE_RECURSE ${JSONCPP_DIR})
+					message(FATAL_ERROR "Cannot make JSON-CPP.")
+				else()
+					message("-- Success!")
+				endif()
+			else()
+				file(REMOVE_RECURSE ${JSONCPP_DIR})
+				message(FATAL_ERROR "Cannot cmake JSON-CPP.")
+			endif()
+		endif()
+	else()
+		message(FATAL_ERROR "Cannot clone JSON-CPP: ${GIT_ERROR}")
+	endif()
+endif()
 find_library(jsoncpp jsoncpp
 	HINTS "${JSONCPP_DIR}/install/debug/lib"
 	NO_DEFAULT_PATH
@@ -276,7 +284,6 @@ message("")
 message("OpenCV")
 if (NOT EXISTS ${OPENCV_DIR})
 	message("-- Cannot find ${OPENCV_DIR}")
-	set(OPENCV_FILE_URL https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.tar.gz)
 	set(OPENCV_TMP_FILE /tmp/opencv_${OPENCV_VERSION}.tar.gz)
 	download(OPENCV_RESULT ${OPENCV_FILE_URL} ${OPENCV_DOWNLOAD_MD5} ${OPENCV_TMP_FILE})
 	if (${OPENCV_RESULT} STREQUAL "ERROR")
@@ -300,7 +307,6 @@ if (NOT EXISTS ${OPENCV_DIR})
 endif()
 if (NOT EXISTS ${OPENCVCONTRIB_DIR})
 	message("-- Cannot find ${OPENCVCONTRIB_DIR}")
-	set(OPENCVCONTRIB_FILE_URL https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.tar.gz)
 	set(OPENCVCONTRIB_TMP_FILE /tmp/opencv_contrib-${OPENCV_VERSION}.tar.gz)
 	download(OPENCV_RESULT ${OPENCVCONTRIB_FILE_URL} ${OPENCVCONTRIB_DOWNLOAD_MD5} ${OPENCVCONTRIB_TMP_FILE})
 	if (${OPENCV_RESULT} STREQUAL "ERROR")
@@ -326,7 +332,7 @@ if (NOT EXISTS ${OPENCV_DIR}/build)
 	message("-- CMaking ...")
 	file(MAKE_DIRECTORY ${OPENCV_DIR}/build)
 	execute_process(
-		COMMAND cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=${OPENCV_DIR}/install -D OPENCV_EXTRA_MODULES_PATH=${OPENCVCONTRIB_DIR}/modules ${OPENCV_DIR}
+		COMMAND cmake -DCMAKE_BUILD_TYPE=RELEASE -DWITH_VTK=OFF -DCMAKE_INSTALL_PREFIX=${OPENCV_DIR}/install -D OPENCV_EXTRA_MODULES_PATH=${OPENCVCONTRIB_DIR}/modules ${OPENCV_DIR}
 		WORKING_DIRECTORY ${OPENCV_DIR}/build
 		RESULT_VARIABLE OPENCV_RESULT
 	)
