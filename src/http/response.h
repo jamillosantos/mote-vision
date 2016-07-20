@@ -12,6 +12,7 @@
 #include <json/value.h>
 #include <json/writer.h>
 #include <server_https.hpp>
+#include <boost/log/trivial.hpp>
 #include "exceptions.h"
 
 namespace mote
@@ -179,7 +180,7 @@ public:
 		: _response(response), _status(mote::http::Status::OK), _flushed(false), _auto_flush(false)
 	{ }
 
-	~ResponseBase()
+	virtual ~ResponseBase()
 	{
 		if (!this->_auto_flush)
 		{
@@ -337,16 +338,20 @@ public:
 	void flush()
 	{
 		if (this->_flushed)
+		{
 			this->_response << this->out.rdbuf();
+			this->_response.flush();
+		}
 		else
 		{
 			this->_response << "HTTP/1.1 " << this->_status.value << " " << this->_status.text << ENDH;
 			for (const std::pair<std::string, std::string>& h : this->_header)
 			{
-				this->_response << h.first << " " << h.second << ENDH;
+				this->_response << h.first << ": " << h.second << ENDH;
 			}
 			this->_response << ENDH;
 			this->_response << this->out.rdbuf();
+			this->_response.flush();
 			this->_flushed = true;
 		}
 	}

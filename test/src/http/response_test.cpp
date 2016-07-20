@@ -16,21 +16,21 @@
 #define HTTPRESPONSE_CONTENT2 "<p>Another content</p>"
 
 #define HTTPRESPONSE_PACKET1 "HTTP/1.1 200 OK\r\n" \
-	"Content-Length 39\r\n" \
-	"User-Agent Pseudo Browser\r\n" \
-	"Content-Type text/html\r\n\r\n" \
+	"Content-Length: 39\r\n" \
+	"User-Agent: Pseudo Browser\r\n" \
+	"Content-Type: text/html\r\n\r\n" \
 	HTTPRESPONSE_CONTENT1 HTTPRESPONSE_CONTENT2
 
 #define HTTPRESPONSE_PACKET1 "HTTP/1.1 200 OK\r\n" \
-	"Content-Length 39\r\n" \
-	"User-Agent Pseudo Browser\r\n" \
-	"Content-Type text/html\r\n\r\n" \
+	"Content-Length: 39\r\n" \
+	"User-Agent: Pseudo Browser\r\n" \
+	"Content-Type: text/html\r\n\r\n" \
 	HTTPRESPONSE_CONTENT1 HTTPRESPONSE_CONTENT2
 
 #define HTTPRESPONSE_PACKET2 "HTTP/1.1 500 Internal Server Error\r\n\r\n" HTTPRESPONSE_CONTENT1 HTTPRESPONSE_CONTENT2
 
 #define HTTPRESPONSE_CONTENT_TYPE_JSON "application/json"
-#define HTTPRESPONSE_PACKET_JSON "HTTP/1.1 200 OK\r\nContent-Length 29\r\nContent-Type application/json\r\n\r\n{\"message\":\"This is a json.\"}"
+#define HTTPRESPONSE_PACKET_JSON "HTTP/1.1 200 OK\r\nContent-Length: 29\r\nContent-Type: application/json\r\n\r\n{\"message\":\"This is a json.\"}"
 
 
 GTEST_TEST(http_response, params)
