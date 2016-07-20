@@ -146,7 +146,7 @@ message("-- Include dir: ${SWS_INCLUDE_DIR}")
 include_directories(${SWS_INCLUDE_DIR})
 message("")
 
-#message("JSONCPP")
+message("JSONCPP")
 #if (NOT EXISTS ${JSONCPP_DIR})
 #	message("-- Clonning JSON-CPP (${JSONCPP_REPO_URL}) ... into ${JSONCPP_DIR}")
 #	execute_process(
@@ -201,19 +201,23 @@ message("")
 #		message(FATAL_ERROR "Cannot clone JSON-CPP: ${GIT_ERROR}")
 #	endif()
 #endif()
-#find_library(jsoncpp jsoncpp
-#	HINTS "${JSONCPP_DIR}/install/debug/lib"
-#	NO_DEFAULT_PATH
-#	)
-#if (${jsoncpp} STREQUAL "jsoncpp-NOTFOUND")
-#	message(FATAL_ERROR "Cannot find jsoncpp at '${JSONCPP_DIR}/install/debug/lib'.")
-#else()
-#	message("-- JSONCPP found at ${jsoncpp}")
-#	set(JSONCPP_INCLUDE_DIR "${JSONCPP_DIR}/install/debug/include")
-#	message("-- Include directory: ${JSONCPP_INCLUDE_DIR}")
-#	include_directories(${JSONCPP_INCLUDE_DIR})
-#endif()
-#message("")
+find_library(jsoncpp jsoncpp
+	HINTS "${JSONCPP_DIR}/install/debug/lib"
+	NO_DEFAULT_PATH
+	)
+if (${jsoncpp} STREQUAL "jsoncpp-NOTFOUND")
+	# tries to find the default installation.
+	find_library(jsoncpp jsoncpp)
+endif()
+if (${jsoncpp} STREQUAL "jsoncpp-NOTFOUND")
+	message(FATAL_ERROR "Cannot find jsoncpp at '${JSONCPP_DIR}/install/debug/lib'.")
+else()
+	message("-- JSONCPP found at ${jsoncpp}")
+	set(JSONCPP_INCLUDE_DIR "${JSONCPP_DIR}/install/debug/include")
+	message("-- Include directory: ${JSONCPP_INCLUDE_DIR}")
+	include_directories(${JSONCPP_INCLUDE_DIR})
+endif()
+message("")
 
 message("GTest")
 if (NOT EXISTS ${GTEST_DIR})
