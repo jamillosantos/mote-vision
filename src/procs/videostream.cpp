@@ -9,16 +9,27 @@ void mote::procs::VideoStream::startTrampolin()
 	while (this->_running)
 	{
 		std::lock_guard<std::mutex> lockGuard(this->_captureMutex);
-		this->_camera.read(this->_imageFrame);
+		this->_camera->read(this->_imageFrame);
 	}
 }
 
-mote::procs::VideoStream::VideoStream(capture::devices::Camera &camera) : _camera(camera), _running(false)
+mote::procs::VideoStream::VideoStream(const mote::config::VideoStream &config)
+	: _running(false), _config(config)
 { }
+
+
+mote::procs::VideoStream::~VideoStream()
+{
+	if (this->_running)
+		this->stop();
+}
+
 
 void mote::procs::VideoStream::start()
 {
 	this->_running = true;
+	this->_camera.reset(new capture::devices::Camera());
+	this->_camera->open(0);
 	this->_thread.reset(new std::thread(&VideoStream::startTrampolin, this));
 }
 

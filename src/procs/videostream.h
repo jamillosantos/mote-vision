@@ -10,6 +10,7 @@
 #include <boost/log/trivial.hpp>
 #include <mutex>
 #include <thread>
+#include <config/videostream.h>
 
 namespace mote
 {
@@ -21,19 +22,22 @@ class VideoStream
 {
 	friend class VideoStreamGuard;
 private:
-	capture::devices::Camera& _camera;
+	volatile bool _running;
+
+	const config::VideoStream& _config;
+
+	std::unique_ptr<capture::devices::Camera> _camera;
 
 	std::mutex _captureMutex;
 
 	std::unique_ptr<std::thread> _thread;
 
-	volatile bool _running;
-
 	cv::Mat _imageFrame;
 
 	void startTrampolin();
 public:
-	VideoStream(capture::devices::Camera &camera);
+	VideoStream(const config::VideoStream &config);
+	virtual ~VideoStream();
 
 	void start();
 

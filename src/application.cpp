@@ -3,6 +3,7 @@
  * @date July 15, 2016
  */
 
+#include <http/actions/index.h>
 #include "application.h"
 
 const mote::Config& mote::Application::config() const
@@ -18,15 +19,17 @@ mote::Application& mote::Application::config(const Json::Value &json)
 
 int mote::Application::run()
 {
-	BOOST_LOG_TRIVIAL(trace) << "Starting http server at " << this->_config.http().port << " ...";
-
-	capture::devices::Camera camera;
-	this->_videoStream.reset(new procs::VideoStream(camera));
+	this->_server.reset(new http::Server(this->_config.http()));
 	try
 	{
-		this->_server.reset(new http::Server(this->_config.http(), *this->_videoStream));
-		camera.open(0);
-		this->_videoStream->start();
+		for (const std::unique_ptr<config::VideoStream>& videoStream : this->_config.videoStreams())
+		{
+			this->_videoStreams.emplace_back(new procs::VideoStream(*videoStream));
+			this->_videoStreams.back()->start();
+		}
+
+		mote::http::actions::Index actionIndex;
+		this->_server->resources()["^/$"]["GET"] = std::bind(&http::actions::Index::trampolin, actionIndex, std::placeholders::_1, std::placeholders::_2);
 		this->_server->start();
 		return 0;
 	}
@@ -41,11 +44,9 @@ void mote::Application::stop()
 {
 	BOOST_LOG_TRIVIAL(trace) << "Stopping application ...";
 
-	if (this->_videoStream)
-	{
-		this->_videoStream->stop();
-		this->_videoStream.reset();
-	}
+	if (this->_videoStreams.size())
+		this->_videoStreams.clear();
+
 	if (this->_server)
 	{
 		this->_server->stop();

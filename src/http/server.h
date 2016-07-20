@@ -11,7 +11,6 @@
 #include <boost/log/trivial.hpp>
 #include <config/http.h>
 #include <server_http.hpp>
-#include <procs/videostream.h>
 #include "response.h"
 
 namespace mote
@@ -22,11 +21,10 @@ class Server
 {
 typedef SimpleWeb::Server<SimpleWeb::HTTP> HttpServer;
 private:
-	std::unique_ptr<HttpServer> _server;
 	config::Http _config;
-	procs::VideoStream& _videoStream;
+	std::unique_ptr<HttpServer> _server;
 public:
-	Server(const config::Http& config, procs::VideoStream &videoStream);
+	Server(const config::Http& config);
 	~Server();
 
 	std::unordered_map<std::string, std::unordered_map<

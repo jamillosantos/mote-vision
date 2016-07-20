@@ -18,7 +18,7 @@ class Application
 {
 private:
 	std::unique_ptr<http::Server> _server;
-	std::unique_ptr<procs::VideoStream> _videoStream;
+	std::vector<std::unique_ptr<procs::VideoStream>> _videoStreams;
 	Config _config;
 public:
 	const Config &config() const;

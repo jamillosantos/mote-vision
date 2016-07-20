@@ -5,8 +5,9 @@
 #include <http/actions/index.h>
 #include "server.h"
 
-mote::http::Server::Server(const mote::config::Http& config, mote::procs::VideoStream &videoStream)
-	: _config(config), _videoStream(videoStream)
+mote::http::Server::Server(const mote::config::Http& config)
+	: _config(config), _server(new HttpServer(this->_config.port, this->_config.threads, this->_config.requestTimeout,
+		this->_config.contentTimeout))
 { }
 
 mote::http::Server::~Server()
@@ -28,11 +29,7 @@ std::unordered_map<std::string, std::unordered_map<
 
 void mote::http::Server::start()
 {
-	this->_server.reset(new HttpServer(this->_config.port, this->_config.threads, this->_config.requestTimeout, this->_config.contentTimeout));
-
-	http::actions::Index actionIndex;
-	this->_server->resource["^/"]["GET"] = std::bind(&http::actions::Index::trampolin, actionIndex, std::placeholders::_1, std::placeholders::_2);
-
+	BOOST_LOG_TRIVIAL(trace) << "Starting http server at " << this->_config.port << " ...";
 	this->_server->start();
 }
 

@@ -11,7 +11,7 @@ const mote::config::Http &mote::Config::http() const
 	return this->_http;
 }
 
-const std::vector<std::unique_ptr<mote::config::VideoStream>> &mote::Config::videoStreams() const
+const std::vector<std::unique_ptr<mote::config::VideoStream>>& mote::Config::videoStreams() const
 {
 	return this->_videoStreams;
 }
