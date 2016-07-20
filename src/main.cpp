@@ -9,6 +9,9 @@
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
 
+#include <json/reader.h>
+#include <json/value.h>
+
 using namespace mote;
 
 Application app;
@@ -51,6 +54,11 @@ int main(int argc, char **argv)
 		if (boost::filesystem::exists(configFile))
 		{
 			signal(SIGINT, handleInt);
+			Json::Reader reader;
+			std::ifstream stream(configFile);
+			Json::Value configJson;
+			reader.parse(stream, configJson, false);
+			app.config(configJson);
 			return app.run();
 		}
 		else
