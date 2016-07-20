@@ -12,23 +12,23 @@ mote::config::Http::Http()
 
 mote::config::Http::Http(const std::string &address, unsigned short port, unsigned short threads,
 	unsigned short request_timeout, unsigned short timeout_content)
-	: address(address), port(port), threads(threads), request_timeout(request_timeout), content_timeout(timeout_content)
+	: address(address), port(port), threads(threads), requestTimeout(request_timeout), contentTimeout(timeout_content)
 { }
 
-void mote::config::Http::to_json(Json::Value &json)
+void mote::config::Http::toJson(Json::Value &json)
 {
 	json["address"] = this->address;
 	json["port"] = this->port;
 	json["threads"] = this->threads;
-	json["request_timeout"] = this->request_timeout;
-	json["content_timeout"] = this->content_timeout;
+	json["request_timeout"] = this->requestTimeout;
+	json["content_timeout"] = this->contentTimeout;
 }
 
-void mote::config::Http::from_json(const Json::Value &json)
+void mote::config::Http::fromJson(const Json::Value &json)
 {
 	this->address = json["address"].asString();
 	this->port = json["port"].asUInt();
 	this->threads = json["threads"].asUInt();
-	this->request_timeout = json["request_timeout"].asUInt();
-	this->content_timeout = json["content_timeout"].asUInt();
+	this->requestTimeout = json["request_timeout"].asUInt();
+	this->contentTimeout = json["content_timeout"].asUInt();
 }

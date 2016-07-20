@@ -4,6 +4,7 @@
  */
 
 #include <gtest/gtest.h>
+#include <json/value.h>
 #include <config/http.h>
 
 #define CONFIG_HTTP_ADDRESS "1.2.3.4"
@@ -14,13 +15,13 @@
 
 GTEST_TEST(config_http, constructor_params)
 {
-	::mote::config::Http config(CONFIG_HTTP_ADDRESS, CONFIG_HTTP_PORT, CONFIG_HTTP_THREADS, CONFIG_HTTP_REQUEST_TIMEOUT,
+	mote::config::Http config(CONFIG_HTTP_ADDRESS, CONFIG_HTTP_PORT, CONFIG_HTTP_THREADS, CONFIG_HTTP_REQUEST_TIMEOUT,
 		CONFIG_HTTP_CONTENT_TIMEOUT);
 	ASSERT_EQ(CONFIG_HTTP_ADDRESS, config.address);
 	ASSERT_EQ(CONFIG_HTTP_PORT, config.port);
 	ASSERT_EQ(CONFIG_HTTP_THREADS, config.threads);
-	ASSERT_EQ(CONFIG_HTTP_REQUEST_TIMEOUT, config.request_timeout);
-	ASSERT_EQ(CONFIG_HTTP_CONTENT_TIMEOUT, config.content_timeout);
+	ASSERT_EQ(CONFIG_HTTP_REQUEST_TIMEOUT, config.requestTimeout);
+	ASSERT_EQ(CONFIG_HTTP_CONTENT_TIMEOUT, config.contentTimeout);
 }
 
 GTEST_TEST(config_http, from_json)
@@ -34,12 +35,12 @@ GTEST_TEST(config_http, from_json)
 	json["request_timeout"] = CONFIG_HTTP_REQUEST_TIMEOUT;
 	json["content_timeout"] = CONFIG_HTTP_CONTENT_TIMEOUT;
 
-	config.from_json(json);
+	config.fromJson(json);
 	ASSERT_EQ(CONFIG_HTTP_ADDRESS, config.address);
 	ASSERT_EQ(CONFIG_HTTP_PORT, config.port);
 	ASSERT_EQ(CONFIG_HTTP_THREADS, config.threads);
-	ASSERT_EQ(CONFIG_HTTP_REQUEST_TIMEOUT, config.request_timeout);
-	ASSERT_EQ(CONFIG_HTTP_CONTENT_TIMEOUT, config.content_timeout);
+	ASSERT_EQ(CONFIG_HTTP_REQUEST_TIMEOUT, config.requestTimeout);
+	ASSERT_EQ(CONFIG_HTTP_CONTENT_TIMEOUT, config.contentTimeout);
 }
 
 GTEST_TEST(config_http, to_json)
@@ -48,7 +49,7 @@ GTEST_TEST(config_http, to_json)
 		CONFIG_HTTP_CONTENT_TIMEOUT);
 
 	Json::Value json;
-	config.to_json(json);
+	config.toJson(json);
 	ASSERT_EQ(CONFIG_HTTP_ADDRESS, json["address"].asString());
 	ASSERT_EQ(CONFIG_HTTP_PORT, json["port"].asUInt());
 	ASSERT_EQ(CONFIG_HTTP_THREADS, json["threads"].asUInt());

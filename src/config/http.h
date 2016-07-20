@@ -25,6 +25,11 @@ class Http
 public:
 	Http();
 
+	// @TODO Test this contructor
+	Http(const config::Http &config)
+		: Http(config.address, config.port, config.threads, config.requestTimeout, config.contentTimeout)
+	{}
+
 	Http(const std::string &address, unsigned short port, unsigned short threads, unsigned short request_timeout,
 		unsigned short timeout_content);
 
@@ -34,13 +39,13 @@ public:
 
 	unsigned short threads;
 
-	unsigned short request_timeout;
+	unsigned short requestTimeout;
 
-	unsigned short content_timeout;
+	unsigned short contentTimeout;
 
-	virtual void to_json(Json::Value &json) override;
+	virtual void toJson(Json::Value &json) override;
 
-	virtual void from_json(const Json::Value &json) override;
+	virtual void fromJson(const Json::Value &json) override;
 };
 }
 }

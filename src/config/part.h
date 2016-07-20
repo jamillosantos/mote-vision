@@ -23,14 +23,14 @@ public:
 	 *
 	 * @param json Object that have the properties set.
 	 */
-	virtual void to_json(Json::Value &json) = 0;
+	virtual void toJson(Json::Value &json) = 0;
 
 	/**
 	 * Loads this configuration object from a JSON object.
 	 *
 	 * @param json Object that will be the source of the loaded properties.
 	 */
-	virtual void from_json(const Json::Value &json) = 0;
+	virtual void fromJson(const Json::Value &json) = 0;
 };
 }
 }

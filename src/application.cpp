@@ -5,11 +5,21 @@
 
 #include "application.h"
 
+const mote::Config& mote::Application::config() const
+{
+	return this->_config;
+}
+
+mote::Application& mote::Application::config(const Json::Value &json)
+{
+	this->_config.fromJson(json);
+	return *this;
+}
+
 int mote::Application::run()
 {
-	mote::config::Http config;
-	BOOST_LOG_TRIVIAL(trace) << "Starting http server at " << config.port << " ...";
-	this->_server.reset(new http::Server(config));
+	BOOST_LOG_TRIVIAL(trace) << "Starting http server at " << this->_config.http().port << " ...";
+	this->_server.reset(new http::Server(this->_config.http()));
 
 	capture::devices::Camera camera;
 	this->_videoStream.reset(new procs::VideoStream(camera));
