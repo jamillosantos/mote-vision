@@ -21,7 +21,17 @@
 	"Content-Type text/html\r\n\r\n" \
 	HTTPRESPONSE_CONTENT1 HTTPRESPONSE_CONTENT2
 
+#define HTTPRESPONSE_PACKET1 "HTTP/1.1 200 OK\r\n" \
+	"Content-Length 39\r\n" \
+	"User-Agent Pseudo Browser\r\n" \
+	"Content-Type text/html\r\n\r\n" \
+	HTTPRESPONSE_CONTENT1 HTTPRESPONSE_CONTENT2
+
 #define HTTPRESPONSE_PACKET2 "HTTP/1.1 500 Internal Server Error\r\n\r\n" HTTPRESPONSE_CONTENT1 HTTPRESPONSE_CONTENT2
+
+#define HTTPRESPONSE_CONTENT_TYPE_JSON "application/json"
+#define HTTPRESPONSE_PACKET_JSON "HTTP/1.1 200 OK\r\nContent-Length 30\r\nContent-Type application/json\r\n\r\n{\"message\":\"This is a json.\"}\n"
+
 
 GTEST_TEST(http_response, params)
 {
@@ -102,4 +112,18 @@ GTEST_TEST(http_response, setting_header_already_flushed_error)
 	response << HTTPRESPONSE_CONTENT1;
 	response.flush();
 	ASSERT_THROW(response.header(HTTPRESPONSE_HEADER_NAME_1, HTTPRESPONSE_HEADER_VALUE_1), mote::http::already_been_flushed);
+}
+
+GTEST_TEST(http_response, json_success)
+{
+	std::stringbuf sbuf;
+	std::ostream originalResponse(&sbuf);
+	{
+		mote::http::Response<SimpleWeb::HTTP> response(originalResponse);
+		Json::Value json;
+		json["message"] = "This is a json.";
+		response << json;
+		ASSERT_EQ(HTTPRESPONSE_CONTENT_TYPE_JSON, response.contentType());
+	}
+	ASSERT_EQ(HTTPRESPONSE_PACKET_JSON, sbuf.str());
 }

@@ -9,6 +9,8 @@
 #define HTTP_HEADER_CONTENT_TYPE "Content-Type"
 #define ENDH "\r\n"
 
+#include <jsoncpp/json/value.h>
+#include <jsoncpp/json/writer.h>
 #include <server_https.hpp>
 #include "exceptions.h"
 
@@ -312,6 +314,18 @@ public:
 		}
 		else
 			this->out << _;
+		return *this;
+	}
+
+	/**
+	 * Operator implementation for writting JSON as response.
+	 */
+	Response& operator<<(const Json::Value &json)
+	{
+		this->contentType("application/json");
+		Json::FastWriter writer;
+		this->out << writer.write(json);
+		return *this;
 	}
 
 	/**
