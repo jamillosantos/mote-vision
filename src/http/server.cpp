@@ -18,8 +18,10 @@ void mote::http::Server::start()
 	this->_server.reset(new HttpServer(this->_config.port, this->_config.threads, this->_config.request_timeout, this->_config.content_timeout));
 
 	this->_server->resource["^/"]["GET"] = [](std::shared_ptr<HttpServer::Response> response, std::shared_ptr<HttpServer::Request> request) {
-		std::string content = "The http server is working!";
-		*response << "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-Length: " << content.length() << "\r\n\r\n" << content;
+		mote::http::Response r(*response.get());
+		Json::Value json;
+		json["message"] = "The server is up.";
+		r << json;
 	};
 
 	this->_server->start();

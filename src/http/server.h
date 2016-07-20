@@ -11,6 +11,7 @@
 #include <boost/log/trivial.hpp>
 #include "../../libs/Simple-Web-Server-2.0/server_http.hpp"
 #include "config.h"
+#include "response.h"
 
 namespace mote
 {
