@@ -9,8 +9,8 @@
 #define HTTP_HEADER_CONTENT_TYPE "Content-Type"
 #define ENDH "\r\n"
 
-#include <jsoncpp/json/value.h>
-#include <jsoncpp/json/writer.h>
+#include <json/value.h>
+#include <json/writer.h>
 #include <server_https.hpp>
 #include "exceptions.h"
 
@@ -123,7 +123,7 @@ public:
 };
 
 template<typename T>
-class Response
+class ResponseBase
 {
 private:
 	/**
@@ -152,9 +152,10 @@ private:
 			return seed;
 		}
 	};
-
+public:
 	typedef std::ostream _Response;
 	typedef std::unordered_multimap<const std::string, std::string, ihash, iequal_to> _Header;
+private:
 
 	_Response &_response;
 
@@ -174,11 +175,11 @@ private:
 			throw already_been_flushed();
 	}
 public:
-	Response(_Response &response)
+	ResponseBase(_Response &response)
 		: _response(response), _status(mote::http::Status::OK), _flushed(false), _auto_flush(false)
 	{ }
 
-	~Response()
+	~ResponseBase()
 	{
 		if (!this->_auto_flush)
 		{
@@ -210,7 +211,7 @@ public:
 	 *
 	 * @see status()
 	 */
-	Response& status(const Status& status)
+	ResponseBase& status(const Status& status)
 	{
 		this->_status = status;
 		return *this;
@@ -238,7 +239,7 @@ public:
 	 * @param value Header value to be set.
 	 * @return Return the Response instance itself. For a chain call.
 	 */
-	Response& header(const std::string &header, const std::string &value)
+	ResponseBase& header(const std::string &header, const std::string &value)
 	{
 		this->ensureNotFlushed();
 		auto it = this->_header.find(header);
@@ -254,7 +255,7 @@ public:
 	 *
 	 * @see header(std::string, std::string)
 	 */
-	Response& header(const std::string &header, size_t &value)
+	ResponseBase& header(const std::string &header, size_t &value)
 	{
 		return this->header(header, std::to_string(value));
 	}
@@ -268,7 +269,7 @@ public:
 	 * @param value Header value
 	 * @return Return the Response instance itself. For a chain call.
 	 */
-	Response & header_append(const std::string &header, const std::string &value)
+	ResponseBase & header_append(const std::string &header, const std::string &value)
 	{
 		this->ensureNotFlushed();
 		this->_header.insert(std::make_pair(header, value));
@@ -295,7 +296,7 @@ public:
 	 * @param value Value of th `Content-Type` header
 	 * @return Returns the own class instance
 	 */
-	Response& contentType(const std::string &value)
+	ResponseBase& contentType(const std::string &value)
 	{
 		return this->header(HTTP_HEADER_CONTENT_TYPE, value);
 	}
@@ -304,7 +305,7 @@ public:
 	 * Operator implementation to enables iostream writing style.
 	 */
 	template <typename C>
-	Response& operator<<(const C& _)
+	ResponseBase& operator<<(const C& _)
 	{
 		if (this->_auto_flush)
 		{
@@ -320,11 +321,13 @@ public:
 	/**
 	 * Operator implementation for writting JSON as response.
 	 */
-	Response& operator<<(const Json::Value &json)
+	ResponseBase& operator<<(const Json::Value &json)
 	{
 		this->contentType("application/json");
 		Json::FastWriter writer;
-		this->out << writer.write(json);
+		writer.omitEndingLineFeed();
+		std::string str = writer.write(json);
+		this->out << str;
 		return *this;
 	}
 
@@ -347,6 +350,14 @@ public:
 			this->_flushed = true;
 		}
 	}
+};
+
+class Response: public ResponseBase<SimpleWeb::HTTP>
+{
+public:
+	Response(ResponseBase<SimpleWeb::HTTP>::_Response &response)
+		: ResponseBase(response)
+	{ }
 };
 
 }
