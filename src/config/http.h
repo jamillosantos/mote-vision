@@ -7,6 +7,7 @@
 #define MOTE_VISION_CONFIG_HTTP_H
 
 #include <string>
+#include "part.h"
 
 #define HTTP_CONFIG_DEFAULT_ADDRESS "0.0.0.0"
 #define HTTP_CONFIG_DEFAULT_PORT 8080
@@ -19,21 +20,27 @@ namespace mote
 namespace config
 {
 class Http
+	: public Part
 {
 public:
 	Http();
 
-	Http(const std::string &address, unsigned short port, unsigned long threads, long request_timeout, long timeout_content);
+	Http(const std::string &address, unsigned short port, unsigned short threads, unsigned short request_timeout,
+		unsigned short timeout_content);
 
 	std::string address;
 
 	unsigned short port;
 
-	unsigned long threads;
+	unsigned short threads;
 
-	long request_timeout;
+	unsigned short request_timeout;
 
-	long content_timeout;
+	unsigned short content_timeout;
+
+	virtual void to_json(Json::Value &json) override;
+
+	virtual void from_json(const Json::Value &json) override;
 };
 }
 }
