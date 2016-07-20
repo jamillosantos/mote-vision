@@ -463,10 +463,12 @@ set(SOURCE_FILES
 
 	src/config/config.cpp
 	src/config/config.h
-	src/config/http.cpp
-	src/config/http.h
 	src/config/part.cpp
 	src/config/part.h
+	src/config/http.cpp
+	src/config/http.h
+	src/config/videostream.cpp
+	src/config/videostream.h
 
 	src/application.h
 	src/application.cpp
