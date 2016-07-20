@@ -1,0 +1,10 @@
+{
+	"http":
+	{
+		"address": "0.0.0.0",
+		"port": 8081,
+		"threads": 5,
+		"request_timeout": 5,
+		"content_timeout": 10
+	}
+}
