@@ -4,7 +4,8 @@
  */
 #include "server.h"
 
-mote::http::Server::Server(const mote::http::Config& config) : _config(config)
+mote::http::Server::Server(const mote::config::Http& config)
+	: _config(config)
 { }
 
 mote::http::Server::~Server()

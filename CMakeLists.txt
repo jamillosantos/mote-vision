@@ -447,8 +447,6 @@ set(SOURCE_FILES
 	src/capture/devices/camera.cpp
 	src/http/server.h
 	src/http/server.cpp
-	src/http/config.h
-	src/http/config.cpp
 	src/procs/videostream.h
 	src/procs/videostream.cpp
 	src/application.h
@@ -459,7 +457,7 @@ set(SOURCE_FILES
 	src/http/exceptions.cpp
 	src/exceptions.h
 	src/exceptions.cpp
-	)
+	src/config/config.cpp src/config/config.h src/config/http.cpp src/config/http.h)
 
 add_executable(vision
 	src/main.cpp

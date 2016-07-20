@@ -6,7 +6,6 @@
 #ifndef MOTE_VISION_APPLICATION_HPP
 #define MOTE_VISION_APPLICATION_HPP
 
-#include <http/config.h>
 #include <capture/devices/camera.h>
 #include <procs/videostream.h>
 #include <boost/log/trivial.hpp>

@@ -7,7 +7,7 @@
 
 int mote::Application::run()
 {
-	http::Config config;
+	mote::config::Http config;
 	BOOST_LOG_TRIVIAL(trace) << "Starting http server at " << config.port << " ...";
 	this->_server.reset(new http::Server(config));
 

@@ -6,8 +6,6 @@
 #include <http/server.h>
 #include "application.h"
 
-#include <boost/log/trivial.hpp>
-
 using namespace mote;
 
 Application app;
@@ -18,7 +16,7 @@ void handleInt(int sig)
 	app.stop();
 }
 
-int main()
+int main(int argc, char** argv)
 {
 	signal(SIGINT, handleInt);
 	return app.run();

@@ -9,8 +9,8 @@
 #include <memory>
 #include <server_http.hpp>
 #include <boost/log/trivial.hpp>
-#include "../../libs/Simple-Web-Server-2.0/server_http.hpp"
-#include "config.h"
+#include <config/http.h>
+#include <server_http.hpp>
 #include "response.h"
 
 namespace mote
@@ -22,14 +22,12 @@ class Server
 typedef SimpleWeb::Server<SimpleWeb::HTTP> HttpServer;
 private:
 	std::unique_ptr<HttpServer> _server;
-	Config _config;
+	config::Http _config;
 public:
-	Server(const Config& config);
-
+	Server(const config::Http& config);
 	~Server();
 
 	void start();
-
 	void stop();
 };
 }
