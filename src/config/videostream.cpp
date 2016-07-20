@@ -5,7 +5,7 @@
 
 #include "videostream.h"
 
-void mote::config::VideoStream::toJson(Json::Value &json)
+void mote::config::VideoStream::toJson(Json::Value &json) const
 {
 	json["camera"] = this->camera;
 	if (this->width)

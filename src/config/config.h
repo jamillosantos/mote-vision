@@ -6,7 +6,9 @@
 #ifndef MOTE_VISION_CONFIG_H
 #define MOTE_VISION_CONFIG_H
 
+#include <memory>
 #include "http.h"
+#include "videostream.h"
 
 namespace mote
 {
@@ -15,10 +17,13 @@ class Config
 {
 private:
 	config::Http _http;
+	std::vector<std::unique_ptr<config::VideoStream>> _videoStreams;
 public:
 	const config::Http &http() const;
 
-	virtual void toJson(Json::Value &json) override;
+	const std::vector<std::unique_ptr<config::VideoStream>> &videoStreams() const;
+
+	virtual void toJson(Json::Value &json) const override;
 
 	virtual void fromJson(const Json::Value &json) override;
 };

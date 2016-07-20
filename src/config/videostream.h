@@ -34,7 +34,7 @@ public:
 	VideoStream(const std::string& camera, const int width, const int height, const int saturation, const int brightness, const int contrast,
 		const int hue, const int gain, const int exposure);
 
-	virtual void toJson(Json::Value &json) override;
+	virtual void toJson(Json::Value &json) const override;
 
 	virtual void fromJson(const Json::Value &json) override;
 };

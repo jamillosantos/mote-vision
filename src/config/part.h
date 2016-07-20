@@ -23,7 +23,7 @@ public:
 	 *
 	 * @param json Object that have the properties set.
 	 */
-	virtual void toJson(Json::Value &json) = 0;
+	virtual void toJson(Json::Value &json) const = 0;
 
 	/**
 	 * Loads this configuration object from a JSON object.

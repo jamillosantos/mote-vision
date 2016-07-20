@@ -15,7 +15,7 @@ mote::config::Http::Http(const std::string &address, unsigned short port, unsign
 	: address(address), port(port), threads(threads), requestTimeout(request_timeout), contentTimeout(timeout_content)
 { }
 
-void mote::config::Http::toJson(Json::Value &json)
+void mote::config::Http::toJson(Json::Value &json) const
 {
 	json["address"] = this->address;
 	json["port"] = this->port;
