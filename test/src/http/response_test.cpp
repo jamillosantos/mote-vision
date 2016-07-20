@@ -30,14 +30,14 @@
 #define HTTPRESPONSE_PACKET2 "HTTP/1.1 500 Internal Server Error\r\n\r\n" HTTPRESPONSE_CONTENT1 HTTPRESPONSE_CONTENT2
 
 #define HTTPRESPONSE_CONTENT_TYPE_JSON "application/json"
-#define HTTPRESPONSE_PACKET_JSON "HTTP/1.1 200 OK\r\nContent-Length 30\r\nContent-Type application/json\r\n\r\n{\"message\":\"This is a json.\"}\n"
+#define HTTPRESPONSE_PACKET_JSON "HTTP/1.1 200 OK\r\nContent-Length 29\r\nContent-Type application/json\r\n\r\n{\"message\":\"This is a json.\"}"
 
 
 GTEST_TEST(http_response, params)
 {
 	std::stringbuf sbuf;
 	std::ostream originalResponse(&sbuf);
-	mote::http::Response<SimpleWeb::HTTP> response(originalResponse);
+	mote::http::ResponseBase<SimpleWeb::HTTP> response(originalResponse);
 	response.header(HTTPRESPONSE_HEADER_NAME_1, HTTPRESPONSE_HEADER_VALUE_1);
 	response.header(HTTPRESPONSE_HEADER_NAME_2, HTTPRESPONSE_HEADER_VALUE_2);
 	ASSERT_EQ(HTTPRESPONSE_HEADER_VALUE_1, response.header(HTTPRESPONSE_HEADER_NAME_1));
@@ -48,7 +48,7 @@ GTEST_TEST(http_response, params_replace)
 {
 	std::stringbuf sbuf;
 	std::ostream originalResponse(&sbuf);
-	mote::http::Response<SimpleWeb::HTTP> response(originalResponse);
+	mote::http::ResponseBase<SimpleWeb::HTTP> response(originalResponse);
 	response.header(HTTPRESPONSE_HEADER_NAME_1, HTTPRESPONSE_HEADER_VALUE_1);
 	response.header(HTTPRESPONSE_HEADER_NAME_1, HTTPRESPONSE_HEADER_VALUE_2);
 	ASSERT_EQ(HTTPRESPONSE_HEADER_VALUE_2, response.header(HTTPRESPONSE_HEADER_NAME_1));
@@ -58,7 +58,7 @@ GTEST_TEST(http_response, status)
 {
 	std::stringbuf sbuf;
 	std::ostream originalResponse(&sbuf);
-	mote::http::Response<SimpleWeb::HTTP> response(originalResponse);
+	mote::http::ResponseBase<SimpleWeb::HTTP> response(originalResponse);
 	response.status(mote::http::Status::IM_A_TEAPOT);
 	ASSERT_EQ(mote::http::Status::IM_A_TEAPOT.value, response.status().value);
 	ASSERT_EQ(mote::http::Status::IM_A_TEAPOT.text, response.status().text);
@@ -68,7 +68,7 @@ GTEST_TEST(http_response, content_type)
 {
 	std::stringbuf sbuf;
 	std::ostream originalResponse(&sbuf);
-	mote::http::Response<SimpleWeb::HTTP> response(originalResponse);
+	mote::http::ResponseBase<SimpleWeb::HTTP> response(originalResponse);
 	response.contentType(HTTPRESPONSE_HEADER_VALUE_1);
 	ASSERT_EQ(HTTPRESPONSE_HEADER_VALUE_1, response.contentType());
 	ASSERT_EQ(HTTPRESPONSE_HEADER_VALUE_1, response.header(HTTPRESPONSE_HEADER_NAME_1));
@@ -79,7 +79,7 @@ GTEST_TEST(http_response, flush_1)
 	std::stringbuf sbuf;
 	std::ostream originalResponse(&sbuf);
 	{
-		mote::http::Response<SimpleWeb::HTTP> response(originalResponse);
+		mote::http::ResponseBase<SimpleWeb::HTTP> response(originalResponse);
 		response.status(mote::http::Status::OK);
 		response.contentType(HTTPRESPONSE_HEADER_VALUE_1);
 		response.header(HTTPRESPONSE_HEADER_NAME_2, HTTPRESPONSE_HEADER_VALUE_2);
@@ -94,7 +94,7 @@ GTEST_TEST(http_response, flush_2)
 {
 	std::stringbuf sbuf;
 	std::ostream originalResponse(&sbuf);
-	mote::http::Response<SimpleWeb::HTTP> response(originalResponse);
+	mote::http::ResponseBase<SimpleWeb::HTTP> response(originalResponse);
 	response.status(mote::http::Status::INTERNAL_SERVER_ERROR);
 	response << HTTPRESPONSE_CONTENT1;
 	response << HTTPRESPONSE_CONTENT2;
@@ -107,7 +107,7 @@ GTEST_TEST(http_response, setting_header_already_flushed_error)
 {
 	std::stringbuf sbuf;
 	std::ostream originalResponse(&sbuf);
-	mote::http::Response<SimpleWeb::HTTP> response(originalResponse);
+	mote::http::ResponseBase<SimpleWeb::HTTP> response(originalResponse);
 	response.status(mote::http::Status::INTERNAL_SERVER_ERROR);
 	response << HTTPRESPONSE_CONTENT1;
 	response.flush();
@@ -119,7 +119,7 @@ GTEST_TEST(http_response, json_success)
 	std::stringbuf sbuf;
 	std::ostream originalResponse(&sbuf);
 	{
-		mote::http::Response<SimpleWeb::HTTP> response(originalResponse);
+		mote::http::ResponseBase<SimpleWeb::HTTP> response(originalResponse);
 		Json::Value json;
 		json["message"] = "This is a json.";
 		response << json;
