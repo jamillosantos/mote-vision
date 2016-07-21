@@ -475,6 +475,8 @@ set(SOURCE_FILES
 
 	src/exceptions.h
 	src/exceptions.cpp
+	src/capture/exceptions.cpp
+	src/capture/exceptions.h
 	)
 
 add_executable(vision

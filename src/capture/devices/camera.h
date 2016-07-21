@@ -32,6 +32,8 @@ public:
 
 	virtual bool open(int cameraIndex);
 
+	virtual bool open(const std::string &device);
+
 	virtual bool isOpened() override;
 
 	virtual bool read(cv::Mat &image) override;

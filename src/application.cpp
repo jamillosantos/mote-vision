@@ -6,6 +6,12 @@
 #include <http/actions/index.h>
 #include "application.h"
 
+
+mote::Application::~Application()
+{
+	this->stop();
+}
+
 const mote::Config& mote::Application::config() const
 {
 	return this->_config;
@@ -19,7 +25,6 @@ mote::Application& mote::Application::config(const Json::Value &json)
 
 int mote::Application::run()
 {
-	this->_server.reset(new http::Server(this->_config.http()));
 	try
 	{
 		for (const std::unique_ptr<config::VideoStream>& videoStream : this->_config.videoStreams())
@@ -29,12 +34,16 @@ int mote::Application::run()
 		}
 
 		mote::http::actions::Index actionIndex;
+
+		this->_server.reset(new http::Server(this->_config.http()));
 		this->_server->resources()["^/$"]["GET"] = std::bind(&http::actions::Index::trampolin, actionIndex, std::placeholders::_1, std::placeholders::_2);
 		this->_server->start();
+
 		return 0;
 	}
 	catch (std::exception &e)
 	{
+		this->stop();
 		BOOST_LOG_TRIVIAL(fatal) << "Error starting HTTP Server: " << e.what();
 		return 1;
 	}
@@ -42,10 +51,11 @@ int mote::Application::run()
 
 void mote::Application::stop()
 {
-	BOOST_LOG_TRIVIAL(trace) << "Stopping application ...";
-
 	if (this->_videoStreams.size())
+	{
+		BOOST_LOG_TRIVIAL(trace) << "Cleaning video streams ...";
 		this->_videoStreams.clear();
+	}
 
 	if (this->_server)
 	{

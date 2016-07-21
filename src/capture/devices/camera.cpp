@@ -3,6 +3,7 @@
  * @date July 14, 2016
  */
 
+#include <boost/regex.hpp>
 #include "camera.h"
 
 mote::capture::devices::Camera::Camera() : fpsCounter(0)
@@ -17,6 +18,16 @@ mote::capture::devices::Camera::~Camera()
 bool mote::capture::devices::Camera::open(int cameraIndex)
 {
 	return this->videoCapture.open(cameraIndex);
+}
+
+bool mote::capture::devices::Camera::open(const std::string &device)
+{
+	boost::regex r("/dev/video([0-9]+)");
+	boost::smatch smatch;
+	if (boost::regex_search(device, smatch, r))
+		return this->videoCapture.open(std::stoi(smatch[1]));
+	else
+		this->videoCapture.open(device);
 }
 
 bool mote::capture::devices::Camera::isOpened()

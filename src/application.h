@@ -21,6 +21,8 @@ private:
 	std::vector<std::unique_ptr<procs::VideoStream>> _videoStreams;
 	Config _config;
 public:
+	virtual ~Application();
+
 	const Config &config() const;
 
 	/**

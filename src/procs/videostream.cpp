@@ -2,10 +2,12 @@
  * @author J. Santos <jamillo@gmail.com>
  * @date July 14, 2016
  */
+#include <capture/exceptions.h>
 #include "videostream.h"
 
 void mote::procs::VideoStream::startTrampolin()
 {
+	BOOST_LOG_TRIVIAL(trace) << "Starting VideoStream at " << this->_config.camera;
 	while (this->_running)
 	{
 		std::lock_guard<std::mutex> lockGuard(this->_captureMutex);
@@ -29,8 +31,13 @@ void mote::procs::VideoStream::start()
 {
 	this->_running = true;
 	this->_camera.reset(new capture::devices::Camera());
-	this->_camera->open(0);
-	this->_thread.reset(new std::thread(&VideoStream::startTrampolin, this));
+	if (this->_camera->open(this->_config.camera))
+		this->_thread.reset(new std::thread(&VideoStream::startTrampolin, this));
+	else
+	{
+		this->_running = false;
+		throw mote::capture::CannotOpenDevice(this->_config.camera);
+	}
 }
 
 void mote::procs::VideoStream::stop()
