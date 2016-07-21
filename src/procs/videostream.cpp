@@ -25,6 +25,11 @@ mote::procs::VideoStream::~VideoStream()
 		this->stop();
 }
 
+cv::Mat &mote::procs::VideoStream::frame()
+{
+	return this->_imageFrame;
+}
+
 void mote::procs::VideoStream::start()
 {
 	this->_running = true;

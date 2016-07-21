@@ -182,12 +182,16 @@ public:
 
 	virtual ~ResponseBase()
 	{
+		BOOST_LOG_TRIVIAL(trace) << "~ResponseBase()";
 		if (!this->_auto_flush)
 		{
 			if (!this->_flushed)
 			{
-				size_t len = this->out.tellp();
-				this->header("Content-Length", len);
+				if (!this->headerExists("Content-Length"))
+				{
+					size_t len = this->out.tellp();
+					this->header("Content-Length", len);
+				}
 			}
 			this->flush();
 		}
@@ -224,6 +228,18 @@ public:
 	 * @param header Header name.
 	 * @return Returns the header value. If not defined returns an empty string.
 	 */
+	bool headerExists(const std::string &header)
+	{
+		auto it = this->_header.find(header);
+		return !(it == this->_header.cend());
+	}
+
+	/**
+	 * Gets a header value.
+	 *
+	 * @param header Header name.
+	 * @return Returns the header value. If not defined returns an empty string.
+	 */
 	std::string header(const std::string &header)
 	{
 		auto it = this->_header.find(header);
@@ -251,9 +267,6 @@ public:
 	}
 
 	/**
-	 * Any type implementation for header. It uses the `std::to_string` implementention, hence it is restricted to its
-	 * types implementations.
-	 *
 	 * @see header(std::string, std::string)
 	 */
 	ResponseBase& header(const std::string &header, size_t &value)
@@ -339,8 +352,11 @@ public:
 	{
 		if (this->_flushed)
 		{
-			this->_response << this->out.rdbuf();
-			this->_response.flush();
+			if (this->out.tellp())
+			{
+				this->_response << this->out.rdbuf();
+				this->_response.flush();
+			}
 		}
 		else
 		{
@@ -355,9 +371,18 @@ public:
 			this->_flushed = true;
 		}
 	}
+
+	void write(const char *__s, std::streamsize __n)
+	{
+		if (this->_flushed)
+			this->_response.write(__s, __n);
+		else
+			this->out.write(__s, __n);
+	}
 };
 
-class Response: public ResponseBase<SimpleWeb::HTTP>
+class Response:
+	public ResponseBase<SimpleWeb::HTTP>
 {
 public:
 	Response(ResponseBase<SimpleWeb::HTTP>::_Response &response)

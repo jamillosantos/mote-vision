@@ -39,6 +39,8 @@ public:
 	VideoStream(const config::VideoStream &config);
 	virtual ~VideoStream();
 
+	virtual cv::Mat& frame();
+
 	void start();
 
 	void stop();

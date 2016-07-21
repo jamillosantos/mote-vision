@@ -446,6 +446,8 @@ set(SOURCE_FILES
 	src/capture/devices/image.cpp
 	src/capture/devices/camera.h
 	src/capture/devices/camera.cpp
+	src/capture/exceptions.cpp
+	src/capture/exceptions.h
 
 	src/procs/videostream.h
 	src/procs/videostream.cpp
@@ -458,8 +460,11 @@ set(SOURCE_FILES
 	src/http/exceptions.cpp
 	src/http/action.cpp
 	src/http/action.h
+
 	src/http/actions/index.cpp
 	src/http/actions/index.h
+	src/http/actions/camera.cpp
+	src/http/actions/camera.h
 
 	src/config/config.cpp
 	src/config/config.h
@@ -475,8 +480,6 @@ set(SOURCE_FILES
 
 	src/exceptions.h
 	src/exceptions.cpp
-	src/capture/exceptions.cpp
-	src/capture/exceptions.h
 	)
 
 add_executable(vision

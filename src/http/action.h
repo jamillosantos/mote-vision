@@ -6,7 +6,7 @@
 #ifndef MOTE_VISION_HTTP_ACTION_H
 #define MOTE_VISION_HTTP_ACTION_H
 
-#include <server_https.hpp>
+#include <server_http.hpp>
 #include "response.h"
 
 namespace mote
@@ -22,6 +22,7 @@ public:
 	virtual void trampolin(std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Response> response,
 		std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request)
 	{
+		BOOST_LOG_TRIVIAL(trace) << "Action::trampolim()";
 		mote::http::Response r(*response);
 		this->action(r, *request);
 	}
