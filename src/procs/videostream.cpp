@@ -19,18 +19,35 @@ mote::procs::VideoStream::VideoStream(const mote::config::VideoStream &config)
 	: _running(false), _config(config)
 { }
 
-
 mote::procs::VideoStream::~VideoStream()
 {
 	if (this->_running)
 		this->stop();
 }
 
-
 void mote::procs::VideoStream::start()
 {
 	this->_running = true;
 	this->_camera.reset(new capture::devices::Camera());
+
+	if (this->_config.width)
+		this->_camera->width(*this->_config.width);
+	if (this->_config.height)
+		this->_camera->height(*this->_config.height);
+
+	if (this->_config.saturation)
+		this->_camera->saturation(*this->_config.saturation);
+	if (this->_config.brightness)
+		this->_camera->brightness(*this->_config.brightness);
+	if (this->_config.contrast)
+		this->_camera->contrast(*this->_config.contrast);
+	if (this->_config.hue)
+		this->_camera->hue(*this->_config.hue);
+	if (this->_config.gain)
+		this->_camera->gain(*this->_config.gain);
+	if (this->_config.exposure)
+		this->_camera->exposure(*this->_config.exposure);
+
 	if (this->_camera->open(this->_config.camera))
 		this->_thread.reset(new std::thread(&VideoStream::startTrampolin, this));
 	else

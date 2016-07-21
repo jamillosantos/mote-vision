@@ -27,7 +27,7 @@ bool mote::capture::devices::Camera::open(const std::string &device)
 	if (boost::regex_search(device, smatch, r))
 		return this->videoCapture.open(std::stoi(smatch[1]));
 	else
-		this->videoCapture.open(device);
+		return this->videoCapture.open(device);
 }
 
 bool mote::capture::devices::Camera::isOpened()
@@ -70,4 +70,92 @@ double mote::capture::devices::Camera::fps()
 double mote::capture::devices::Camera::realFps()
 {
 	return this->fpsResult;
+}
+
+int mote::capture::devices::Camera::width()
+{
+	return this->videoCapture.get(CV_CAP_PROP_FRAME_WIDTH);
+}
+
+mote::capture::devices::Camera &mote::capture::devices::Camera::width(int value)
+{
+	this->videoCapture.set(CV_CAP_PROP_FRAME_WIDTH, value);
+	return *this;
+}
+
+int mote::capture::devices::Camera::height()
+{
+	return this->videoCapture.get(CV_CAP_PROP_FRAME_HEIGHT);
+}
+
+mote::capture::devices::Camera &mote::capture::devices::Camera::height(int value)
+{
+	this->videoCapture.set(CV_CAP_PROP_FRAME_HEIGHT, value);
+	return *this;
+}
+
+int mote::capture::devices::Camera::saturation()
+{
+	return this->videoCapture.get(CV_CAP_PROP_SATURATION);
+}
+
+mote::capture::devices::Camera &mote::capture::devices::Camera::saturation(int value)
+{
+	this->videoCapture.set(CV_CAP_PROP_SATURATION, value);
+	return *this;
+}
+
+int mote::capture::devices::Camera::brightness()
+{
+	return this->videoCapture.get(CV_CAP_PROP_BRIGHTNESS);
+}
+
+mote::capture::devices::Camera &mote::capture::devices::Camera::brightness(int value)
+{
+	this->videoCapture.set(CV_CAP_PROP_BRIGHTNESS, value);
+	return *this;
+}
+
+int mote::capture::devices::Camera::contrast()
+{
+	return this->videoCapture.get(CV_CAP_PROP_CONTRAST);
+}
+
+mote::capture::devices::Camera &mote::capture::devices::Camera::contrast(int value)
+{
+	this->videoCapture.set(CV_CAP_PROP_CONTRAST, value);
+	return *this;
+}
+
+int mote::capture::devices::Camera::hue()
+{
+	return this->videoCapture.get(CV_CAP_PROP_HUE);
+}
+
+mote::capture::devices::Camera &mote::capture::devices::Camera::hue(int value)
+{
+	this->videoCapture.set(CV_CAP_PROP_HUE, value);
+	return *this;
+}
+
+int mote::capture::devices::Camera::gain()
+{
+	return this->videoCapture.get(CV_CAP_PROP_GAIN);
+}
+
+mote::capture::devices::Camera &mote::capture::devices::Camera::gain(int value)
+{
+	this->videoCapture.set(CV_CAP_PROP_GAIN, value);
+	return *this;
+}
+
+int mote::capture::devices::Camera::exposure()
+{
+	return this->videoCapture.get(CV_CAP_PROP_EXPOSURE);
+}
+
+mote::capture::devices::Camera &mote::capture::devices::Camera::exposure(int value)
+{
+	this->videoCapture.set(CV_CAP_PROP_EXPOSURE, value);
+	return *this;
 }

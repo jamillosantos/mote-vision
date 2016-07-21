@@ -40,6 +40,30 @@ public:
 
 	virtual void close() override;
 
+	virtual int width();
+	virtual Camera& width(int value);
+
+	virtual int height();
+	virtual Camera& height(int value);
+
+	virtual int saturation();
+	virtual Camera& saturation(int value);
+
+	virtual int brightness();
+	virtual Camera& brightness(int value);
+
+	virtual int contrast();
+	virtual Camera& contrast(int value);
+
+	virtual int hue();
+	virtual Camera& hue(int value);
+
+	virtual int gain();
+	virtual Camera& gain(int value);
+
+	virtual int exposure();
+	virtual Camera& exposure(int value);
+
 	virtual double fps();
 
 	virtual double realFps();
