@@ -36,6 +36,7 @@ int mote::Application::run()
 
 		mote::http::actions::Index actionIndex;
 		mote::http::actions::CameraSnapshot actionCameraSnapshot(this->_videoStreams);
+		mote::http::actions::CameraStream actionCameraStream(this->_videoStreams);
 
 		this->_server.reset(new http::Server(this->_config.http()));
 		this->_server->resources()["^/$"]["GET"] = std::bind(&http::actions::Index::trampolin, actionIndex,
@@ -43,6 +44,8 @@ int mote::Application::run()
 		this->_server->resources()["^/camera/([0-9]+)/picture.([a-z]+)$"]["GET"] = std::bind(
 			&http::actions::CameraSnapshot::trampolin, actionCameraSnapshot, std::placeholders::_1,
 			std::placeholders::_2);
+		this->_server->resources()["^/camera/([0-9]+)/stream.([a-z]+)$"]["GET"] = std::bind(
+			&http::actions::CameraStream::trampolin, actionCameraStream, std::placeholders::_1, std::placeholders::_2);
 		this->_server->start();
 
 		return 0;

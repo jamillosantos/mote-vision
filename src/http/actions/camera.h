@@ -9,6 +9,9 @@
 #include <http/action.h>
 #include <procs/videostream.h>
 #include <boost/lexical_cast.hpp>
+#include "videostream.h"
+
+#define CAMERASTREAM_BOUNDARY "donotcross"
 
 namespace mote
 {
@@ -17,12 +20,23 @@ namespace http
 namespace actions
 {
 class CameraSnapshot
-	: public Action
+	: public mote::http::actions::VideoStream
 {
-private:
-	std::vector<std::unique_ptr<mote::procs::VideoStream>>& _streams;
 public:
-	CameraSnapshot(std::vector<std::unique_ptr<mote::procs::VideoStream>>& streams);
+	CameraSnapshot(std::vector<std::unique_ptr<procs::VideoStream>> &streams);
+protected:
+	virtual void action(mote::http::Response &response, SimpleWeb::Server<SimpleWeb::HTTP>::Request &request) override;
+};
+
+class CameraStream
+	: public mote::http::actions::VideoStream
+{
+public:
+	CameraStream(std::vector<std::unique_ptr<procs::VideoStream>> &streams);
+
+	virtual void trampolin(std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Response> response,
+		std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request) override;
+
 protected:
 	virtual void action(mote::http::Response &response, SimpleWeb::Server<SimpleWeb::HTTP>::Request &request) override;
 };

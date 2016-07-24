@@ -480,7 +480,7 @@ set(SOURCE_FILES
 
 	src/exceptions.h
 	src/exceptions.cpp
-	)
+	src/http/actions/videostream.cpp src/http/actions/videostream.h)
 
 add_executable(vision
 	src/main.cpp

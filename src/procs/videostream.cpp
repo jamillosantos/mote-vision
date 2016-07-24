@@ -10,8 +10,12 @@ void mote::procs::VideoStream::startTrampolin()
 	BOOST_LOG_TRIVIAL(trace) << "Starting VideoStream at " << this->_config.camera;
 	while (this->_running)
 	{
+		BOOST_LOG_TRIVIAL(trace) << "VideoStream::startTrampolim() - Locking";
 		std::lock_guard<std::mutex> lockGuard(this->_captureMutex);
 		this->_camera->read(this->_imageFrame);
+		BOOST_LOG_TRIVIAL(trace) << "VideoStream::startTrampolim() - Notifying";
+		this->_conditionVariable.notify_all();
+		BOOST_LOG_TRIVIAL(trace) << "VideoStream::startTrampolim() - Ok";
 	}
 }
 
@@ -23,6 +27,12 @@ mote::procs::VideoStream::~VideoStream()
 {
 	if (this->_running)
 		this->stop();
+}
+
+void mote::procs::VideoStream::waitFrame()
+{
+	std::unique_lock<std::mutex> lock(this->_captureMutex);
+	this->_conditionVariable.wait(lock);
 }
 
 cv::Mat &mote::procs::VideoStream::frame()

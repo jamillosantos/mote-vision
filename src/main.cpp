@@ -22,7 +22,6 @@ void handleInt(int sig)
 	app.stop();
 }
 
-
 int main(int argc, char **argv)
 {
 	namespace po = boost::program_options;

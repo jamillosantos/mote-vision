@@ -11,6 +11,7 @@
 #include <mutex>
 #include <thread>
 #include <config/videostream.h>
+#include <condition_variable>
 
 namespace mote
 {
@@ -30,6 +31,8 @@ private:
 
 	std::mutex _captureMutex;
 
+	std::condition_variable _conditionVariable;
+
 	std::unique_ptr<std::thread> _thread;
 
 	cv::Mat _imageFrame;
@@ -38,6 +41,8 @@ private:
 public:
 	VideoStream(const config::VideoStream &config);
 	virtual ~VideoStream();
+
+	virtual void waitFrame();
 
 	virtual cv::Mat& frame();
 
