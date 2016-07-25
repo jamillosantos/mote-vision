@@ -42,6 +42,11 @@ public:
 
 	virtual double intensity();
 
+	virtual RGBColour& minimum(const RGBColour& colour);
+	virtual RGBColour& maximum(const RGBColour& colour);
+
+	RGBColour& operator=(const RGBColour& colour);
+
 	bool operator==(const RGBColour& colour);
 	bool operator!=(const RGBColour& colour);
 

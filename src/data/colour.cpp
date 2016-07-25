@@ -31,6 +31,36 @@ double mote::data::RGBColour::intensity()
 	return (this->r + this->g + this->b) / 3.0;
 }
 
+mote::data::RGBColour &mote::data::RGBColour::minimum(const mote::data::RGBColour &colour)
+{
+	if (colour.r < this->r)
+		this->r = colour.r;
+	if (colour.g < this->g)
+		this->g = colour.g;
+	if (colour.b < this->b)
+		this->b = colour.b;
+	return *this;
+}
+
+mote::data::RGBColour &mote::data::RGBColour::maximum(const mote::data::RGBColour &colour)
+{
+	if (colour.r > this->r)
+		this->r = colour.r;
+	if (colour.g > g)
+		this->g = colour.g;
+	if (colour.b > this->b)
+		this->b = colour.b;
+	return *this;
+}
+
+mote::data::RGBColour &mote::data::RGBColour::operator=(const mote::data::RGBColour &colour)
+{
+	this->r = colour.r;
+	this->g = colour.g;
+	this->b = colour.b;
+	return *this;
+}
+
 bool mote::data::RGBColour::operator==(const mote::data::RGBColour &colour)
 {
 	return

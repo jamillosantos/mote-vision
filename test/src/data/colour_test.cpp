@@ -126,3 +126,51 @@ GTEST_TEST(data_colour, operator_divide_assign)
 	colour1 /= colour2;
 	ASSERT_TRUE(result == colour1);
 }
+
+GTEST_TEST(data_colour, maximum)
+{
+	mote::data::RGBColour
+		colourBase(10, 20, 30),
+		colour(10, 20, 30),
+		colour2(11, 2, 3),
+		colour2Result(11, 20, 30),
+		colour3(1, 22, 3),
+		colour3Result(10, 22, 30),
+		colour4(1, 2, 33),
+		colour4Result(10, 20, 33);
+
+	colour.maximum(colour2);
+	ASSERT_TRUE(colour2Result == colour);
+
+	colour = colourBase;
+	colour.maximum(colour3);
+	ASSERT_TRUE(colour3Result == colour);
+
+	colour = colourBase;
+	colour.maximum(colour4);
+	ASSERT_TRUE(colour4Result == colour);
+}
+
+GTEST_TEST(data_colour, minimum)
+{
+	mote::data::RGBColour
+		colourBase(10, 20, 30),
+		colour(10, 20, 30),
+		colour2(1, 22, 33),
+		colour2Result(1, 20, 30),
+		colour3(11, 2, 33),
+		colour3Result(10, 2, 30),
+		colour4(11, 22, 3),
+		colour4Result(10, 20, 3);
+
+	colour.minimum(colour2);
+	ASSERT_TRUE(colour2Result == colour);
+
+	colour = colourBase;
+	colour.minimum(colour3);
+	ASSERT_TRUE(colour3Result == colour);
+
+	colour = colourBase;
+	colour.minimum(colour4);
+	ASSERT_TRUE(colour4Result == colour);
+}
