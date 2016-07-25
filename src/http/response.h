@@ -182,7 +182,6 @@ public:
 
 	virtual ~ResponseBase()
 	{
-		BOOST_LOG_TRIVIAL(trace) << "~ResponseBase()";
 		if (!this->_auto_flush)
 		{
 			if (!this->_flushed)

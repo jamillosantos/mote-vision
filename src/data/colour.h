@@ -23,6 +23,15 @@ class RGBColour
 	: public Colour
 {
 public:
+	static RGBColour red;
+	static RGBColour blue;
+	static RGBColour green;
+	static RGBColour white;
+	static RGBColour black;
+	static RGBColour yellow;
+	static mote::data::RGBColour cyan;
+	static mote::data::RGBColour magenta;
+public:
 	RGBColour(uint8_t r, uint8_t g, uint8_t b);
 	RGBColour(const RGBColour& colour);
 	RGBColour();

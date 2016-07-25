@@ -5,6 +5,15 @@
 
 #include "colour.h"
 
+mote::data::RGBColour mote::data::RGBColour::red(255, 0, 0);
+mote::data::RGBColour mote::data::RGBColour::green(0, 255, 0);
+mote::data::RGBColour mote::data::RGBColour::blue(0, 0, 255);
+mote::data::RGBColour mote::data::RGBColour::white(255, 255, 255);
+mote::data::RGBColour mote::data::RGBColour::black(0, 0, 0);
+mote::data::RGBColour mote::data::RGBColour::yellow(255, 255, 0);
+mote::data::RGBColour mote::data::RGBColour::cyan(0, 255, 255);
+mote::data::RGBColour mote::data::RGBColour::magenta(255, 0, 255);
+
 mote::data::RGBColour::RGBColour(uint8_t r, uint8_t g, uint8_t b)
 	: r(r), g(g), b(b)
 { }
