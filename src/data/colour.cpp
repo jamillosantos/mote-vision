@@ -1,0 +1,105 @@
+/**
+ * @author J. Santos <jamillo@gmail.com>
+ * @date July 24, 2016
+ */
+
+#include "colour.h"
+
+mote::data::RGBColour::RGBColour(uint8_t r, uint8_t g, uint8_t b)
+	: r(r), g(g), b(b)
+{ }
+
+mote::data::RGBColour::RGBColour(const mote::data::RGBColour &colour)
+	: mote::data::RGBColour::RGBColour(colour.r, colour.g, colour.b)
+{ }
+
+mote::data::RGBColour::RGBColour()
+	: mote::data::RGBColour::RGBColour(0, 0, 0)
+{ }
+
+double mote::data::RGBColour::intensity()
+{
+	return (this->r + this->g + this->b) / 3.0;
+}
+
+bool mote::data::RGBColour::operator==(const mote::data::RGBColour &colour)
+{
+	return
+		(colour.r == this->r) &&
+		(colour.g == this->g) &&
+		(colour.b == this->b);
+}
+
+bool mote::data::RGBColour::operator!=(const mote::data::RGBColour &colour)
+{
+	return
+		(colour.r != this->r) ||
+		(colour.g != this->g) ||
+		(colour.b != this->b);
+}
+
+mote::data::RGBColour mote::data::RGBColour::operator+(const mote::data::RGBColour &colour)
+{
+	return mote::data::RGBColour(this->r + colour.r, this->g + colour.g, this->b + colour.b);
+}
+
+mote::data::RGBColour mote::data::RGBColour::operator-(const mote::data::RGBColour &colour)
+{
+	return mote::data::RGBColour(this->r - colour.r, this->g - colour.g, this->b - colour.b);
+}
+
+mote::data::RGBColour mote::data::RGBColour::operator*(const mote::data::RGBColour &colour)
+{
+	return mote::data::RGBColour(this->r * colour.r, this->g * colour.g, this->b * colour.b);
+}
+
+mote::data::RGBColour mote::data::RGBColour::operator/(const mote::data::RGBColour &colour)
+{
+	return mote::data::RGBColour(this->r / colour.r, this->g / colour.g, this->b / colour.b);
+}
+
+mote::data::RGBColour &mote::data::RGBColour::operator+=(const mote::data::RGBColour &colour)
+{
+	this->r += colour.r;
+	this->g += colour.g;
+	this->b += colour.b;
+	return *this;
+}
+
+mote::data::RGBColour &mote::data::RGBColour::operator-=(const mote::data::RGBColour &colour)
+{
+	this->r -= colour.r;
+	this->g -= colour.g;
+	this->b -= colour.b;
+	return *this;
+}
+
+mote::data::RGBColour &mote::data::RGBColour::operator*=(const mote::data::RGBColour &colour)
+{
+	this->r *= colour.r;
+	this->g *= colour.g;
+	this->b *= colour.b;
+	return *this;
+}
+
+mote::data::RGBColour &mote::data::RGBColour::operator/=(const mote::data::RGBColour &colour)
+{
+	this->r /= colour.r;
+	this->g /= colour.g;
+	this->b /= colour.b;
+	return *this;
+}
+
+void mote::data::RGBColour::fromJson(const Json::Value &json)
+{
+	this->r = json["r"].asUInt();
+	this->g = json["g"].asUInt();
+	this->b = json["b"].asUInt();
+}
+
+void mote::data::RGBColour::toJson(Json::Value &json)
+{
+	json["r"] = this->r;
+	json["g"] = this->g;
+	json["b"] = this->b;
+}

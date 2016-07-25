@@ -36,6 +36,7 @@ private:
 	std::unique_ptr<std::thread> _thread;
 
 	cv::Mat _imageFrame;
+	cv::Mat _outputFrame;
 
 	void startTrampolin();
 public:
@@ -45,6 +46,7 @@ public:
 	virtual void waitFrame();
 
 	virtual cv::Mat& frame();
+	virtual cv::Mat& outputFrame();
 
 	void start();
 

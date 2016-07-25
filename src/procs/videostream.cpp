@@ -40,6 +40,11 @@ cv::Mat &mote::procs::VideoStream::frame()
 	return this->_imageFrame;
 }
 
+cv::Mat &mote::procs::VideoStream::outputFrame()
+{
+	return this->_outputFrame;
+}
+
 void mote::procs::VideoStream::start()
 {
 	this->_running = true;
