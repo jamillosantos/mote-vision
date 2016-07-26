@@ -12,6 +12,9 @@ namespace mote
 {
 namespace data
 {
+/**
+ * Colour range definition for aalab colour detection method.
+ */
 class ColourRange
 	: public RGBColour
 {
@@ -20,8 +23,19 @@ public:
 	ColourRange(const ColourRange &colour);
 	ColourRange();
 
+	/**
+	 * Red - green.
+	 */
 	int redGreen;
+
+	/**
+	 * Red - blue.
+	 */
 	int redBlue;
+
+	/**
+	 * Green - blue.
+	 */
 	int greenBlue;
 
 	virtual RGBColour& minimum(const RGBColour &colour) override;
