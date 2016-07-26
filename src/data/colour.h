@@ -47,18 +47,18 @@ public:
 
 	RGBColour& operator=(const RGBColour& colour);
 
-	bool operator==(const RGBColour& colour);
-	bool operator!=(const RGBColour& colour);
+	virtual bool operator==(const RGBColour& colour);
+	virtual bool operator!=(const RGBColour& colour);
 
 	RGBColour operator+(const RGBColour& colour);
 	RGBColour operator-(const RGBColour& colour);
 	RGBColour operator*(const RGBColour& colour);
 	RGBColour operator/(const RGBColour& colour);
 
-	RGBColour &operator+=(const RGBColour& colour);
-	RGBColour &operator-=(const RGBColour& colour);
-	RGBColour &operator*=(const RGBColour& colour);
-	RGBColour &operator/=(const RGBColour& colour);
+	virtual RGBColour &operator+=(const RGBColour& colour);
+	virtual RGBColour &operator-=(const RGBColour& colour);
+	virtual RGBColour &operator*=(const RGBColour& colour);
+	virtual RGBColour &operator/=(const RGBColour& colour);
 
 	virtual void fromJson(const Json::Value &json) override;
 
