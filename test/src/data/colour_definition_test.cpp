@@ -6,7 +6,7 @@
 #include <gtest/gtest.h>
 #include <data/colour_definition.h>
 
-GTEST_TEST(data_colour_definition, constructor_with_params)
+GTEST_TEST(data_colour_range, constructor_with_params)
 {
 	mote::data::ColourRange colour(0, 1, 2);
 	ASSERT_EQ(0, colour.r);
@@ -14,7 +14,7 @@ GTEST_TEST(data_colour_definition, constructor_with_params)
 	ASSERT_EQ(2, colour.b);
 }
 
-GTEST_TEST(data_colour_definition, constructor_with_no_params)
+GTEST_TEST(data_colour_range, constructor_with_no_params)
 {
 	mote::data::ColourRange colour;
 	ASSERT_EQ(0, colour.r);
@@ -22,7 +22,20 @@ GTEST_TEST(data_colour_definition, constructor_with_no_params)
 	ASSERT_EQ(0, colour.b);
 }
 
-GTEST_TEST(data_colour_definition, operator_equals)
+GTEST_TEST(data_colour_range, constructor_copy)
+{
+	mote::data::ColourRange
+		colour1(1, 2, 3),
+		colour2(colour1);
+	ASSERT_EQ(colour1.r, colour2.r);
+	ASSERT_EQ(colour1.g, colour2.g);
+	ASSERT_EQ(colour1.b, colour2.b);
+	ASSERT_EQ(colour1.redBlue, colour2.redBlue);
+	ASSERT_EQ(colour1.redGreen, colour2.redGreen);
+	ASSERT_EQ(colour1.greenBlue, colour2.greenBlue);
+}
+
+GTEST_TEST(data_colour_range, operator_equals)
 {
 	mote::data::ColourRange
 		colour1(0, 1, 2),
@@ -30,7 +43,7 @@ GTEST_TEST(data_colour_definition, operator_equals)
 	ASSERT_TRUE(colour1 == colour2);
 }
 
-GTEST_TEST(data_colour_definition, operator_not_equal)
+GTEST_TEST(data_colour_range, operator_not_equal)
 {
 	mote::data::ColourRange
 		colour1(0, 1, 2),
@@ -42,7 +55,7 @@ GTEST_TEST(data_colour_definition, operator_not_equal)
 	ASSERT_TRUE(colour1 != colour4);
 }
 
-GTEST_TEST(data_colour_definition, operator_plus)
+GTEST_TEST(data_colour_range, operator_plus)
 {
 	mote::data::ColourRange
 		colour1(10, 20, 30),
@@ -55,7 +68,7 @@ GTEST_TEST(data_colour_definition, operator_plus)
 	ASSERT_EQ(value.greenBlue, (value.g - value.b));
 }
 
-GTEST_TEST(data_colour_definition, operator_minus)
+GTEST_TEST(data_colour_range, operator_minus)
 {
 	mote::data::ColourRange
 		colour1(10, 20, 30),
@@ -68,7 +81,7 @@ GTEST_TEST(data_colour_definition, operator_minus)
 	ASSERT_EQ(value.greenBlue, (value.g - value.b));
 }
 
-GTEST_TEST(data_colour_definition, operator_multiply)
+GTEST_TEST(data_colour_range, operator_multiply)
 {
 	mote::data::ColourRange
 		colour1(10, 20, 30),
@@ -81,7 +94,7 @@ GTEST_TEST(data_colour_definition, operator_multiply)
 	ASSERT_EQ(value.greenBlue, (value.g - value.b));
 }
 
-GTEST_TEST(data_colour_definition, operator_divide)
+GTEST_TEST(data_colour_range, operator_divide)
 {
 	mote::data::ColourRange
 		colour1(10, 21, 40),
@@ -94,7 +107,7 @@ GTEST_TEST(data_colour_definition, operator_divide)
 	ASSERT_EQ(value.greenBlue, (value.g - value.b));
 }
 
-GTEST_TEST(data_colour_definition, operator_plus_assign)
+GTEST_TEST(data_colour_range, operator_plus_assign)
 {
 	mote::data::ColourRange
 		colour1(10, 20, 30),
@@ -107,7 +120,7 @@ GTEST_TEST(data_colour_definition, operator_plus_assign)
 	ASSERT_EQ(colour1.greenBlue, (colour1.g - colour1.b));
 }
 
-GTEST_TEST(data_colour_definition, operator_minus_assign)
+GTEST_TEST(data_colour_range, operator_minus_assign)
 {
 	mote::data::ColourRange
 		colour1(10, 20, 30),
@@ -120,7 +133,7 @@ GTEST_TEST(data_colour_definition, operator_minus_assign)
 	ASSERT_EQ(colour1.greenBlue, (colour1.g - colour1.b));
 }
 
-GTEST_TEST(data_colour_definition, operator_multiply_assign)
+GTEST_TEST(data_colour_range, operator_multiply_assign)
 {
 	mote::data::ColourRange
 		colour1(10, 20, 30),
@@ -133,7 +146,7 @@ GTEST_TEST(data_colour_definition, operator_multiply_assign)
 	ASSERT_EQ(colour1.greenBlue, (colour1.g - colour1.b));
 }
 
-GTEST_TEST(data_colour_definition, operator_divide_assign)
+GTEST_TEST(data_colour_range, operator_divide_assign)
 {
 	mote::data::ColourRange
 		colour1(10, 21, 40),
@@ -146,7 +159,7 @@ GTEST_TEST(data_colour_definition, operator_divide_assign)
 	ASSERT_EQ(colour1.greenBlue, (colour1.g - colour1.b));
 }
 
-GTEST_TEST(data_colour_definition, maximum)
+GTEST_TEST(data_colour_range, maximum)
 {
 	mote::data::ColourRange
 		colourBase(10, 20, 30),
@@ -170,7 +183,7 @@ GTEST_TEST(data_colour_definition, maximum)
 	ASSERT_TRUE(colour4Result == colour);
 }
 
-GTEST_TEST(data_colour_definition, minimum)
+GTEST_TEST(data_colour_range, minimum)
 {
 	mote::data::ColourRange
 		colourBase(10, 20, 30),
@@ -192,4 +205,14 @@ GTEST_TEST(data_colour_definition, minimum)
 	colour = colourBase;
 	colour.minimum(colour4);
 	ASSERT_TRUE(colour4Result == colour);
+}
+
+
+GTEST_TEST(data_colour_definition, constructor_copy)
+{
+	mote::data::ColourDefinition
+		colourDefinition1(mote::data::ColourRange(1, 2, 3), mote::data::ColourRange(4, 5, 6)),
+		colourDefinition2(colourDefinition1);
+	ASSERT_TRUE(colourDefinition1.min == colourDefinition2.min);
+	ASSERT_TRUE(colourDefinition1.max == colourDefinition2.max);
 }

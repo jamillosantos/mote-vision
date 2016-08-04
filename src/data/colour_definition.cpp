@@ -11,6 +11,10 @@ mote::data::ColourRange::ColourRange(uint8_t r, uint8_t g, uint8_t b)
 	this->update();
 }
 
+mote::data::ColourRange::ColourRange(const mote::data::ColourRange &colour)
+	: ColourRange(colour.r, colour.g, colour.b)
+{ }
+
 mote::data::ColourRange::ColourRange()
 	: ColourRange(0, 0, 0)
 { }
@@ -109,3 +113,18 @@ mote::data::ColourRange &mote::data::ColourRange::operator/=(const mote::data::C
 	this->update();
 	return *this;
 }
+
+mote::data::ColourDefinition::ColourDefinition()
+{ }
+
+mote::data::ColourDefinition::ColourDefinition(const mote::data::ColourDefinition &definition)
+	: min(definition.min), max(definition.max)
+{ }
+
+mote::data::ColourDefinition::ColourDefinition(const mote::data::ColourRange &min, const mote::data::ColourRange &max)
+	: min(min), max(max)
+{ }
+
+mote::data::ColourDefinition::ColourDefinition(const mote::data::ColourRange&& min, const mote::data::ColourRange&& max)
+	: min(min), max(max)
+{ }

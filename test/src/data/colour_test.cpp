@@ -5,7 +5,6 @@
 
 #include <gtest/gtest.h>
 #include <data/colour.h>
-#include <boost/log/trivial.hpp>
 
 GTEST_TEST(data_colour, constructor_with_params)
 {
@@ -21,6 +20,16 @@ GTEST_TEST(data_colour, constructor_with_no_params)
 	ASSERT_EQ(0, colour.r);
 	ASSERT_EQ(0, colour.g);
 	ASSERT_EQ(0, colour.b);
+}
+
+GTEST_TEST(data_colour, constructor_copy)
+{
+	mote::data::RGBColour
+		colour1(1, 2, 3),
+		colour2(colour1);
+	ASSERT_EQ(colour1.r, colour2.r);
+	ASSERT_EQ(colour1.g, colour2.g);
+	ASSERT_EQ(colour1.b, colour2.b);
 }
 
 GTEST_TEST(data_colour, intesity)

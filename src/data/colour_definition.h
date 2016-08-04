@@ -20,7 +20,7 @@ class ColourRange
 {
 public:
 	ColourRange(uint8_t r, uint8_t g, uint8_t b);
-	ColourRange(const ColourRange &colour);
+	ColourRange(const ColourRange& colour);
 	ColourRange();
 
 	/**
@@ -57,8 +57,13 @@ public:
 class ColourDefinition
 {
 public:
-	ColourRange max;
+	ColourDefinition();
+	ColourDefinition(const ColourDefinition& definition);
+	ColourDefinition(const ColourRange& min, const ColourRange& max);
+	ColourDefinition(const ColourRange&& min, const ColourRange&& max);
+
 	ColourRange min;
+	ColourRange max;
 };
 }
 }
