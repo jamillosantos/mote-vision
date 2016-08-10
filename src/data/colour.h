@@ -99,7 +99,7 @@ public:
 
 	virtual void fromJson(const Json::Value &json) override;
 
-	virtual void toJson(Json::Value &json) override;
+	virtual void toJson(Json::Value &json) const override;
 };
 }
 }

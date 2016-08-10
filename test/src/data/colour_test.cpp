@@ -183,3 +183,26 @@ GTEST_TEST(data_colour, minimum)
 	colour.minimum(colour4);
 	ASSERT_TRUE(colour4Result == colour);
 }
+
+GTEST_TEST(data_colour, toJson)
+{
+	mote::data::RGBColour colour(1, 2, 3);
+	Json::Value json;
+	colour.toJson(json);
+	ASSERT_EQ(1, json["r"].asInt());
+	ASSERT_EQ(2, json["g"].asInt());
+	ASSERT_EQ(3, json["b"].asInt());
+}
+
+GTEST_TEST(data_colour, fromJson)
+{
+	mote::data::RGBColour colour(1, 2, 3);
+	Json::Value json;
+	json["r"] = 1;
+	json["g"] = 2;
+	json["b"] = 3;
+	colour.fromJson(json);
+	ASSERT_EQ(1, colour.r);
+	ASSERT_EQ(2, colour.g);
+	ASSERT_EQ(3, colour.b);
+}

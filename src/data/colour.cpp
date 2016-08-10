@@ -136,7 +136,7 @@ void mote::data::RGBColour::fromJson(const Json::Value &json)
 	this->b = json["b"].asUInt();
 }
 
-void mote::data::RGBColour::toJson(Json::Value &json)
+void mote::data::RGBColour::toJson(Json::Value &json) const
 {
 	json["r"] = this->r;
 	json["g"] = this->g;
