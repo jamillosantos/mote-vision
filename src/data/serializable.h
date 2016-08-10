@@ -28,7 +28,7 @@ public:
 	 * Serializes the data to a JSON value.
 	 * @param json Json that will be used as desteny of data.
 	 */
-	virtual void toJson(Json::Value &json) = 0;
+	virtual void toJson(Json::Value &json) const = 0;
 };
 }
 }
