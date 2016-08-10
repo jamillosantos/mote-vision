@@ -128,3 +128,15 @@ mote::data::ColourDefinition::ColourDefinition(const mote::data::ColourRange &mi
 mote::data::ColourDefinition::ColourDefinition(const mote::data::ColourRange&& min, const mote::data::ColourRange&& max)
 	: min(min), max(max)
 { }
+
+void mote::data::ColourDefinition::fromJson(const Json::Value &json)
+{
+	this->min.fromJson(json["min"]);
+	this->max.fromJson(json["max"]);
+}
+
+void mote::data::ColourDefinition::toJson(Json::Value &json) const
+{
+	this->min.toJson(json["min"]);
+	this->max.toJson(json["max"]);
+}

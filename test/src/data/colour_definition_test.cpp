@@ -207,7 +207,6 @@ GTEST_TEST(data_colour_range, minimum)
 	ASSERT_TRUE(colour4Result == colour);
 }
 
-
 GTEST_TEST(data_colour_definition, constructor_copy)
 {
 	mote::data::ColourDefinition
@@ -215,4 +214,37 @@ GTEST_TEST(data_colour_definition, constructor_copy)
 		colourDefinition2(colourDefinition1);
 	ASSERT_TRUE(colourDefinition1.min == colourDefinition2.min);
 	ASSERT_TRUE(colourDefinition1.max == colourDefinition2.max);
+}
+
+GTEST_TEST(data_colour_definition, toJson)
+{
+	mote::data::ColourDefinition colourDefinition(mote::data::ColourRange(1, 2, 3), mote::data::ColourRange(4, 5, 6));
+	Json::Value json;
+	colourDefinition.toJson(json);
+	ASSERT_EQ(1, json["min"]["r"].asInt());
+	ASSERT_EQ(2, json["min"]["g"].asInt());
+	ASSERT_EQ(3, json["min"]["b"].asInt());
+	ASSERT_EQ(4, json["max"]["r"].asInt());
+	ASSERT_EQ(5, json["max"]["g"].asInt());
+	ASSERT_EQ(6, json["max"]["b"].asInt());
+}
+
+GTEST_TEST(data_colour_definition, fromJson)
+{
+	mote::data::ColourDefinition colourDefinition;
+	Json::Value json;
+	json["min"]["r"] = 1;
+	json["min"]["g"] = 2;
+	json["min"]["b"] = 3;
+	json["max"]["r"] = 4;
+	json["max"]["g"] = 5;
+	json["max"]["b"] = 6;
+	colourDefinition.fromJson(json);
+	ASSERT_EQ(1, colourDefinition.min.r);
+	ASSERT_EQ(2, colourDefinition.min.g);
+	ASSERT_EQ(3, colourDefinition.min.b);
+	ASSERT_EQ(4, colourDefinition.max.r);
+	ASSERT_EQ(5, colourDefinition.max.g);
+	ASSERT_EQ(6, colourDefinition.max.b);
+
 }
