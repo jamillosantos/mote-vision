@@ -207,3 +207,102 @@ GTEST_TEST(config_colour_definitions, fromJson)
 	ASSERT_EQ(0, cd["colour2"]->max.g);
 	ASSERT_EQ(255, cd["colour2"]->max.b);
 }
+
+GTEST_TEST(config_colour_definitions, addJson_add)
+{
+	Json::Value json;
+
+	json["colour1"]["min"]["r"] = 255;
+	json["colour1"]["min"]["g"] = 255;
+	json["colour1"]["min"]["b"] = 255;
+	json["colour1"]["max"]["r"] = 255;
+	json["colour1"]["max"]["g"] = 0;
+	json["colour1"]["max"]["b"] = 0;
+
+	json["colour2"]["min"]["r"] = 0;
+	json["colour2"]["min"]["g"] = 255;
+	json["colour2"]["min"]["b"] = 0;
+	json["colour2"]["max"]["r"] = 0;
+	json["colour2"]["max"]["g"] = 0;
+	json["colour2"]["max"]["b"] = 255;
+
+	mote::config::ColourDefinitions cd;
+	cd.addJson(json);
+
+	ASSERT_EQ(255, cd["colour1"]->min.r);
+	ASSERT_EQ(255, cd["colour1"]->min.g);
+	ASSERT_EQ(255, cd["colour1"]->min.b);
+	ASSERT_EQ(255, cd["colour1"]->max.r);
+	ASSERT_EQ(0, cd["colour1"]->max.g);
+	ASSERT_EQ(0, cd["colour1"]->max.b);
+
+	ASSERT_EQ(0, cd["colour2"]->min.r);
+	ASSERT_EQ(255, cd["colour2"]->min.g);
+	ASSERT_EQ(0, cd["colour2"]->min.b);
+	ASSERT_EQ(0, cd["colour2"]->max.r);
+	ASSERT_EQ(0, cd["colour2"]->max.g);
+	ASSERT_EQ(255, cd["colour2"]->max.b);
+
+	Json::Value json2;
+	json2["colour3"]["min"]["r"] = 1;
+	json2["colour3"]["min"]["g"] = 255;
+	json2["colour3"]["min"]["b"] = 3;
+	json2["colour3"]["max"]["r"] = 4;
+	json2["colour3"]["max"]["g"] = 5;
+	json2["colour3"]["max"]["b"] = 255;
+
+	cd.addJson(json2);
+
+	ASSERT_EQ(1, cd["colour3"]->min.r);
+	ASSERT_EQ(255, cd["colour3"]->min.g);
+	ASSERT_EQ(3, cd["colour3"]->min.b);
+	ASSERT_EQ(4, cd["colour3"]->max.r);
+	ASSERT_EQ(5, cd["colour3"]->max.g);
+	ASSERT_EQ(255, cd["colour3"]->max.b);
+}
+
+GTEST_TEST(config_colour_definitions, addJson_replace)
+{
+	Json::Value json;
+
+	json["colour1"]["min"]["r"] = 255;
+	json["colour1"]["min"]["g"] = 255;
+	json["colour1"]["min"]["b"] = 255;
+	json["colour1"]["max"]["r"] = 255;
+	json["colour1"]["max"]["g"] = 0;
+	json["colour1"]["max"]["b"] = 0;
+
+	json["colour2"]["min"]["r"] = 0;
+	json["colour2"]["min"]["g"] = 255;
+	json["colour2"]["min"]["b"] = 0;
+	json["colour2"]["max"]["r"] = 0;
+	json["colour2"]["max"]["g"] = 0;
+	json["colour2"]["max"]["b"] = 255;
+
+	mote::config::ColourDefinitions cd;
+	cd.addJson(json);
+
+	Json::Value json2;
+	json2["colour1"]["min"]["r"] = 1;
+	json2["colour1"]["min"]["g"] = 2;
+	json2["colour1"]["min"]["b"] = 3;
+	json2["colour1"]["max"]["r"] = 4;
+	json2["colour1"]["max"]["g"] = 5;
+	json2["colour1"]["max"]["b"] = 6;
+
+	cd.addJson(json2);
+
+	ASSERT_EQ(1, cd["colour1"]->min.r);
+	ASSERT_EQ(2, cd["colour1"]->min.g);
+	ASSERT_EQ(3, cd["colour1"]->min.b);
+	ASSERT_EQ(4, cd["colour1"]->max.r);
+	ASSERT_EQ(5, cd["colour1"]->max.g);
+	ASSERT_EQ(6, cd["colour1"]->max.b);
+
+	ASSERT_EQ(0, cd["colour2"]->min.r);
+	ASSERT_EQ(255, cd["colour2"]->min.g);
+	ASSERT_EQ(0, cd["colour2"]->min.b);
+	ASSERT_EQ(0, cd["colour2"]->max.r);
+	ASSERT_EQ(0, cd["colour2"]->max.g);
+	ASSERT_EQ(255, cd["colour2"]->max.b);
+}

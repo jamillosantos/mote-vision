@@ -124,6 +124,8 @@ void mote::config::ColourDefinitions::addJson(const Json::Value &json)
 	{
 		mote::data::ColourDefinition tmp;
 		tmp.fromJson(*it);
+		if (this->exists(it.name()))
+			this->remove(it.name());
 		this->add(it.name(), tmp);
 	}
 }
