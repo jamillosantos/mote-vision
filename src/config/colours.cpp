@@ -43,7 +43,7 @@ boost::optional<mote::data::ColourDefinition> mote::config::ColourDefinitions::g
 {
 	const const_iterator &it = this->find(name);
 	if (it == this->end())
-		return mote::data::ColourDefinition();
+		return boost::optional<mote::data::ColourDefinition>();
 	else
 		return it->second;
 }
