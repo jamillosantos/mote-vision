@@ -111,3 +111,22 @@ GTEST_TEST(config_colour_definitions, empty)
 
 	ASSERT_TRUE(cd.empty());
 }
+
+GTEST_TEST(config_colour_definitions, size)
+{
+	mote::config::ColourDefinitions cd;
+
+	ASSERT_EQ(cd.size(), 0);
+
+	mote::data::ColourDefinition
+		colourDefinition1(mote::data::ColourRange(mote::data::RGBColour::white), mote::data::ColourRange(mote::data::RGBColour::red));
+	cd.add("colour1", colourDefinition1);
+	ASSERT_EQ(cd.size(), 1);
+
+	cd.add("colour2", mote::data::ColourDefinition(mote::data::ColourRange(mote::data::RGBColour::white), mote::data::ColourRange(mote::data::RGBColour::red)));
+	ASSERT_EQ(cd.size(), 2);
+
+	cd.remove("colour1");
+
+	ASSERT_EQ(cd.size(), 1);
+}
