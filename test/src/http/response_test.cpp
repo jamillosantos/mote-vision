@@ -111,7 +111,7 @@ GTEST_TEST(http_response, setting_header_already_flushed_error)
 	response.status(mote::http::Status::INTERNAL_SERVER_ERROR);
 	response << HTTPRESPONSE_CONTENT1;
 	response.flush();
-	ASSERT_THROW(response.header(HTTPRESPONSE_HEADER_NAME_1, HTTPRESPONSE_HEADER_VALUE_1), mote::http::already_been_flushed);
+	ASSERT_THROW(response.header(HTTPRESPONSE_HEADER_NAME_1, HTTPRESPONSE_HEADER_VALUE_1), mote::http::AlreadyBeenFlushed);
 }
 
 GTEST_TEST(http_response, json_success)

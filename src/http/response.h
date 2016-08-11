@@ -173,7 +173,7 @@ private:
 	void ensureNotFlushed()
 	{
 		if (this->_flushed)
-			throw already_been_flushed();
+			throw AlreadyBeenFlushed();
 	}
 public:
 	ResponseBase(_Response &response)

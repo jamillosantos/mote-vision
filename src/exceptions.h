@@ -15,20 +15,20 @@ namespace mote
 /**
  * Exception base class for the entire system.
  */
-class exception
+class Exception
 	: public std::exception
 {
 private:
 	std::string _message;
 	boost::optional<const std::exception&> _cause;
 public:
-	exception();
+	Exception();
 
-	exception(const std::string &message);
+	Exception(const std::string &message);
 
-	exception(const std::exception& cause);
+	Exception(const std::exception& cause);
 
-	exception(const std::string &message, const std::exception &cause);
+	Exception(const std::string &message, const std::exception &cause);
 
 	virtual const std::string & message() const;
 

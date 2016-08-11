@@ -6,5 +6,5 @@
 #include "exceptions.h"
 
 mote::capture::CannotOpenDevice::CannotOpenDevice(const std::string &device)
-	: exception("Cannot open '" + device + "'.")
+	: Exception("Cannot open '" + device + "'.")
 {}

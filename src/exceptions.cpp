@@ -5,24 +5,24 @@
 
 #include "exceptions.h"
 
-mote::exception::exception()
+mote::Exception::Exception()
 { }
 
-mote::exception::exception(const std::string &message) : _message(message)
+mote::Exception::Exception(const std::string &message) : _message(message)
 { }
 
-mote::exception::exception(const std::exception& cause) : _cause(cause)
+mote::Exception::Exception(const std::exception& cause) : _cause(cause)
 { }
 
-mote::exception::exception(const std::string &message, const std::exception &cause) : _message(message), _cause(cause)
+mote::Exception::Exception(const std::string &message, const std::exception &cause) : _message(message), _cause(cause)
 { }
 
-const std::string &mote::exception::message() const
+const std::string &mote::Exception::message() const
 {
 	return this->_message;
 }
 
-const char* mote::exception::what() const _GLIBCXX_NOEXCEPT
+const char* mote::Exception::what() const _GLIBCXX_NOEXCEPT
 {
 	return this->_message.c_str();
 }

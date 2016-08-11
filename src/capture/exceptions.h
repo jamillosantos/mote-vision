@@ -13,7 +13,7 @@ namespace mote
 namespace capture
 {
 class CannotOpenDevice
-	: public mote::exception
+	: public mote::Exception
 {
 public:
 	CannotOpenDevice(const std::string &device);
