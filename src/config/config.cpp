@@ -16,7 +16,7 @@ const std::vector<std::unique_ptr<mote::config::VideoStream>>& mote::Config::vid
 	return this->_videoStreams;
 }
 
-const mote::config::ColourDefinitions &mote::Config::colourDefinitions() const
+mote::config::ColourDefinitions &mote::Config::colourDefinitions()
 {
 	return this->_colourDefinitions;
 }

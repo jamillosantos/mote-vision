@@ -25,7 +25,7 @@ public:
 
 	const std::vector<std::unique_ptr<config::VideoStream>> &videoStreams() const;
 
-	const mote::config::ColourDefinitions &colourDefinitions() const;
+	mote::config::ColourDefinitions &colourDefinitions();
 
 	virtual void toJson(Json::Value &json) const override;
 

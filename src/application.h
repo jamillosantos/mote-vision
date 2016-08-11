@@ -23,7 +23,7 @@ private:
 public:
 	virtual ~Application();
 
-	const Config &config() const;
+	Config &config();
 
 	/**
 	 * Loads the configuration of the application from a JSON object.

@@ -6,6 +6,7 @@
 #include <http/actions/index.h>
 #include <http/actions/camera.h>
 #include <http/actions/config.h>
+#include <http/actions/config/colour_definitions.h>
 #include "application.h"
 
 
@@ -14,7 +15,7 @@ mote::Application::~Application()
 	this->stop();
 }
 
-const mote::Config& mote::Application::config() const
+mote::Config& mote::Application::config()
 {
 	return this->_config;
 }
@@ -38,7 +39,9 @@ int mote::Application::run()
 		mote::http::actions::Index actionIndex;
 		mote::http::actions::CameraSnapshot actionCameraSnapshot(this->_videoStreams);
 		mote::http::actions::CameraStream actionCameraStream(this->_videoStreams);
+
 		mote::http::actions::Config actionConfig(this->config());
+		mote::http::actions::config::colour_definitions::Set actionConfigColourDefinitionsSet(this->config().colourDefinitions());
 
 		this->_server.reset(new http::Server(this->_config.http()));
 		this->_server->resources()["^/$"]["GET"] = std::bind(&http::actions::Index::trampolin, actionIndex,
@@ -50,6 +53,9 @@ int mote::Application::run()
 			&http::actions::CameraStream::trampolin, actionCameraStream, std::placeholders::_1, std::placeholders::_2);
 		this->_server->resources()["^/config$"]["GET"] = std::bind(
 			&http::actions::Config::trampolin, actionConfig, std::placeholders::_1, std::placeholders::_2);
+		this->_server->resources()["^/config/colourDefinitions$"]["PUT"] = std::bind(
+			&mote::http::actions::config::colour_definitions::Set::trampolin, actionConfigColourDefinitionsSet,
+			std::placeholders::_1, std::placeholders::_2);
 		this->_server->start();
 
 		return 0;

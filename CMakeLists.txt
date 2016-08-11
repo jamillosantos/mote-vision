@@ -470,6 +470,8 @@ set(SOURCE_FILES
 	src/http/actions/videostream.h
 	src/http/actions/config.cpp
 	src/http/actions/config.h
+	src/http/actions/config/colour_definitions.cpp
+	src/http/actions/config/colour_definitions.h
 
 	src/config/config.cpp
 	src/config/config.h
