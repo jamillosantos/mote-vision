@@ -25,6 +25,24 @@ GTEST_TEST(config_colour_definitions, get)
 	ASSERT_FALSE(cd.get("colour50").is_initialized());
 }
 
+GTEST_TEST(config_colour_definitions, operator_get)
+{
+	mote::config::ColourDefinitions cd;
+
+	mote::data::ColourDefinition
+		colourDefinition1(mote::data::ColourRange(mote::data::RGBColour::white), mote::data::ColourRange(mote::data::RGBColour::red)),
+		colourDefinition2(mote::data::ColourRange(mote::data::RGBColour::green), mote::data::ColourRange(mote::data::RGBColour::blue));
+	cd.add("colour1", colourDefinition1);
+	cd.add("colour2", colourDefinition2);
+
+	ASSERT_TRUE(cd["colour1"].is_initialized());
+	ASSERT_TRUE(*cd["colour1"] == colourDefinition1);
+	ASSERT_TRUE(cd["colour2"].is_initialized());
+	ASSERT_TRUE(*cd["colour2"] == colourDefinition2);
+
+	ASSERT_FALSE(cd["colour50"].is_initialized());
+}
+
 GTEST_TEST(config_colour_definitions, add)
 {
 	mote::config::ColourDefinitions cd;
