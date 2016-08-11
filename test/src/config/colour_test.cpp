@@ -33,3 +33,21 @@ GTEST_TEST(config_colour_definitions, remove)
 	cd.remove("colour2");
 	ASSERT_FALSE(cd.exists("colour1"));
 }
+
+
+GTEST_TEST(config_colour_definitions, exists)
+{
+	mote::config::ColourDefinitions cd;
+	cd.add("colour1", mote::data::ColourDefinition(mote::data::ColourRange(mote::data::RGBColour::white), mote::data::ColourRange(mote::data::RGBColour::red)));
+	cd.add("colour2", mote::data::ColourDefinition(mote::data::ColourRange(mote::data::RGBColour::green), mote::data::ColourRange(mote::data::RGBColour::blue)));
+	ASSERT_TRUE(cd.exists("colour1"));
+	ASSERT_TRUE(cd.exists("colour2"));
+	ASSERT_FALSE(cd.exists("colour3"));
+	cd.remove("colour1");
+	ASSERT_FALSE(cd.exists("colour1"));
+	ASSERT_TRUE(cd.exists("colour2"));
+	cd.add("colour3", mote::data::ColourDefinition(mote::data::ColourRange(mote::data::RGBColour::cyan), mote::data::ColourRange(mote::data::RGBColour::magenta)));
+	ASSERT_TRUE(cd.exists("colour3"));
+}
+
+
