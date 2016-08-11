@@ -17,7 +17,7 @@ mote::procs::ModuleManager &mote::procs::ModuleManager::add(mote::procs::Module 
 
 void mote::procs::ModuleManager::process(cv::Mat &in, cv::Mat &out)
 {
-	for (const std::unique_ptr<mote::procs::Module>& module : this->_modules)
+	for (mote::procs::Module* module : this->_modules)
 	{
 		if (module->enabled)
 			module->process(in, out);
@@ -27,6 +27,11 @@ void mote::procs::ModuleManager::process(cv::Mat &in, cv::Mat &out)
 size_t mote::procs::ModuleManager::size()
 {
 	return this->_modules.size();
+}
+
+bool mote::procs::ModuleManager::empty()
+{
+	return this->_modules.empty();
 }
 
 mote::procs::ModuleManager::iterator mote::procs::ModuleManager::begin()

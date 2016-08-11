@@ -10,7 +10,7 @@ class MockModule
 	: public mote::procs::Module
 {
 public:
-	bool processed = false;
+	int processed = 0;
 
 	virtual const std::string &name() const override
 	{
@@ -19,7 +19,7 @@ public:
 
 	virtual void process(cv::Mat &in, cv::Mat &out) override
 	{
-		this->processed = true;
+		this->processed++;
 	}
 };
 
@@ -30,9 +30,12 @@ GTEST_TEST(procs_module_manager, process)
 	cv::Mat in, out;
 
 	manager.add(module);
-	ASSERT_FALSE(module->processed);
+	ASSERT_EQ(0, module->processed);
 	manager.process(in, out);
-	ASSERT_TRUE(module->processed);
+
+	manager.add(module);
+	manager.process(in, out);
+	ASSERT_EQ(3, module->processed);
 }
 
 GTEST_TEST(procs_module_manager, process_disabled)
@@ -44,7 +47,30 @@ GTEST_TEST(procs_module_manager, process_disabled)
 	cv::Mat in, out;
 
 	manager.add(module);
-	ASSERT_FALSE(module->processed);
+	ASSERT_EQ(0, module->processed);
 	manager.process(in, out);
-	ASSERT_FALSE(module->processed);
+	ASSERT_EQ(0, module->processed);
 }
+
+GTEST_TEST(procs_module_manager, size)
+{
+	MockModule* module1 = new MockModule();
+	mote::procs::ModuleManager manager;
+
+	ASSERT_EQ(0, manager.size());
+	manager.add(module1);
+	ASSERT_EQ(1, manager.size());
+	manager.add(module1);
+	ASSERT_EQ(2, manager.size());
+}
+
+GTEST_TEST(procs_module_manager, empty)
+{
+	MockModule* module1 = new MockModule();
+	mote::procs::ModuleManager manager;
+
+	ASSERT_TRUE(manager.empty());
+	manager.add(module1);
+	ASSERT_FALSE(manager.empty());
+}
+

@@ -43,7 +43,7 @@ public:
 class ModuleManager
 {
 private:
-	typedef std::vector<std::unique_ptr<Module>> vector;
+	typedef std::vector<Module*> vector;
 public:
 	typedef vector::iterator iterator;
 	typedef vector::reverse_iterator reverse_iterator;
@@ -53,7 +53,11 @@ private:
 	vector _modules;
 public:
 	/**
-	 * Ads a module into the manager.
+	 * Adds a module into the manager.
+	 *
+	 * **IMPORTANT**: Remeber that you are adding a *pointer* to the module. So, you need to remember to free this
+	 * object when you are destroying this object. A good practice would be declare those modules as another "manager"
+	 * class as member fields and start this ModuleManager from there.
 	 *
 	 * @param module Module that will be added.
 	 * @return The ModuleManager instance itself.
@@ -74,6 +78,13 @@ public:
 	 * @return
 	 */
 	size_t size();
+
+	/**
+	 * Returns if there is any module added.
+	 *
+	 * @return
+	 */
+	bool empty();
 
 	iterator begin();
 	iterator end();
