@@ -35,6 +35,16 @@ GTEST_TEST(data_colour_range, constructor_copy)
 	ASSERT_EQ(colour1.greenBlue, colour2.greenBlue);
 }
 
+GTEST_TEST(data_colour_range, constructor_rgbcolour)
+{
+	mote::data::RGBColour colour(1, 2, 3);
+	mote::data::ColourRange colourRange(colour);
+
+	ASSERT_EQ(colour.r, colourRange.r);
+	ASSERT_EQ(colour.g, colourRange.g);
+	ASSERT_EQ(colour.b, colourRange.b);
+}
+
 GTEST_TEST(data_colour_range, operator_equals)
 {
 	mote::data::ColourRange

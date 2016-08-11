@@ -15,6 +15,10 @@ mote::data::ColourRange::ColourRange(const mote::data::ColourRange &colour)
 	: ColourRange(colour.r, colour.g, colour.b)
 { }
 
+mote::data::ColourRange::ColourRange(const mote::data::RGBColour &colour)
+	: ColourRange(colour.r, colour.g, colour.b)
+{ }
+
 mote::data::ColourRange::ColourRange()
 	: ColourRange(0, 0, 0)
 { }
