@@ -84,8 +84,8 @@ public:
 
 	RGBColour& operator=(const RGBColour& colour);
 
-	virtual bool operator==(const RGBColour& colour);
-	virtual bool operator!=(const RGBColour& colour);
+	virtual bool operator==(const RGBColour& colour) const;
+	virtual bool operator!=(const RGBColour& colour) const;
 
 	RGBColour operator+(const RGBColour& colour);
 	RGBColour operator-(const RGBColour& colour);

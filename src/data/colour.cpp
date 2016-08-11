@@ -61,7 +61,7 @@ mote::data::RGBColour &mote::data::RGBColour::operator=(const mote::data::RGBCol
 	return *this;
 }
 
-bool mote::data::RGBColour::operator==(const mote::data::RGBColour &colour)
+bool mote::data::RGBColour::operator==(const mote::data::RGBColour &colour) const
 {
 	return
 		(colour.r == this->r) &&
@@ -69,7 +69,7 @@ bool mote::data::RGBColour::operator==(const mote::data::RGBColour &colour)
 		(colour.b == this->b);
 }
 
-bool mote::data::RGBColour::operator!=(const mote::data::RGBColour &colour)
+bool mote::data::RGBColour::operator!=(const mote::data::RGBColour &colour) const
 {
 	return
 		(colour.r != this->r) ||
