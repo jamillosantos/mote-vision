@@ -123,6 +123,7 @@ void mote::config::ColourDefinitions::addJson(const Json::Value &json)
 	for (Json::Value::const_iterator it = json.begin(); it != json.end(); ++it)
 	{
 		mote::data::ColourDefinition tmp;
-		tmp.fromJson(it.key());
+		tmp.fromJson(*it);
+		this->add(it.name(), tmp);
 	}
 }
