@@ -5,6 +5,7 @@
 
 #include <http/actions/index.h>
 #include <http/actions/camera.h>
+#include <http/actions/config.h>
 #include "application.h"
 
 
@@ -37,6 +38,7 @@ int mote::Application::run()
 		mote::http::actions::Index actionIndex;
 		mote::http::actions::CameraSnapshot actionCameraSnapshot(this->_videoStreams);
 		mote::http::actions::CameraStream actionCameraStream(this->_videoStreams);
+		mote::http::actions::Config actionConfig(this->config());
 
 		this->_server.reset(new http::Server(this->_config.http()));
 		this->_server->resources()["^/$"]["GET"] = std::bind(&http::actions::Index::trampolin, actionIndex,
@@ -46,6 +48,8 @@ int mote::Application::run()
 			std::placeholders::_2);
 		this->_server->resources()["^/camera/([0-9]+)/stream.([a-z]+)$"]["GET"] = std::bind(
 			&http::actions::CameraStream::trampolin, actionCameraStream, std::placeholders::_1, std::placeholders::_2);
+		this->_server->resources()["^/config$"]["GET"] = std::bind(
+			&http::actions::Config::trampolin, actionConfig, std::placeholders::_1, std::placeholders::_2);
 		this->_server->start();
 
 		return 0;

@@ -468,6 +468,8 @@ set(SOURCE_FILES
 	src/http/actions/camera.h
 	src/http/actions/videostream.cpp
 	src/http/actions/videostream.h
+	src/http/actions/config.cpp
+	src/http/actions/config.h
 
 	src/config/config.cpp
 	src/config/config.h
