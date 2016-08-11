@@ -39,6 +39,11 @@ size_t mote::config::ColourDefinitions::size() const
 	return this->_colours.size();
 }
 
+void mote::config::ColourDefinitions::clear()
+{
+	this->_colours.clear();
+}
+
 boost::optional<mote::data::ColourDefinition> mote::config::ColourDefinitions::get(const std::string &name) const
 {
 	const const_iterator &it = this->find(name);

@@ -149,6 +149,16 @@ GTEST_TEST(config_colour_definitions, size)
 	ASSERT_EQ(cd.size(), 1);
 }
 
+GTEST_TEST(config_colour_definitions, clear)
+{
+	mote::config::ColourDefinitions cd;
+	ASSERT_TRUE(cd.empty());
+	cd.add("colour1", mote::data::ColourDefinition(mote::data::ColourRange(mote::data::RGBColour::white), mote::data::ColourRange(mote::data::RGBColour::red)));
+	ASSERT_FALSE(cd.empty());
+	cd.clear();
+	ASSERT_TRUE(cd.empty());
+}
+
 GTEST_TEST(config_colour_definitions, toJson)
 {
 	mote::config::ColourDefinitions cd;

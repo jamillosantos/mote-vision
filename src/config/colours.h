@@ -37,6 +37,8 @@ public:
 	bool empty() const;
 	size_t size() const;
 
+	void clear();
+
 	boost::optional<mote::data::ColourDefinition> get(const std::string &name) const;
 	boost::optional<mote::data::ColourDefinition> operator[](const std::string &name) const;
 
@@ -53,10 +55,12 @@ public:
 	const_reverse_iterator crbegin() const;
 	const_reverse_iterator crend() const;
 
+
 	virtual void toJson(Json::Value &json) const override;
 
 	virtual void fromJson(const Json::Value &json) override;
 	virtual void addJson(const Json::Value &json);
+
 };
 }
 }
