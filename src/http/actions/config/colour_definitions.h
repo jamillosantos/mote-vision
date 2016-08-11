@@ -30,15 +30,21 @@ public:
 protected:
 	virtual void action(mote::http::Response &response, SimpleWeb::Server<SimpleWeb::HTTP>::Request &request) override;
 };
-}
-}
-}
-}
-}
-class colour_definitions
+
+class Clear
+	: public Action
 {
-
+private:
+	mote::config::ColourDefinitions &_colourDefinitions;
+public:
+	Clear(mote::config::ColourDefinitions &colourDefinitions);
+protected:
+	virtual void action(mote::http::Response &response, SimpleWeb::Server<SimpleWeb::HTTP>::Request &request) override;
 };
-
+}
+}
+}
+}
+}
 
 #endif //MOTE_VISION_COLOUR_DEFINITIONS_H

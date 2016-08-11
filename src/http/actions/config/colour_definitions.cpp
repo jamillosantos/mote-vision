@@ -26,3 +26,16 @@ void mote::http::actions::config::colour_definitions::Set::action(mote::http::Re
 	}
 	response << jsonResult;
 }
+
+mote::http::actions::config::colour_definitions::Clear::Clear(mote::config::ColourDefinitions &colourDefinitions)
+	: _colourDefinitions(colourDefinitions)
+{ }
+
+void mote::http::actions::config::colour_definitions::Clear::action(mote::http::Response &response,
+	SimpleWeb::Server<SimpleWeb::HTTP>::Request &request)
+{
+	this->_colourDefinitions.clear();
+	Json::Value jsonResult;
+	jsonResult["success"] = true;
+	response << jsonResult;
+}
