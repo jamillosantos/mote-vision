@@ -20,12 +20,7 @@ class Action
 {
 public:
 	virtual void trampolin(std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Response> response,
-		std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request)
-	{
-		BOOST_LOG_TRIVIAL(trace) << "Action::trampolim()";
-		mote::http::Response r(*response);
-		this->action(r, *request);
-	}
+		std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request);
 protected:
 	virtual void action(mote::http::Response& response, SimpleWeb::Server<SimpleWeb::HTTP>::Request& request) = 0;
 };
