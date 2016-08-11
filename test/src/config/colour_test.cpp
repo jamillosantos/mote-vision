@@ -34,7 +34,6 @@ GTEST_TEST(config_colour_definitions, remove)
 	ASSERT_FALSE(cd.exists("colour1"));
 }
 
-
 GTEST_TEST(config_colour_definitions, exists)
 {
 	mote::config::ColourDefinitions cd;
@@ -50,4 +49,39 @@ GTEST_TEST(config_colour_definitions, exists)
 	ASSERT_TRUE(cd.exists("colour3"));
 }
 
+GTEST_TEST(config_colour_definitions, find)
+{
+	mote::config::ColourDefinitions cd;
+	mote::data::ColourDefinition
+		colourDefinition1(mote::data::ColourRange(mote::data::RGBColour::white), mote::data::ColourRange(mote::data::RGBColour::red)),
+		colourDefinition2(mote::data::ColourRange(mote::data::RGBColour::green), mote::data::ColourRange(mote::data::RGBColour::blue));
+	cd.add("colour1", colourDefinition1);
+	cd.add("colour2", colourDefinition2);
 
+	{
+		const mote::config::ColourDefinitions::const_iterator &it = cd.find("colour1");
+		ASSERT_EQ(it->first, "colour1");
+		ASSERT_TRUE(it->second == colourDefinition1);
+	}
+	{
+		const mote::config::ColourDefinitions::const_iterator &it = cd.find("colour2");
+		ASSERT_EQ(it->first, "colour2");
+		ASSERT_TRUE(it->second == colourDefinition2);
+	}
+}
+
+GTEST_TEST(config_colour_definitions, empty)
+{
+	mote::config::ColourDefinitions cd;
+	ASSERT_TRUE(cd.empty());
+
+	mote::data::ColourDefinition
+		colourDefinition1(mote::data::ColourRange(mote::data::RGBColour::white), mote::data::ColourRange(mote::data::RGBColour::red));
+	cd.add("colour1", colourDefinition1);
+
+	ASSERT_FALSE(cd.empty());
+
+	cd.remove("colour1");
+
+	ASSERT_TRUE(cd.empty());
+}
