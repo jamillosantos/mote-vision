@@ -44,6 +44,13 @@ GTEST_TEST(config_config, from_json_1)
 	json["videoStreams"]["gain"] = CONFIG_VIDEOSTREAM_GAIN;
 	json["videoStreams"]["exposure"] = CONFIG_VIDEOSTREAM_EXPOSURE;
 
+	json["colourDefinitions"]["colour1"]["min"]["r"] = 1;
+	json["colourDefinitions"]["colour1"]["min"]["g"] = 2;
+	json["colourDefinitions"]["colour1"]["min"]["b"] = 3;
+	json["colourDefinitions"]["colour1"]["max"]["r"] = 4;
+	json["colourDefinitions"]["colour1"]["max"]["g"] = 5;
+	json["colourDefinitions"]["colour1"]["max"]["b"] = 6;
+
 	config.fromJson(json);
 	ASSERT_EQ(CONFIG_HTTP_ADDRESS, config.http().address);
 	ASSERT_EQ(CONFIG_HTTP_PORT, config.http().port);
@@ -61,6 +68,15 @@ GTEST_TEST(config_config, from_json_1)
 	ASSERT_EQ(CONFIG_VIDEOSTREAM_HUE, config.videoStreams()[0]->hue);
 	ASSERT_EQ(CONFIG_VIDEOSTREAM_GAIN, config.videoStreams()[0]->gain);
 	ASSERT_EQ(CONFIG_VIDEOSTREAM_EXPOSURE, config.videoStreams()[0]->exposure);
+
+	ASSERT_TRUE(config.colourDefinitions()["colour1"].is_initialized());
+
+	ASSERT_EQ(1, config.colourDefinitions()["colour1"]->min.r);
+	ASSERT_EQ(2, config.colourDefinitions()["colour1"]->min.g);
+	ASSERT_EQ(3, config.colourDefinitions()["colour1"]->min.b);
+	ASSERT_EQ(4, config.colourDefinitions()["colour1"]->max.r);
+	ASSERT_EQ(5, config.colourDefinitions()["colour1"]->max.g);
+	ASSERT_EQ(6, config.colourDefinitions()["colour1"]->max.b);
 }
 
 GTEST_TEST(config_config, from_json_multiple_video_streams)
@@ -126,11 +142,20 @@ GTEST_TEST(config_config, to_json)
 		json["videoStreams"]["hue"] = CONFIG_VIDEOSTREAM_HUE;
 		json["videoStreams"]["gain"] = CONFIG_VIDEOSTREAM_GAIN;
 		json["videoStreams"]["exposure"] = CONFIG_VIDEOSTREAM_EXPOSURE;
+
+		json["colourDefinitions"]["colour1"]["min"]["r"] = 1;
+		json["colourDefinitions"]["colour1"]["min"]["g"] = 2;
+		json["colourDefinitions"]["colour1"]["min"]["b"] = 3;
+		json["colourDefinitions"]["colour1"]["max"]["r"] = 4;
+		json["colourDefinitions"]["colour1"]["max"]["g"] = 5;
+		json["colourDefinitions"]["colour1"]["max"]["b"] = 6;
+
 		config.fromJson(json);
 	}
 
 	Json::Value json;
 	config.toJson(json);
+
 	ASSERT_EQ(CONFIG_HTTP_ADDRESS, json["http"]["address"].asString());
 	ASSERT_EQ(CONFIG_HTTP_PORT, json["http"]["port"].asUInt());
 	ASSERT_EQ(CONFIG_HTTP_THREADS, json["http"]["threads"].asUInt());
@@ -148,4 +173,11 @@ GTEST_TEST(config_config, to_json)
 	ASSERT_EQ(CONFIG_VIDEOSTREAM_HUE, json["videoStreams"][0]["hue"].asInt());
 	ASSERT_EQ(CONFIG_VIDEOSTREAM_GAIN, json["videoStreams"][0]["gain"].asInt());
 	ASSERT_EQ(CONFIG_VIDEOSTREAM_EXPOSURE, json["videoStreams"][0]["exposure"].asInt());
+
+	ASSERT_EQ(1, json["colourDefinitions"]["colour1"]["min"]["r"].asInt());
+	ASSERT_EQ(2, json["colourDefinitions"]["colour1"]["min"]["g"].asInt());
+	ASSERT_EQ(3, json["colourDefinitions"]["colour1"]["min"]["b"].asInt());
+	ASSERT_EQ(4, json["colourDefinitions"]["colour1"]["max"]["r"].asInt());
+	ASSERT_EQ(5, json["colourDefinitions"]["colour1"]["max"]["g"].asInt());
+	ASSERT_EQ(6, json["colourDefinitions"]["colour1"]["max"]["b"].asInt());
 }

@@ -16,9 +16,15 @@ const std::vector<std::unique_ptr<mote::config::VideoStream>>& mote::Config::vid
 	return this->_videoStreams;
 }
 
+const mote::config::ColourDefinitions &mote::Config::colourDefinitions() const
+{
+	return this->_colourDefinitions;
+}
+
 void mote::Config::toJson(Json::Value &json) const
 {
 	this->_http.toJson(json["http"]);
+
 	json["videoStreams"] = Json::arrayValue;
 	for (const std::unique_ptr<config::VideoStream>& videoStream : this->_videoStreams)
 	{
@@ -26,6 +32,8 @@ void mote::Config::toJson(Json::Value &json) const
 		videoStream->toJson(videoStreamJson);
 		json["videoStreams"].append(videoStreamJson);
 	}
+
+	this->_colourDefinitions.toJson(json["colourDefinitions"]);
 }
 
 void mote::Config::fromJson(const Json::Value &json)
@@ -44,6 +52,17 @@ void mote::Config::fromJson(const Json::Value &json)
 		{
 			this->_videoStreams.emplace_back(new mote::config::VideoStream());
 			this->_videoStreams.back()->fromJson(jsonVideoStream);
+		}
+	}
+	this->_colourDefinitions.clear();
+	Json::Value jsonColourDefinitions = json["colourDefinitions"];
+	if (jsonColourDefinitions.isObject())
+	{
+		for (Json::ValueConstIterator it = jsonColourDefinitions.begin(); it != jsonColourDefinitions.end(); ++it)
+		{
+			mote::data::ColourDefinition colourDefinition;
+			colourDefinition.fromJson(*it);
+			this->_colourDefinitions.add(it.name(), colourDefinition);
 		}
 	}
 }
