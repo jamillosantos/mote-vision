@@ -36,6 +36,8 @@ namespace http
  */
 class Status
 {
+private:
+	static std::map<int, Status*> _statuses;
 public:
 	static Status CONTINUE;
 	static Status SWITCHING_PROTOCOLS;
@@ -100,6 +102,8 @@ public:
 	static Status NOT_EXTENDED;
 	static Status NETWORK_AUTHENTICATION_REQUIRED;
 	static Status NETWORK_CONNECT_TIMEOUT_ERROR;
+
+	static boost::optional<const mote::http::Status&> byCode(int code);
 
 	/**
 	 * Integer code of the status.

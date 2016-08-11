@@ -12,21 +12,32 @@ namespace mote
 {
 namespace http
 {
-class HttpError
+class HttpException
 	: public mote::Exception
 {
 public:
-	HttpError();
+	HttpException();
 
-	HttpError(const std::string &message);
+	HttpException(const std::string &message);
 
-	HttpError(const std::exception &cause);
+	HttpException(const std::exception &cause);
 
-	HttpError(const std::string &message, const std::exception &cause);
+	HttpException(const std::string &message, const std::exception &cause);
+};
+
+class HttpError
+	: public HttpException
+{
+private:
+	int _errorCode;
+public:
+	HttpError(const int errorCode, const std::string &message);
+
+	int errorCode() const;
 };
 
 class AlreadyBeenFlushed
-	: public HttpError
+	: public HttpException
 {
 public:
 	AlreadyBeenFlushed();

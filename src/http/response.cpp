@@ -5,6 +5,8 @@
 
 #include "response.h"
 
+std::map<int, mote::http::Status*> mote::http::Status::_statuses;
+
 mote::http::Status mote::http::Status::CONTINUE(100, "Continue");
 mote::http::Status mote::http::Status::SWITCHING_PROTOCOLS(101, "Switching Protocols");
 mote::http::Status mote::http::Status::PROCESSING(102, "Processing");
@@ -69,8 +71,19 @@ mote::http::Status mote::http::Status::NOT_EXTENDED(510, "Not Extended");
 mote::http::Status mote::http::Status::NETWORK_AUTHENTICATION_REQUIRED(511, "Network Authentication Required");
 mote::http::Status mote::http::Status::NETWORK_CONNECT_TIMEOUT_ERROR(599, "Network Connect Timeout Error");
 
+boost::optional<const mote::http::Status&> mote::http::Status::byCode(int code)
+{
+	if (_statuses.find(code) == _statuses.end())
+		return boost::optional<const mote::http::Status&>();
+	else
+		return *_statuses[code];
+}
+
 mote::http::Status::Status(int value, const std::string &text) : value(value), text(text)
-{ }
+{
+	if (_statuses.find(value) == _statuses.end())
+		_statuses[value] = this;
+}
 
 mote::http::Status::Status(const Status &status) : Status(status.value, status.text)
 { }

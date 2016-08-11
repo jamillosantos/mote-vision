@@ -5,21 +5,30 @@
 
 #include "exceptions.h"
 
-mote::http::HttpError::HttpError() : Exception()
+mote::http::HttpException::HttpException() : Exception()
 { }
 
-mote::http::HttpError::HttpError(const std::string &message)
+mote::http::HttpException::HttpException(const std::string &message)
 	: Exception(message)
 { }
 
-mote::http::HttpError::HttpError(const std::exception &cause)
+mote::http::HttpException::HttpException(const std::exception &cause)
 	: Exception(cause)
 { }
 
-mote::http::HttpError::HttpError(const std::string &message, const std::exception &cause)
+mote::http::HttpException::HttpException(const std::string &message, const std::exception &cause)
 	: Exception(message, cause)
 { }
 
 mote::http::AlreadyBeenFlushed::AlreadyBeenFlushed()
-	: HttpError("The response already flushed.")
+	: HttpException("The response already flushed.")
 { }
+
+mote::http::HttpError::HttpError(const int errorCode, const std::string &message)
+	: HttpException(message), _errorCode(errorCode)
+{ }
+
+int mote::http::HttpError::errorCode() const
+{
+	return this->_errorCode;
+}
