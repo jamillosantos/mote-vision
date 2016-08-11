@@ -67,8 +67,11 @@ public:
 	ColourRange min;
 	ColourRange max;
 
-	virtual void fromJson(const Json::Value &json) override;
+	bool operator==(const ColourDefinition &colourDefinition) const;
 
+	bool operator!=(const ColourDefinition &colourDefinition) const;
+
+	virtual void fromJson(const Json::Value &json) override;
 	virtual void toJson(Json::Value &json) const override;
 };
 }

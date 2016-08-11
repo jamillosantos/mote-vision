@@ -226,6 +226,59 @@ GTEST_TEST(data_colour_definition, constructor_copy)
 	ASSERT_TRUE(colourDefinition1.max == colourDefinition2.max);
 }
 
+GTEST_TEST(data_colour_definition, operator_equal)
+{
+	mote::data::ColourDefinition
+		colourDefinition1(mote::data::ColourRange(1, 2, 3), mote::data::ColourRange(4, 5, 6)),
+		colourDefinition2(mote::data::ColourRange(1, 2, 3), mote::data::ColourRange(4, 5, 6));
+	ASSERT_TRUE(colourDefinition1 == colourDefinition2);
+}
+
+GTEST_TEST(data_colour_definition, operator_not_equal)
+{
+	{	// Min.r different
+		mote::data::ColourDefinition
+			colourDefinition1(mote::data::ColourRange(1, 2, 3), mote::data::ColourRange(4, 5, 6)),
+			colourDefinition2(mote::data::ColourRange(10, 2, 3), mote::data::ColourRange(4, 5, 6));
+		ASSERT_TRUE(colourDefinition1 != colourDefinition2);
+	}
+
+	{	// Min.g different
+		mote::data::ColourDefinition
+			colourDefinition1(mote::data::ColourRange(1, 2, 3), mote::data::ColourRange(4, 5, 6)),
+			colourDefinition2(mote::data::ColourRange(1, 20, 3), mote::data::ColourRange(4, 5, 6));
+		ASSERT_TRUE(colourDefinition1 != colourDefinition2);
+	}
+
+	{	// Min.b different
+		mote::data::ColourDefinition
+			colourDefinition1(mote::data::ColourRange(1, 2, 3), mote::data::ColourRange(4, 5, 6)),
+			colourDefinition2(mote::data::ColourRange(1, 2, 30), mote::data::ColourRange(4, 5, 6));
+		ASSERT_TRUE(colourDefinition1 != colourDefinition2);
+	}
+
+	{	// Max.r different
+		mote::data::ColourDefinition
+			colourDefinition1(mote::data::ColourRange(1, 2, 3), mote::data::ColourRange(4, 5, 6)),
+			colourDefinition2(mote::data::ColourRange(1, 2, 3), mote::data::ColourRange(40, 5, 6));
+		ASSERT_TRUE(colourDefinition1 != colourDefinition2);
+	}
+
+	{	// Max.g different
+		mote::data::ColourDefinition
+			colourDefinition1(mote::data::ColourRange(1, 2, 3), mote::data::ColourRange(4, 5, 6)),
+			colourDefinition2(mote::data::ColourRange(1, 2, 3), mote::data::ColourRange(4, 50, 6));
+		ASSERT_TRUE(colourDefinition1 != colourDefinition2);
+	}
+
+	{	// Max.b different
+		mote::data::ColourDefinition
+			colourDefinition1(mote::data::ColourRange(1, 2, 3), mote::data::ColourRange(4, 5, 6)),
+			colourDefinition2(mote::data::ColourRange(1, 2, 3), mote::data::ColourRange(4, 5, 60));
+		ASSERT_TRUE(colourDefinition1 != colourDefinition2);
+	}
+}
+
 GTEST_TEST(data_colour_definition, toJson)
 {
 	mote::data::ColourDefinition colourDefinition(mote::data::ColourRange(1, 2, 3), mote::data::ColourRange(4, 5, 6));

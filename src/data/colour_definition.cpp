@@ -144,3 +144,14 @@ void mote::data::ColourDefinition::toJson(Json::Value &json) const
 	this->min.toJson(json["min"]);
 	this->max.toJson(json["max"]);
 }
+
+bool mote::data::ColourDefinition::operator==(const mote::data::ColourDefinition &colourDefinition) const
+{
+	return
+		(this->min == colourDefinition.min) && (this->max == colourDefinition.max);
+}
+
+bool mote::data::ColourDefinition::operator!=(const mote::data::ColourDefinition &colourDefinition) const
+{
+	return !(colourDefinition == *this);
+}
