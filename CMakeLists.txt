@@ -451,6 +451,8 @@ set(SOURCE_FILES
 
 	src/procs/videostream.h
 	src/procs/videostream.cpp
+	src/procs/module.cpp
+	src/procs/module.h
 
 	src/http/server.h
 	src/http/server.cpp
@@ -460,11 +462,12 @@ set(SOURCE_FILES
 	src/http/exceptions.cpp
 	src/http/action.cpp
 	src/http/action.h
-
 	src/http/actions/index.cpp
 	src/http/actions/index.h
 	src/http/actions/camera.cpp
 	src/http/actions/camera.h
+	src/http/actions/videostream.cpp
+	src/http/actions/videostream.h
 
 	src/config/config.cpp
 	src/config/config.h
@@ -474,13 +477,21 @@ set(SOURCE_FILES
 	src/config/http.h
 	src/config/videostream.cpp
 	src/config/videostream.h
+	src/config/colours.cpp
+	src/config/colours.h
 
 	src/application.h
 	src/application.cpp
-
 	src/exceptions.h
 	src/exceptions.cpp
-	src/http/actions/videostream.cpp src/http/actions/videostream.h src/procs/module.cpp src/procs/module.h src/data/colour.cpp src/data/colour.h src/data/serializable.cpp src/data/serializable.h src/data/colour_definition.cpp src/data/colour_definition.h)
+
+	src/data/colour.cpp
+	src/data/colour.h
+	src/data/serializable.cpp
+	src/data/serializable.h
+	src/data/colour_definition.cpp
+	src/data/colour_definition.h
+)
 
 add_executable(vision
 	src/main.cpp
