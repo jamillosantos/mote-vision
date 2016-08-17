@@ -39,3 +39,24 @@ void mote::http::actions::config::colour_definitions::Clear::action(mote::http::
 	jsonResult["success"] = true;
 	response << jsonResult;
 }
+
+mote::http::actions::config::colour_definitions::Remove::Remove(mote::config::ColourDefinitions &colourDefinitions)
+	: _colourDefinitions(colourDefinitions)
+{ }
+
+void mote::http::actions::config::colour_definitions::Remove::action(mote::http::Response &response,
+	SimpleWeb::Server<SimpleWeb::HTTP>::Request &request)
+{
+	Json::Value
+		json,
+		jsonResult;
+	Json::Reader reader;
+	reader.parse(request.content, json);
+	Json::Value &jsonColours = json["colours"];
+	for (Json::ValueConstIterator it = jsonColours.begin(); it != jsonColours.end(); ++it)
+	{
+		this->_colourDefinitions.remove(it->asString());
+		jsonResult[it->asString()] = true;
+	}
+	response << jsonResult;
+}

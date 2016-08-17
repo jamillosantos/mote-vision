@@ -41,6 +41,17 @@ public:
 protected:
 	virtual void action(mote::http::Response &response, SimpleWeb::Server<SimpleWeb::HTTP>::Request &request) override;
 };
+
+class Remove
+	: public Action
+{
+private:
+	mote::config::ColourDefinitions &_colourDefinitions;
+public:
+	Remove(mote::config::ColourDefinitions &colourDefinitions);
+protected:
+	virtual void action(mote::http::Response &response, SimpleWeb::Server<SimpleWeb::HTTP>::Request &request) override;
+};
 }
 }
 }

@@ -43,6 +43,7 @@ int mote::Application::run()
 		mote::http::actions::Config actionConfig(this->config());
 		mote::http::actions::config::colour_definitions::Set actionConfigColourDefinitionsSet(this->config().colourDefinitions());
 		mote::http::actions::config::colour_definitions::Clear actionConfigColourDefinitionsClear(this->config().colourDefinitions());
+		mote::http::actions::config::colour_definitions::Remove actionConfigColourDefinitionsRemove(this->config().colourDefinitions());
 
 		this->_server.reset(new http::Server(this->_config.http()));
 		this->_server->resources()["^/$"]["GET"] = std::bind(&http::actions::Index::trampolin, actionIndex,
@@ -60,6 +61,9 @@ int mote::Application::run()
 			std::placeholders::_1, std::placeholders::_2);
 		this->_server->resources()["^/config/colourDefinitions/clear$"]["GET"] = std::bind(
 			&mote::http::actions::config::colour_definitions::Clear::trampolin, actionConfigColourDefinitionsClear,
+			std::placeholders::_1, std::placeholders::_2);
+		this->_server->resources()["^/config/colourDefinitions/remove"]["POST"] = std::bind(
+			&mote::http::actions::config::colour_definitions::Remove::trampolin, actionConfigColourDefinitionsRemove,
 			std::placeholders::_1, std::placeholders::_2);
 		this->_server->start();
 
