@@ -58,8 +58,8 @@ void mote::imgprocs::FrameBufferIterator::get(mote::data::Pixel &pixel)
 	this->getPixel(pixel, this->_cursor.x, this->_cursor.y);
 }
 
-mote::imgprocs::FramBufferIteratorRGB24::FramBufferIteratorRGB24(uint8_t *begin, unsigned int width,
-	unsigned int height, unsigned int subsample)
+mote::imgprocs::FramBufferIteratorRGB24::FramBufferIteratorRGB24(uint8_t *begin,
+	unsigned int width, unsigned int height, unsigned int subsample)
 	: FrameBufferIterator(sizeof(mote::data::Pixel), begin, width, height, subsample)
 { }
 
