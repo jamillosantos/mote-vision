@@ -14,6 +14,11 @@ GTEST_TEST(data_pixel, constructor)
 	ASSERT_EQ(3, p.b);
 }
 
+GTEST_TEST(data_pixel, size_of)
+{
+	ASSERT_EQ(3, sizeof(mote::data::Pixel));
+}
+
 GTEST_TEST(data_pixel, address_alignment)
 {
 	char* data = "\x03\x02\x01";

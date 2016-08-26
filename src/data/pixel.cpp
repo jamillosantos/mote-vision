@@ -4,3 +4,10 @@
  */
 
 #include "pixel.h"
+
+mote::data::Pixel::Pixel()
+{ }
+
+mote::data::Pixel::Pixel(uint8_t r, uint8_t g, uint8_t b)
+	: b(b), g(g), r(r)
+{ }
