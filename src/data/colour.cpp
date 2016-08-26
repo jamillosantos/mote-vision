@@ -15,130 +15,166 @@ mote::data::RGBColour mote::data::RGBColour::cyan(0, 255, 255);
 mote::data::RGBColour mote::data::RGBColour::magenta(255, 0, 255);
 
 mote::data::RGBColour::RGBColour(uint8_t r, uint8_t g, uint8_t b)
-	: r(r), g(g), b(b)
+	: _pixel(new mote::data::Pixel(r, g, b)), _ownsPixel(true)
+{ }
+
+mote::data::RGBColour::RGBColour(mote::data::Pixel *pixel)
+	: _pixel(pixel), _ownsPixel(false)
 { }
 
 mote::data::RGBColour::RGBColour(const mote::data::RGBColour &colour)
-	: mote::data::RGBColour::RGBColour(colour.r, colour.g, colour.b)
+	: mote::data::RGBColour::RGBColour(colour.pixel()->r, colour.pixel()->g, colour.pixel()->b)
 { }
 
 mote::data::RGBColour::RGBColour()
 	: mote::data::RGBColour::RGBColour(0, 0, 0)
 { }
 
+mote::data::RGBColour::~RGBColour()
+{
+	if (this->_ownsPixel && this->_pixel)
+		delete this->_pixel;
+}
+
+mote::data::Pixel* mote::data::RGBColour::pixel()
+{
+	return this->_pixel;
+}
+
+mote::data::Pixel* mote::data::RGBColour::pixel() const
+{
+	return this->_pixel;
+}
+
+mote::data::RGBColour &mote::data::RGBColour::pixel(mote::data::Pixel *pixel, bool own)
+{
+	if (this->_ownsPixel && (this->_ownsPixel))
+		delete this->_pixel;
+
+	this->_pixel = pixel;
+	this->_ownsPixel = own;
+
+	return *this;
+}
+
 double mote::data::RGBColour::intensity()
 {
-	return (this->r + this->g + this->b) / 3.0;
+	return (this->pixel()->r + this->pixel()->g + this->pixel()->b) / 3.0;
 }
 
 mote::data::RGBColour &mote::data::RGBColour::minimum(const mote::data::RGBColour &colour)
 {
-	if (colour.r < this->r)
-		this->r = colour.r;
-	if (colour.g < this->g)
-		this->g = colour.g;
-	if (colour.b < this->b)
-		this->b = colour.b;
+	if (colour.pixel()->r < this->pixel()->r)
+		this->pixel()->r = colour.pixel()->r;
+	if (colour.pixel()->g < this->pixel()->g)
+		this->pixel()->g = colour.pixel()->g;
+	if (colour.pixel()->b < this->pixel()->b)
+		this->pixel()->b = colour.pixel()->b;
 	return *this;
 }
 
 mote::data::RGBColour &mote::data::RGBColour::maximum(const mote::data::RGBColour &colour)
 {
-	if (colour.r > this->r)
-		this->r = colour.r;
-	if (colour.g > g)
-		this->g = colour.g;
-	if (colour.b > this->b)
-		this->b = colour.b;
+	if (colour.pixel()->r > this->pixel()->r)
+		this->pixel()->r = colour.pixel()->r;
+	if (colour.pixel()->g > this->pixel()->g)
+		this->pixel()->g = colour.pixel()->g;
+	if (colour.pixel()->b > this->pixel()->b)
+		this->pixel()->b = colour.pixel()->b;
 	return *this;
 }
 
 mote::data::RGBColour &mote::data::RGBColour::operator=(const mote::data::RGBColour &colour)
 {
-	this->r = colour.r;
-	this->g = colour.g;
-	this->b = colour.b;
+	this->pixel()->r = colour.pixel()->r;
+	this->pixel()->g = colour.pixel()->g;
+	this->pixel()->b = colour.pixel()->b;
 	return *this;
 }
 
 bool mote::data::RGBColour::operator==(const mote::data::RGBColour &colour) const
 {
 	return
-		(colour.r == this->r) &&
-		(colour.g == this->g) &&
-		(colour.b == this->b);
+		(colour.pixel()->r == this->pixel()->r) &&
+		(colour.pixel()->g == this->pixel()->g) &&
+		(colour.pixel()->b == this->pixel()->b);
 }
 
 bool mote::data::RGBColour::operator!=(const mote::data::RGBColour &colour) const
 {
 	return
-		(colour.r != this->r) ||
-		(colour.g != this->g) ||
-		(colour.b != this->b);
+		(colour.pixel()->r != this->pixel()->r) ||
+		(colour.pixel()->g != this->pixel()->g) ||
+		(colour.pixel()->b != this->pixel()->b);
 }
 
 mote::data::RGBColour mote::data::RGBColour::operator+(const mote::data::RGBColour &colour)
 {
-	return mote::data::RGBColour(this->r + colour.r, this->g + colour.g, this->b + colour.b);
+	return mote::data::RGBColour(this->pixel()->r + colour.pixel()->r, this->pixel()->g + colour.pixel()->g, this->pixel()->b + colour.pixel()->b);
 }
 
 mote::data::RGBColour mote::data::RGBColour::operator-(const mote::data::RGBColour &colour)
 {
-	return mote::data::RGBColour(this->r - colour.r, this->g - colour.g, this->b - colour.b);
+	return mote::data::RGBColour(this->pixel()->r - colour.pixel()->r, this->pixel()->g - colour.pixel()->g, this->pixel()->b - colour.pixel()->b);
 }
 
 mote::data::RGBColour mote::data::RGBColour::operator*(const mote::data::RGBColour &colour)
 {
-	return mote::data::RGBColour(this->r * colour.r, this->g * colour.g, this->b * colour.b);
+	return mote::data::RGBColour(this->pixel()->r * colour.pixel()->r, this->pixel()->g * colour.pixel()->g, this->pixel()->b * colour.pixel()->b);
 }
 
 mote::data::RGBColour mote::data::RGBColour::operator/(const mote::data::RGBColour &colour)
 {
-	return mote::data::RGBColour(this->r / colour.r, this->g / colour.g, this->b / colour.b);
+	return mote::data::RGBColour(this->pixel()->r / colour.pixel()->r, this->pixel()->g / colour.pixel()->g, this->pixel()->b / colour.pixel()->b);
 }
 
 mote::data::RGBColour &mote::data::RGBColour::operator+=(const mote::data::RGBColour &colour)
 {
-	this->r += colour.r;
-	this->g += colour.g;
-	this->b += colour.b;
+	this->pixel()->r += colour.pixel()->r;
+	this->pixel()->g += colour.pixel()->g;
+	this->pixel()->b += colour.pixel()->b;
 	return *this;
 }
 
 mote::data::RGBColour &mote::data::RGBColour::operator-=(const mote::data::RGBColour &colour)
 {
-	this->r -= colour.r;
-	this->g -= colour.g;
-	this->b -= colour.b;
+	this->pixel()->r -= colour.pixel()->r;
+	this->pixel()->g -= colour.pixel()->g;
+	this->pixel()->b -= colour.pixel()->b;
 	return *this;
 }
 
 mote::data::RGBColour &mote::data::RGBColour::operator*=(const mote::data::RGBColour &colour)
 {
-	this->r *= colour.r;
-	this->g *= colour.g;
-	this->b *= colour.b;
+	this->pixel()->r *= colour.pixel()->r;
+	this->pixel()->g *= colour.pixel()->g;
+	this->pixel()->b *= colour.pixel()->b;
 	return *this;
 }
 
 mote::data::RGBColour &mote::data::RGBColour::operator/=(const mote::data::RGBColour &colour)
 {
-	this->r /= colour.r;
-	this->g /= colour.g;
-	this->b /= colour.b;
+	this->pixel()->r /= colour.pixel()->r;
+	this->pixel()->g /= colour.pixel()->g;
+	this->pixel()->b /= colour.pixel()->b;
 	return *this;
 }
 
 void mote::data::RGBColour::fromJson(const Json::Value &json)
 {
-	this->r = json["r"].asUInt();
-	this->g = json["g"].asUInt();
-	this->b = json["b"].asUInt();
+	this->pixel()->r = json["r"].asUInt();
+	this->pixel()->g = json["g"].asUInt();
+	this->pixel()->b = json["b"].asUInt();
 }
 
 void mote::data::RGBColour::toJson(Json::Value &json) const
 {
-	json["r"] = this->r;
-	json["g"] = this->g;
-	json["b"] = this->b;
+	json["r"] = this->pixel()->r;
+	json["g"] = this->pixel()->g;
+	json["b"] = this->pixel()->b;
+}
+
+bool mote::data::RGBColour::ownsPixel() const
+{
+	return this->_ownsPixel;
 }

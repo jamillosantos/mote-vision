@@ -12,11 +12,11 @@ mote::data::ColourRange::ColourRange(uint8_t r, uint8_t g, uint8_t b)
 }
 
 mote::data::ColourRange::ColourRange(const mote::data::ColourRange &colour)
-	: ColourRange(colour.r, colour.g, colour.b)
+	: ColourRange(colour.pixel()->r, colour.pixel()->g, colour.pixel()->b)
 { }
 
 mote::data::ColourRange::ColourRange(const mote::data::RGBColour &colour)
-	: ColourRange(colour.r, colour.g, colour.b)
+	: ColourRange(colour.pixel()->r, colour.pixel()->g, colour.pixel()->b)
 { }
 
 mote::data::ColourRange::ColourRange()
@@ -25,9 +25,9 @@ mote::data::ColourRange::ColourRange()
 
 void mote::data::ColourRange::update()
 {
-	this->redGreen = this->r - this->g;
-	this->redBlue = this->r - this->b;
-	this->greenBlue = this->g - this->b;
+	this->redGreen = this->pixel()->r - this->pixel()->g;
+	this->redBlue = this->pixel()->r - this->pixel()->b;
+	this->greenBlue = this->pixel()->g - this->pixel()->b;
 }
 
 mote::data::RGBColour &mote::data::ColourRange::minimum(const mote::data::RGBColour &colour)
@@ -64,56 +64,56 @@ mote::data::RGBColour &mote::data::ColourRange::maximum(const mote::data::RGBCol
 
 mote::data::ColourRange mote::data::ColourRange::operator+(const mote::data::ColourRange &colour)
 {
-	return mote::data::ColourRange(this->r + colour.r, this->g + colour.g, this->b + colour.b);
+	return mote::data::ColourRange(this->pixel()->r + colour.pixel()->r, this->pixel()->g + colour.pixel()->g, this->pixel()->b + colour.pixel()->b);
 }
 
 mote::data::ColourRange mote::data::ColourRange::operator-(const mote::data::ColourRange &colour)
 {
-	return mote::data::ColourRange(this->r - colour.r, this->g - colour.g, this->b - colour.b);
+	return mote::data::ColourRange(this->pixel()->r - colour.pixel()->r, this->pixel()->g - colour.pixel()->g, this->pixel()->b - colour.pixel()->b);
 }
 
 mote::data::ColourRange mote::data::ColourRange::operator*(const mote::data::ColourRange &colour)
 {
-	return mote::data::ColourRange(this->r * colour.r, this->g * colour.g, this->b * colour.b);
+	return mote::data::ColourRange(this->pixel()->r * colour.pixel()->r, this->pixel()->g * colour.pixel()->g, this->pixel()->b * colour.pixel()->b);
 }
 
 mote::data::ColourRange mote::data::ColourRange::operator/(const mote::data::ColourRange &colour)
 {
-	return mote::data::ColourRange(this->r / colour.r, this->g / colour.g, this->b / colour.b);
+	return mote::data::ColourRange(this->pixel()->r / colour.pixel()->r, this->pixel()->g / colour.pixel()->g, this->pixel()->b / colour.pixel()->b);
 }
 
 mote::data::ColourRange &mote::data::ColourRange::operator+=(const mote::data::ColourRange &colour)
 {
-	this->r += colour.r;
-	this->g += colour.g;
-	this->b += colour.b;
+	this->pixel()->r += colour.pixel()->r;
+	this->pixel()->g += colour.pixel()->g;
+	this->pixel()->b += colour.pixel()->b;
 	this->update();
 	return *this;
 }
 
 mote::data::ColourRange &mote::data::ColourRange::operator-=(const mote::data::ColourRange &colour)
 {
-	this->r -= colour.r;
-	this->g -= colour.g;
-	this->b -= colour.b;
+	this->pixel()->r -= colour.pixel()->r;
+	this->pixel()->g -= colour.pixel()->g;
+	this->pixel()->b -= colour.pixel()->b;
 	this->update();
 	return *this;
 }
 
 mote::data::ColourRange &mote::data::ColourRange::operator*=(const mote::data::ColourRange &colour)
 {
-	this->r *= colour.r;
-	this->g *= colour.g;
-	this->b *= colour.b;
+	this->pixel()->r *= colour.pixel()->r;
+	this->pixel()->g *= colour.pixel()->g;
+	this->pixel()->b *= colour.pixel()->b;
 	this->update();
 	return *this;
 }
 
 mote::data::ColourRange &mote::data::ColourRange::operator/=(const mote::data::ColourRange &colour)
 {
-	this->r /= colour.r;
-	this->g /= colour.g;
-	this->b /= colour.b;
+	this->pixel()->r /= colour.pixel()->r;
+	this->pixel()->g /= colour.pixel()->g;
+	this->pixel()->b /= colour.pixel()->b;
 	this->update();
 	return *this;
 }

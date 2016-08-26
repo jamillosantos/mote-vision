@@ -71,12 +71,12 @@ GTEST_TEST(config_config, from_json_1)
 
 	ASSERT_TRUE(config.colourDefinitions()["colour1"].is_initialized());
 
-	ASSERT_EQ(1, config.colourDefinitions()["colour1"]->min.r);
-	ASSERT_EQ(2, config.colourDefinitions()["colour1"]->min.g);
-	ASSERT_EQ(3, config.colourDefinitions()["colour1"]->min.b);
-	ASSERT_EQ(4, config.colourDefinitions()["colour1"]->max.r);
-	ASSERT_EQ(5, config.colourDefinitions()["colour1"]->max.g);
-	ASSERT_EQ(6, config.colourDefinitions()["colour1"]->max.b);
+	ASSERT_EQ(1, config.colourDefinitions()["colour1"]->min.pixel()->r);
+	ASSERT_EQ(2, config.colourDefinitions()["colour1"]->min.pixel()->g);
+	ASSERT_EQ(3, config.colourDefinitions()["colour1"]->min.pixel()->b);
+	ASSERT_EQ(4, config.colourDefinitions()["colour1"]->max.pixel()->r);
+	ASSERT_EQ(5, config.colourDefinitions()["colour1"]->max.pixel()->g);
+	ASSERT_EQ(6, config.colourDefinitions()["colour1"]->max.pixel()->b);
 }
 
 GTEST_TEST(config_config, from_json_multiple_video_streams)

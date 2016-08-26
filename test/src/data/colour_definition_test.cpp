@@ -9,17 +9,17 @@
 GTEST_TEST(data_colour_range, constructor_with_params)
 {
 	mote::data::ColourRange colour(0, 1, 2);
-	ASSERT_EQ(0, colour.r);
-	ASSERT_EQ(1, colour.g);
-	ASSERT_EQ(2, colour.b);
+	ASSERT_EQ(0, colour.pixel()->r);
+	ASSERT_EQ(1, colour.pixel()->g);
+	ASSERT_EQ(2, colour.pixel()->b);
 }
 
 GTEST_TEST(data_colour_range, constructor_with_no_params)
 {
 	mote::data::ColourRange colour;
-	ASSERT_EQ(0, colour.r);
-	ASSERT_EQ(0, colour.g);
-	ASSERT_EQ(0, colour.b);
+	ASSERT_EQ(0, colour.pixel()->r);
+	ASSERT_EQ(0, colour.pixel()->g);
+	ASSERT_EQ(0, colour.pixel()->b);
 }
 
 GTEST_TEST(data_colour_range, constructor_copy)
@@ -27,9 +27,9 @@ GTEST_TEST(data_colour_range, constructor_copy)
 	mote::data::ColourRange
 		colour1(1, 2, 3),
 		colour2(colour1);
-	ASSERT_EQ(colour1.r, colour2.r);
-	ASSERT_EQ(colour1.g, colour2.g);
-	ASSERT_EQ(colour1.b, colour2.b);
+	ASSERT_EQ(colour1.pixel()->r, colour2.pixel()->r);
+	ASSERT_EQ(colour1.pixel()->g, colour2.pixel()->g);
+	ASSERT_EQ(colour1.pixel()->b, colour2.pixel()->b);
 	ASSERT_EQ(colour1.redBlue, colour2.redBlue);
 	ASSERT_EQ(colour1.redGreen, colour2.redGreen);
 	ASSERT_EQ(colour1.greenBlue, colour2.greenBlue);
@@ -40,9 +40,9 @@ GTEST_TEST(data_colour_range, constructor_rgbcolour)
 	mote::data::RGBColour colour(1, 2, 3);
 	mote::data::ColourRange colourRange(colour);
 
-	ASSERT_EQ(colour.r, colourRange.r);
-	ASSERT_EQ(colour.g, colourRange.g);
-	ASSERT_EQ(colour.b, colourRange.b);
+	ASSERT_EQ(colour.pixel()->r, colourRange.pixel()->r);
+	ASSERT_EQ(colour.pixel()->g, colourRange.pixel()->g);
+	ASSERT_EQ(colour.pixel()->b, colourRange.pixel()->b);
 }
 
 GTEST_TEST(data_colour_range, operator_equals)
@@ -73,9 +73,9 @@ GTEST_TEST(data_colour_range, operator_plus)
 		result(11, 22, 33),
 		value = (colour1 + colour2);
 	ASSERT_TRUE(result == value);
-	ASSERT_EQ(value.redGreen, (value.r - value.g));
-	ASSERT_EQ(value.redBlue, (value.r - value.b));
-	ASSERT_EQ(value.greenBlue, (value.g - value.b));
+	ASSERT_EQ(value.redGreen, (value.pixel()->r - value.pixel()->g));
+	ASSERT_EQ(value.redBlue, (value.pixel()->r - value.pixel()->b));
+	ASSERT_EQ(value.greenBlue, (value.pixel()->g - value.pixel()->b));
 }
 
 GTEST_TEST(data_colour_range, operator_minus)
@@ -86,9 +86,9 @@ GTEST_TEST(data_colour_range, operator_minus)
 		result(9, 18, 27),
 		value = (colour1 - colour2);
 	ASSERT_TRUE(result == value);
-	ASSERT_EQ(value.redGreen, (value.r - value.g));
-	ASSERT_EQ(value.redBlue, (value.r - value.b));
-	ASSERT_EQ(value.greenBlue, (value.g - value.b));
+	ASSERT_EQ(value.redGreen, (value.pixel()->r - value.pixel()->g));
+	ASSERT_EQ(value.redBlue, (value.pixel()->r - value.pixel()->b));
+	ASSERT_EQ(value.greenBlue, (value.pixel()->g - value.pixel()->b));
 }
 
 GTEST_TEST(data_colour_range, operator_multiply)
@@ -99,9 +99,9 @@ GTEST_TEST(data_colour_range, operator_multiply)
 		result(20, 60, 120),
 		value = (colour1 * colour2);
 	ASSERT_TRUE(result == value);
-	ASSERT_EQ(value.redGreen, (value.r - value.g));
-	ASSERT_EQ(value.redBlue, (value.r - value.b));
-	ASSERT_EQ(value.greenBlue, (value.g - value.b));
+	ASSERT_EQ(value.redGreen, (value.pixel()->r - value.pixel()->g));
+	ASSERT_EQ(value.redBlue, (value.pixel()->r - value.pixel()->b));
+	ASSERT_EQ(value.greenBlue, (value.pixel()->g - value.pixel()->b));
 }
 
 GTEST_TEST(data_colour_range, operator_divide)
@@ -112,9 +112,9 @@ GTEST_TEST(data_colour_range, operator_divide)
 		result(5, 7, 10),
 		value = (colour1 / colour2);
 	ASSERT_TRUE(result == value);
-	ASSERT_EQ(value.redGreen, (value.r - value.g));
-	ASSERT_EQ(value.redBlue, (value.r - value.b));
-	ASSERT_EQ(value.greenBlue, (value.g - value.b));
+	ASSERT_EQ(value.redGreen, (value.pixel()->r - value.pixel()->g));
+	ASSERT_EQ(value.redBlue, (value.pixel()->r - value.pixel()->b));
+	ASSERT_EQ(value.greenBlue, (value.pixel()->g - value.pixel()->b));
 }
 
 GTEST_TEST(data_colour_range, operator_plus_assign)
@@ -125,9 +125,9 @@ GTEST_TEST(data_colour_range, operator_plus_assign)
 		result(11, 22, 33);
 	colour1 += colour2;
 	ASSERT_TRUE(result == colour1);
-	ASSERT_EQ(colour1.redGreen, (colour1.r - colour1.g));
-	ASSERT_EQ(colour1.redBlue, (colour1.r - colour1.b));
-	ASSERT_EQ(colour1.greenBlue, (colour1.g - colour1.b));
+	ASSERT_EQ(colour1.redGreen, (colour1.pixel()->r - colour1.pixel()->g));
+	ASSERT_EQ(colour1.redBlue, (colour1.pixel()->r - colour1.pixel()->b));
+	ASSERT_EQ(colour1.greenBlue, (colour1.pixel()->g - colour1.pixel()->b));
 }
 
 GTEST_TEST(data_colour_range, operator_minus_assign)
@@ -138,9 +138,9 @@ GTEST_TEST(data_colour_range, operator_minus_assign)
 		result(9, 18, 27);
 	colour1 -= colour2;
 	ASSERT_TRUE(result == colour1);
-	ASSERT_EQ(colour1.redGreen, (colour1.r - colour1.g));
-	ASSERT_EQ(colour1.redBlue, (colour1.r - colour1.b));
-	ASSERT_EQ(colour1.greenBlue, (colour1.g - colour1.b));
+	ASSERT_EQ(colour1.redGreen, (colour1.pixel()->r - colour1.pixel()->g));
+	ASSERT_EQ(colour1.redBlue, (colour1.pixel()->r - colour1.pixel()->b));
+	ASSERT_EQ(colour1.greenBlue, (colour1.pixel()->g - colour1.pixel()->b));
 }
 
 GTEST_TEST(data_colour_range, operator_multiply_assign)
@@ -151,9 +151,9 @@ GTEST_TEST(data_colour_range, operator_multiply_assign)
 		result(20, 60, 120);
 	colour1 *= colour2;
 	ASSERT_TRUE(result == colour1);
-	ASSERT_EQ(colour1.redGreen, (colour1.r - colour1.g));
-	ASSERT_EQ(colour1.redBlue, (colour1.r - colour1.b));
-	ASSERT_EQ(colour1.greenBlue, (colour1.g - colour1.b));
+	ASSERT_EQ(colour1.redGreen, (colour1.pixel()->r - colour1.pixel()->g));
+	ASSERT_EQ(colour1.redBlue, (colour1.pixel()->r - colour1.pixel()->b));
+	ASSERT_EQ(colour1.greenBlue, (colour1.pixel()->g - colour1.pixel()->b));
 }
 
 GTEST_TEST(data_colour_range, operator_divide_assign)
@@ -164,9 +164,9 @@ GTEST_TEST(data_colour_range, operator_divide_assign)
 		result(5, 7, 10);
 	colour1 /= colour2;
 	ASSERT_TRUE(result == colour1);
-	ASSERT_EQ(colour1.redGreen, (colour1.r - colour1.g));
-	ASSERT_EQ(colour1.redBlue, (colour1.r - colour1.b));
-	ASSERT_EQ(colour1.greenBlue, (colour1.g - colour1.b));
+	ASSERT_EQ(colour1.redGreen, (colour1.pixel()->r - colour1.pixel()->g));
+	ASSERT_EQ(colour1.redBlue, (colour1.pixel()->r - colour1.pixel()->b));
+	ASSERT_EQ(colour1.greenBlue, (colour1.pixel()->g - colour1.pixel()->b));
 }
 
 GTEST_TEST(data_colour_range, maximum)
@@ -303,11 +303,10 @@ GTEST_TEST(data_colour_definition, fromJson)
 	json["max"]["g"] = 5;
 	json["max"]["b"] = 6;
 	colourDefinition.fromJson(json);
-	ASSERT_EQ(1, colourDefinition.min.r);
-	ASSERT_EQ(2, colourDefinition.min.g);
-	ASSERT_EQ(3, colourDefinition.min.b);
-	ASSERT_EQ(4, colourDefinition.max.r);
-	ASSERT_EQ(5, colourDefinition.max.g);
-	ASSERT_EQ(6, colourDefinition.max.b);
-
+	ASSERT_EQ(1, colourDefinition.min.pixel()->r);
+	ASSERT_EQ(2, colourDefinition.min.pixel()->g);
+	ASSERT_EQ(3, colourDefinition.min.pixel()->b);
+	ASSERT_EQ(4, colourDefinition.max.pixel()->r);
+	ASSERT_EQ(5, colourDefinition.max.pixel()->g);
+	ASSERT_EQ(6, colourDefinition.max.pixel()->b);
 }

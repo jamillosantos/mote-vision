@@ -203,19 +203,19 @@ GTEST_TEST(config_colour_definitions, fromJson)
 	mote::config::ColourDefinitions cd;
 	cd.fromJson(json);
 
-	ASSERT_EQ(255, cd["colour1"]->min.r);
-	ASSERT_EQ(255, cd["colour1"]->min.g);
-	ASSERT_EQ(255, cd["colour1"]->min.b);
-	ASSERT_EQ(255, cd["colour1"]->max.r);
-	ASSERT_EQ(0, cd["colour1"]->max.g);
-	ASSERT_EQ(0, cd["colour1"]->max.b);
+	ASSERT_EQ(255, cd["colour1"]->min.pixel()->r);
+	ASSERT_EQ(255, cd["colour1"]->min.pixel()->g);
+	ASSERT_EQ(255, cd["colour1"]->min.pixel()->b);
+	ASSERT_EQ(255, cd["colour1"]->max.pixel()->r);
+	ASSERT_EQ(0, cd["colour1"]->max.pixel()->g);
+	ASSERT_EQ(0, cd["colour1"]->max.pixel()->b);
 
-	ASSERT_EQ(0, cd["colour2"]->min.r);
-	ASSERT_EQ(255, cd["colour2"]->min.g);
-	ASSERT_EQ(0, cd["colour2"]->min.b);
-	ASSERT_EQ(0, cd["colour2"]->max.r);
-	ASSERT_EQ(0, cd["colour2"]->max.g);
-	ASSERT_EQ(255, cd["colour2"]->max.b);
+	ASSERT_EQ(0, cd["colour2"]->min.pixel()->r);
+	ASSERT_EQ(255, cd["colour2"]->min.pixel()->g);
+	ASSERT_EQ(0, cd["colour2"]->min.pixel()->b);
+	ASSERT_EQ(0, cd["colour2"]->max.pixel()->r);
+	ASSERT_EQ(0, cd["colour2"]->max.pixel()->g);
+	ASSERT_EQ(255, cd["colour2"]->max.pixel()->b);
 }
 
 GTEST_TEST(config_colour_definitions, addJson_add)
@@ -239,19 +239,19 @@ GTEST_TEST(config_colour_definitions, addJson_add)
 	mote::config::ColourDefinitions cd;
 	cd.addJson(json);
 
-	ASSERT_EQ(255, cd["colour1"]->min.r);
-	ASSERT_EQ(255, cd["colour1"]->min.g);
-	ASSERT_EQ(255, cd["colour1"]->min.b);
-	ASSERT_EQ(255, cd["colour1"]->max.r);
-	ASSERT_EQ(0, cd["colour1"]->max.g);
-	ASSERT_EQ(0, cd["colour1"]->max.b);
+	ASSERT_EQ(255, cd["colour1"]->min.pixel()->r);
+	ASSERT_EQ(255, cd["colour1"]->min.pixel()->g);
+	ASSERT_EQ(255, cd["colour1"]->min.pixel()->b);
+	ASSERT_EQ(255, cd["colour1"]->max.pixel()->r);
+	ASSERT_EQ(0, cd["colour1"]->max.pixel()->g);
+	ASSERT_EQ(0, cd["colour1"]->max.pixel()->b);
 
-	ASSERT_EQ(0, cd["colour2"]->min.r);
-	ASSERT_EQ(255, cd["colour2"]->min.g);
-	ASSERT_EQ(0, cd["colour2"]->min.b);
-	ASSERT_EQ(0, cd["colour2"]->max.r);
-	ASSERT_EQ(0, cd["colour2"]->max.g);
-	ASSERT_EQ(255, cd["colour2"]->max.b);
+	ASSERT_EQ(0, cd["colour2"]->min.pixel()->r);
+	ASSERT_EQ(255, cd["colour2"]->min.pixel()->g);
+	ASSERT_EQ(0, cd["colour2"]->min.pixel()->b);
+	ASSERT_EQ(0, cd["colour2"]->max.pixel()->r);
+	ASSERT_EQ(0, cd["colour2"]->max.pixel()->g);
+	ASSERT_EQ(255, cd["colour2"]->max.pixel()->b);
 
 	Json::Value json2;
 	json2["colour3"]["min"]["r"] = 1;
@@ -263,12 +263,12 @@ GTEST_TEST(config_colour_definitions, addJson_add)
 
 	cd.addJson(json2);
 
-	ASSERT_EQ(1, cd["colour3"]->min.r);
-	ASSERT_EQ(255, cd["colour3"]->min.g);
-	ASSERT_EQ(3, cd["colour3"]->min.b);
-	ASSERT_EQ(4, cd["colour3"]->max.r);
-	ASSERT_EQ(5, cd["colour3"]->max.g);
-	ASSERT_EQ(255, cd["colour3"]->max.b);
+	ASSERT_EQ(1, cd["colour3"]->min.pixel()->r);
+	ASSERT_EQ(255, cd["colour3"]->min.pixel()->g);
+	ASSERT_EQ(3, cd["colour3"]->min.pixel()->b);
+	ASSERT_EQ(4, cd["colour3"]->max.pixel()->r);
+	ASSERT_EQ(5, cd["colour3"]->max.pixel()->g);
+	ASSERT_EQ(255, cd["colour3"]->max.pixel()->b);
 }
 
 GTEST_TEST(config_colour_definitions, addJson_replace)
@@ -302,17 +302,17 @@ GTEST_TEST(config_colour_definitions, addJson_replace)
 
 	cd.addJson(json2);
 
-	ASSERT_EQ(1, cd["colour1"]->min.r);
-	ASSERT_EQ(2, cd["colour1"]->min.g);
-	ASSERT_EQ(3, cd["colour1"]->min.b);
-	ASSERT_EQ(4, cd["colour1"]->max.r);
-	ASSERT_EQ(5, cd["colour1"]->max.g);
-	ASSERT_EQ(6, cd["colour1"]->max.b);
+	ASSERT_EQ(1, cd["colour1"]->min.pixel()->r);
+	ASSERT_EQ(2, cd["colour1"]->min.pixel()->g);
+	ASSERT_EQ(3, cd["colour1"]->min.pixel()->b);
+	ASSERT_EQ(4, cd["colour1"]->max.pixel()->r);
+	ASSERT_EQ(5, cd["colour1"]->max.pixel()->g);
+	ASSERT_EQ(6, cd["colour1"]->max.pixel()->b);
 
-	ASSERT_EQ(0, cd["colour2"]->min.r);
-	ASSERT_EQ(255, cd["colour2"]->min.g);
-	ASSERT_EQ(0, cd["colour2"]->min.b);
-	ASSERT_EQ(0, cd["colour2"]->max.r);
-	ASSERT_EQ(0, cd["colour2"]->max.g);
-	ASSERT_EQ(255, cd["colour2"]->max.b);
+	ASSERT_EQ(0, cd["colour2"]->min.pixel()->r);
+	ASSERT_EQ(255, cd["colour2"]->min.pixel()->g);
+	ASSERT_EQ(0, cd["colour2"]->min.pixel()->b);
+	ASSERT_EQ(0, cd["colour2"]->max.pixel()->r);
+	ASSERT_EQ(0, cd["colour2"]->max.pixel()->g);
+	ASSERT_EQ(255, cd["colour2"]->max.pixel()->b);
 }

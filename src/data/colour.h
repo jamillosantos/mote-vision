@@ -9,6 +9,7 @@
 #include <cstdint>
 
 #include "serializable.h"
+#include "pixel.h"
 
 namespace mote
 {
@@ -19,13 +20,12 @@ namespace data
  */
 class Colour
 	: public Serializable
-{
-};
+{ };
 
 /**
  * RGB Colour definition.
  */
-class RGBColour
+struct RGBColour
 	: public Colour
 {
 public:
@@ -37,25 +37,21 @@ public:
 	static RGBColour yellow;
 	static mote::data::RGBColour cyan;
 	static mote::data::RGBColour magenta;
+
+private:
+	mote::data::Pixel* _pixel;
+	bool _ownsPixel;
 public:
 	RGBColour(uint8_t r, uint8_t g, uint8_t b);
+	RGBColour(mote::data::Pixel *pixel);
 	RGBColour(const RGBColour& colour);
 	RGBColour();
+	virtual ~RGBColour();
 
-	/**
-	 * Red channel value.
-	 */
-	uint8_t r;
-
-	/**
-	 * Green channel value.
-	 */
-	uint8_t g;
-
-	/**
-	 * Blue channel value.
-	 */
-	uint8_t b;
+	mote::data::Pixel* pixel();
+	mote::data::Pixel* pixel() const;
+	RGBColour& pixel(mote::data::Pixel* pixel, bool own=false);
+	bool ownsPixel() const;
 
 	/**
 	 * Intensity of the colour (average).

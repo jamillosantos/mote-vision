@@ -9,17 +9,32 @@
 GTEST_TEST(data_colour, constructor_with_params)
 {
 	mote::data::RGBColour colour(0, 1, 2);
-	ASSERT_EQ(0, colour.r);
-	ASSERT_EQ(1, colour.g);
-	ASSERT_EQ(2, colour.b);
+	ASSERT_EQ(0, colour.pixel()->r);
+	ASSERT_EQ(1, colour.pixel()->g);
+	ASSERT_EQ(2, colour.pixel()->b);
 }
 
 GTEST_TEST(data_colour, constructor_with_no_params)
 {
 	mote::data::RGBColour colour;
-	ASSERT_EQ(0, colour.r);
-	ASSERT_EQ(0, colour.g);
-	ASSERT_EQ(0, colour.b);
+	ASSERT_EQ(0, colour.pixel()->r);
+	ASSERT_EQ(0, colour.pixel()->g);
+	ASSERT_EQ(0, colour.pixel()->b);
+}
+
+GTEST_TEST(data_colour, constructor_pixel)
+{
+	mote::data::Pixel pixel(0, 1, 2);
+	mote::data::RGBColour colour(&pixel);
+	ASSERT_EQ(0, colour.pixel()->r);
+	ASSERT_EQ(1, colour.pixel()->g);
+	ASSERT_EQ(2, colour.pixel()->b);
+	pixel.r = 3;
+	pixel.g = 4;
+	pixel.b = 5;
+	ASSERT_EQ(3, colour.pixel()->r);
+	ASSERT_EQ(4, colour.pixel()->g);
+	ASSERT_EQ(5, colour.pixel()->b);
 }
 
 GTEST_TEST(data_colour, constructor_copy)
@@ -27,9 +42,9 @@ GTEST_TEST(data_colour, constructor_copy)
 	mote::data::RGBColour
 		colour1(1, 2, 3),
 		colour2(colour1);
-	ASSERT_EQ(colour1.r, colour2.r);
-	ASSERT_EQ(colour1.g, colour2.g);
-	ASSERT_EQ(colour1.b, colour2.b);
+	ASSERT_EQ(colour1.pixel()->r, colour2.pixel()->r);
+	ASSERT_EQ(colour1.pixel()->g, colour2.pixel()->g);
+	ASSERT_EQ(colour1.pixel()->b, colour2.pixel()->b);
 }
 
 GTEST_TEST(data_colour, intesity)
@@ -202,7 +217,7 @@ GTEST_TEST(data_colour, fromJson)
 	json["g"] = 2;
 	json["b"] = 3;
 	colour.fromJson(json);
-	ASSERT_EQ(1, colour.r);
-	ASSERT_EQ(2, colour.g);
-	ASSERT_EQ(3, colour.b);
+	ASSERT_EQ(1, colour.pixel()->r);
+	ASSERT_EQ(2, colour.pixel()->g);
+	ASSERT_EQ(3, colour.pixel()->b);
 }
