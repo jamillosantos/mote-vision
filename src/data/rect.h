@@ -57,6 +57,20 @@ public:
 		this->height = b - this->y;
 		return *this;
 	}
+
+	Rect<T>& movesX(const T x)
+	{
+		this->width -= (x - this->x);
+		this->x = x;
+		return *this;
+	}
+
+	Rect<T>& movesY(const T y)
+	{
+		this->height -= (y - this->y);
+		this->y = y;
+		return *this;
+	}
 };
 }
 }

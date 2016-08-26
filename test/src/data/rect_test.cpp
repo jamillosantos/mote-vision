@@ -51,3 +51,29 @@ GTEST_TEST(data_rect, set_b)
 	rect.b(80.0f);
 	ASSERT_EQ(70.0f, rect.height);
 }
+
+GTEST_TEST(data_rect, movesX)
+{
+	mote::data::Rect<float> rect(40.0f, 50.0f, 60.0f, 50.0f);
+	rect.movesX(0.0f);
+	ASSERT_EQ(100.0f, rect.width);
+	rect.movesX(20.0f);
+	ASSERT_EQ(80.0f, rect.width);
+	rect.movesX(100.0f);
+	ASSERT_EQ(0.0f, rect.width);
+	rect.movesX(110.0f);
+	ASSERT_EQ(-10.0f, rect.width);
+}
+
+GTEST_TEST(data_rect, movesY)
+{
+	mote::data::Rect<float> rect(40.0f, 50.0f, 60.0f, 50.0f);
+	rect.movesY(0.0f);
+	ASSERT_EQ(100.0f, rect.height);
+	rect.movesY(20.0f);
+	ASSERT_EQ(80.0f, rect.height);
+	rect.movesY(100.0f);
+	ASSERT_EQ(0.0f, rect.height);
+	rect.movesY(110.0f);
+	ASSERT_EQ(-10.0f, rect.height);
+}
