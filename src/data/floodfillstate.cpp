@@ -58,6 +58,12 @@ std::size_t mote::data::FloodFillState::size() const
 	return this->_size;
 }
 
+mote::data::FloodFillState &mote::data::FloodFillState::size(std::size_t size)
+{
+	this->_size = size;
+	return *this;
+}
+
 unsigned int mote::data::FloodFillState::sumX() const
 {
 	return this->_sumX;
@@ -117,4 +123,14 @@ mote::data::Pixel mote::data::FloodFillState::averageColour() const
 
 	return mote::data::Pixel(boost::algorithm::clamp(red, 0, 255), boost::algorithm::clamp(green, 0, 255),
 		boost::algorithm::clamp(blue, 0, 255));
+}
+
+void mote::data::FloodFillState::clear()
+{
+	this->_size = this->_sumX = this->_sumY = 0;
+
+	this->_bBox.x = this->_bBox.y = std::numeric_limits<int>::max();
+	this->_bBox.width = this->_bBox.height = 0;
+
+	this->_sumRed = this->_sumGreen = this->_sumBlue = 0;
 }
