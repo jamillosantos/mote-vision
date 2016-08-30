@@ -27,3 +27,9 @@ GTEST_TEST(data_pixel, address_alignment)
 	ASSERT_EQ(2, p->g);
 	ASSERT_EQ(3, p->b);
 }
+
+GTEST_TEST(data_pixel, is)
+{
+	mote::data::Pixel pixel(1, 2, 3);
+	ASSERT_TRUE(pixel.is(1, 2, 3));
+}
