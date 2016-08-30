@@ -38,6 +38,8 @@ public:
 	virtual bool getPixel(mote::data::Pixel *px, const unsigned int x, const unsigned int y) = 0;
 	virtual bool getPixel(mote::data::Pixel &px, const unsigned int x, const unsigned int y) = 0;
 
+	virtual bool setPixel(mote::data::Pixel *px) = 0;
+	virtual bool setPixel(const mote::data::Pixel &px) = 0;
 	virtual bool setPixel(const unsigned int x, const unsigned int y, mote::data::Pixel *px) = 0;
 	virtual bool setPixel(const unsigned int x, const unsigned int y, const mote::data::Pixel &px) = 0;
 
@@ -48,7 +50,9 @@ public:
 	virtual bool goDown(const unsigned int amount = 1);
 
 	virtual void get(mote::data::Pixel *pixel);
+	virtual void get(mote::data::Pixel *pixel, const int offsetX, const int offsetY);
 	virtual void get(mote::data::Pixel &pixel);
+	virtual void get(mote::data::Pixel &pixel, const int offsetX, const int offsetY);
 };
 
 class FramBufferIteratorRGB24
@@ -62,6 +66,8 @@ public:
 	virtual bool getPixel(mote::data::Pixel *px, const unsigned int x, const unsigned int y) override;
 	virtual bool getPixel(mote::data::Pixel &px, const unsigned int x, const unsigned int y) override;
 
+	virtual bool setPixel(mote::data::Pixel *px) override;
+	virtual bool setPixel(const mote::data::Pixel &px) override;
 	virtual bool setPixel(const unsigned int x, const unsigned int y, mote::data::Pixel *px) override;
 	virtual bool setPixel(const unsigned int x, const unsigned int y, const mote::data::Pixel &px) override;
 };

@@ -53,9 +53,19 @@ void mote::imgprocs::FrameBufferIterator::get(mote::data::Pixel *pixel)
 	this->getPixel(pixel, this->_cursor.x, this->_cursor.y);
 }
 
+void mote::imgprocs::FrameBufferIterator::get(mote::data::Pixel *pixel, const int offsetX, const int offsetY)
+{
+	this->getPixel(pixel, this->_cursor.x + offsetX, this->_cursor.y + offsetY);
+}
+
 void mote::imgprocs::FrameBufferIterator::get(mote::data::Pixel &pixel)
 {
 	this->getPixel(pixel, this->_cursor.x, this->_cursor.y);
+}
+
+void mote::imgprocs::FrameBufferIterator::get(mote::data::Pixel &pixel, const int offsetX, const int offsetY)
+{
+	this->getPixel(pixel, this->_cursor.x + offsetX, this->_cursor.y + offsetY);
 }
 
 mote::imgprocs::FramBufferIteratorRGB24::FramBufferIteratorRGB24(uint8_t *begin,
@@ -122,4 +132,14 @@ bool mote::imgprocs::FramBufferIteratorRGB24::setPixel(const unsigned int x, con
 		return true;
 	}
 	return false;
+}
+
+bool mote::imgprocs::FramBufferIteratorRGB24::setPixel(mote::data::Pixel *px)
+{
+	return this->setPixel(this->_cursor.x, this->_cursor.y, px);
+}
+
+bool mote::imgprocs::FramBufferIteratorRGB24::setPixel(const mote::data::Pixel &px)
+{
+	return this->setPixel(this->_cursor.x, this->_cursor.y, px);
 }
