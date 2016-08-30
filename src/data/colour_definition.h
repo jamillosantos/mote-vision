@@ -19,7 +19,9 @@ class ColourRange
 	: public RGBColour
 {
 public:
-	ColourRange(uint8_t r, uint8_t g, uint8_t b);
+	ColourRange(const uint8_t r, const uint8_t g, const uint8_t b, const int redGreen, const int redBlue, const int greenBlue);
+	ColourRange(const uint8_t r, const uint8_t g, const uint8_t b);
+	ColourRange(const Pixel &pixel);
 	ColourRange(const ColourRange& colour);
 	ColourRange(const RGBColour& colour);
 	ColourRange();
@@ -53,6 +55,10 @@ public:
 	virtual ColourRange& operator-=(const ColourRange& colour);
 	virtual ColourRange& operator*=(const ColourRange& colour);
 	virtual ColourRange& operator/=(const ColourRange& colour);
+
+	virtual void toJson(Json::Value &json) const override;
+
+	virtual void fromJson(const Json::Value &json) override;
 };
 
 class ColourDefinition
@@ -70,6 +76,12 @@ public:
 	bool operator==(const ColourDefinition &colourDefinition) const;
 
 	bool operator!=(const ColourDefinition &colourDefinition) const;
+
+	bool isMatch(const mote::data::Pixel &p) const;
+	bool isMatch(const mote::data::RGBColour &colour) const;
+
+	void addPixel(const mote::data::Pixel& pixel);
+	void addPixel(const mote::data::RGBColour& colour);
 
 	virtual void fromJson(const Json::Value &json) override;
 	virtual void toJson(Json::Value &json) const override;

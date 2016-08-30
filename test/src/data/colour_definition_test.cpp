@@ -219,9 +219,14 @@ GTEST_TEST(data_colour_range, minimum)
 
 GTEST_TEST(data_colour_definition, constructor_copy)
 {
-	mote::data::ColourDefinition
-		colourDefinition1(mote::data::ColourRange(1, 2, 3), mote::data::ColourRange(4, 5, 6)),
-		colourDefinition2(colourDefinition1);
+	mote::data::ColourDefinition colourDefinition1(mote::data::ColourRange(1, 2, 3), mote::data::ColourRange(4, 5, 6));
+	colourDefinition1.min.redGreen = 1;
+	colourDefinition1.min.redBlue = 2;
+	colourDefinition1.min.greenBlue = 3;
+	colourDefinition1.max.redGreen = 4;
+	colourDefinition1.max.redBlue = 5;
+	colourDefinition1.max.greenBlue = 6;
+	mote::data::ColourDefinition colourDefinition2(colourDefinition1);
 	ASSERT_TRUE(colourDefinition1.min == colourDefinition2.min);
 	ASSERT_TRUE(colourDefinition1.max == colourDefinition2.max);
 }
@@ -277,6 +282,109 @@ GTEST_TEST(data_colour_definition, operator_not_equal)
 			colourDefinition2(mote::data::ColourRange(1, 2, 3), mote::data::ColourRange(4, 5, 60));
 		ASSERT_TRUE(colourDefinition1 != colourDefinition2);
 	}
+}
+
+GTEST_TEST(data_colour_definition, addPoint_min)
+{
+	mote::data::ColourDefinition colourDefinition;
+	mote::data::Pixel
+		pixel1(100, 90, 85),
+		pixel2(150, 80, 100),
+		pixel3(25, 30, 40);
+	colourDefinition.addPixel(pixel1);
+	EXPECT_EQ(100, colourDefinition.min.pixel()->r);
+	EXPECT_EQ(90, colourDefinition.min.pixel()->g);
+	EXPECT_EQ(85, colourDefinition.min.pixel()->b);
+	EXPECT_EQ(15, colourDefinition.min.redBlue);
+	EXPECT_EQ(10, colourDefinition.min.redGreen);
+	EXPECT_EQ(5, colourDefinition.min.greenBlue);
+	colourDefinition.addPixel(pixel2);
+	EXPECT_EQ(100, colourDefinition.min.pixel()->r);
+	EXPECT_EQ(80, colourDefinition.min.pixel()->g);
+	EXPECT_EQ(85, colourDefinition.min.pixel()->b);
+	EXPECT_EQ(15, colourDefinition.min.redBlue);
+	EXPECT_EQ(10, colourDefinition.min.redGreen);
+	EXPECT_EQ(-20, colourDefinition.min.greenBlue);
+	colourDefinition.addPixel(pixel3);
+	EXPECT_EQ(25, colourDefinition.min.pixel()->r);
+	EXPECT_EQ(30, colourDefinition.min.pixel()->g);
+	EXPECT_EQ(40, colourDefinition.min.pixel()->b);
+	EXPECT_EQ(-15, colourDefinition.min.redBlue);
+	EXPECT_EQ(-5, colourDefinition.min.redGreen);
+	EXPECT_EQ(-20, colourDefinition.min.greenBlue);
+}
+
+GTEST_TEST(data_colour_definition, addPoint_max)
+{
+	mote::data::ColourDefinition colourDefinition;
+	mote::data::Pixel
+		pixel1(25, 30, 40),
+		pixel2(150, 80, 100),
+		pixel3(100, 90, 60);
+	colourDefinition.addPixel(pixel1);
+	EXPECT_EQ(25, colourDefinition.max.pixel()->r);
+	EXPECT_EQ(30, colourDefinition.max.pixel()->g);
+	EXPECT_EQ(40, colourDefinition.max.pixel()->b);
+	EXPECT_EQ(-15, colourDefinition.max.redBlue);
+	EXPECT_EQ(-5, colourDefinition.max.redGreen);
+	EXPECT_EQ(-10, colourDefinition.max.greenBlue);
+	colourDefinition.addPixel(pixel2);
+	EXPECT_EQ(150, colourDefinition.max.pixel()->r);
+	EXPECT_EQ(80, colourDefinition.max.pixel()->g);
+	EXPECT_EQ(100, colourDefinition.max.pixel()->b);
+	EXPECT_EQ(50, colourDefinition.max.redBlue);
+	EXPECT_EQ(70, colourDefinition.max.redGreen);
+	EXPECT_EQ(-10, colourDefinition.max.greenBlue);
+	colourDefinition.addPixel(pixel3);
+	EXPECT_EQ(150, colourDefinition.max.pixel()->r);
+	EXPECT_EQ(90, colourDefinition.max.pixel()->g);
+	EXPECT_EQ(100, colourDefinition.max.pixel()->b);
+	EXPECT_EQ(50, colourDefinition.max.redBlue);
+	EXPECT_EQ(70, colourDefinition.max.redGreen);
+	EXPECT_EQ(30, colourDefinition.max.greenBlue);
+}
+
+GTEST_TEST(data_colour_definition, isMatch_r_success)
+{
+	mote::data::ColourDefinition colourDefinition;
+	colourDefinition.addPixel(mote::data::ColourRange(100, 0, 0));
+	colourDefinition.addPixel(mote::data::ColourRange(250, 0, 0));
+	mote::data::Pixel
+		pixel1(100, 0, 0),
+		pixel2(150, 0, 0),
+		pixel3(250, 0, 0);
+	ASSERT_TRUE(colourDefinition.isMatch(pixel1));
+	ASSERT_TRUE(colourDefinition.isMatch(pixel2));
+	ASSERT_TRUE(colourDefinition.isMatch(pixel3));
+}
+
+GTEST_TEST(data_colour_definition, isMatch_g_success)
+{
+	mote::data::ColourDefinition colourDefinition;
+	colourDefinition.addPixel(mote::data::ColourRange(0, 100, 0));
+	colourDefinition.addPixel(mote::data::ColourRange(0, 250, 0));
+	mote::data::Pixel
+		pixel1(0, 100, 0),
+		pixel2(0, 150, 0),
+		pixel3(0, 250, 0);
+	ASSERT_TRUE(colourDefinition.isMatch(pixel1));
+	ASSERT_TRUE(colourDefinition.isMatch(pixel2));
+	ASSERT_TRUE(colourDefinition.isMatch(pixel3));
+}
+
+GTEST_TEST(data_colour_definition, isMatch_b_success)
+{
+	mote::data::ColourDefinition colourDefinition;
+	colourDefinition.addPixel(mote::data::ColourRange(0, 0, 100));
+	colourDefinition.addPixel(mote::data::ColourRange(0, 0, 250));
+
+	mote::data::Pixel
+		pixel1(0, 0, 100),
+		pixel2(0, 0, 150),
+		pixel3(0, 0, 250);
+	ASSERT_TRUE(colourDefinition.isMatch(pixel1));
+	ASSERT_TRUE(colourDefinition.isMatch(pixel2));
+	ASSERT_TRUE(colourDefinition.isMatch(pixel3));
 }
 
 GTEST_TEST(data_colour_definition, toJson)
