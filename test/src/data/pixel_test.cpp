@@ -5,6 +5,7 @@
 
 #include <gtest/gtest.h>
 #include <data/pixel.h>
+#include <cmath>
 
 GTEST_TEST(data_pixel, constructor)
 {
@@ -32,4 +33,18 @@ GTEST_TEST(data_pixel, is)
 {
 	mote::data::Pixel pixel(1, 2, 3);
 	ASSERT_TRUE(pixel.is(1, 2, 3));
+}
+
+GTEST_TEST(data_pixel, intesity)
+{
+	mote::data::Pixel pixel(0, 255, 125);
+	ASSERT_EQ(126, std::floor(pixel.intensity()));
+}
+
+GTEST_TEST(data_pixel, diffIntesity)
+{
+	mote::data::Pixel
+		pixel1(0, 255, 125),
+		pixel2(0, 0, 0);
+	ASSERT_EQ(16044, std::floor(pixel1.diffIntensity(pixel2)));
 }

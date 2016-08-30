@@ -25,6 +25,10 @@ struct Pixel
 	Pixel(const Pixel& px);
 
 	bool is(uint8_t r, uint8_t g, uint8_t b);
+
+	double intensity() const;
+
+	double diffIntensity(const Pixel &p) const;
 };
 }
 }
