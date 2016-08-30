@@ -8,13 +8,23 @@
 
 mote::imgprocs::FrameBufferIterator::FrameBufferIterator(unsigned int bytesPerPixel, uint8_t *begin, unsigned int width,
 	unsigned int height, unsigned int subsample)
-	: _bytesPerPixel(bytesPerPixel), _bytesPerLine(width * _bytesPerPixel), _cursor(0, 0), _begin(begin),
+	: _bytesPerPixel(bytesPerPixel), _bytesPerLine(width * _bytesPerPixel), _cursor(-1, 0), _begin(begin),
 	_width(width), _height(height), _subsample(subsample)
 {}
 
 bool mote::imgprocs::FrameBufferIterator::inBounds(const unsigned int x, const unsigned int y)
 {
 	return (x >= 0) && (x < this->_width) && (y >= 0) && (y < this->_height);
+}
+
+bool mote::imgprocs::FrameBufferIterator::goNext()
+{
+	if (++this->_cursor.x >= this->_width)
+	{
+		this->_cursor.x = 0;
+		++ this->_cursor.y;
+	}
+	return (this->_cursor.y < this->_height);
 }
 
 bool mote::imgprocs::FrameBufferIterator::go(const unsigned int x, const unsigned int y)

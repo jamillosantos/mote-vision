@@ -134,6 +134,23 @@ GTEST_TEST(imgprocs_frame_buffer_iterator_rgb24, get_and_go)
 	ASSERT_EQ(74, px.r);
 }
 
+GTEST_TEST(imgprocs_frame_buffer_iterator_rgb24, goNext)
+{
+	uint8_t image[25 * 3];
+	for (unsigned int i = 0; i < sizeof(image); i++)
+		image[i] = i;
+
+	mote::data::Pixel px;
+	mote::imgprocs::FramBufferIteratorRGB24 it(image, 5, 5, 1);
+
+	unsigned int count = 0;
+	while (it.goNext())
+	{
+		++count;
+	}
+	ASSERT_EQ(25, count);
+}
+
 GTEST_TEST(imgprocs_frame_buffer_iterator_rgb24, goDirections)
 {
 	uint8_t image[25 * 3];

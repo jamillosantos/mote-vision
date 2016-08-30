@@ -43,6 +43,7 @@ public:
 	virtual bool setPixel(const unsigned int x, const unsigned int y, mote::data::Pixel *px) = 0;
 	virtual bool setPixel(const unsigned int x, const unsigned int y, const mote::data::Pixel &px) = 0;
 
+	virtual bool goNext();
 	virtual bool go(const unsigned int x, const unsigned int y);
 	virtual bool goLeft(const unsigned int amount = 1);
 	virtual bool goRight(const unsigned int amount = 1);
