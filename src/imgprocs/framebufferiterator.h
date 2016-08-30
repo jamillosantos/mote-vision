@@ -68,23 +68,12 @@ public:
 
 template <typename T>
 class MatIterator
+	: public T
 {
-private:
-	T _frameBuffer;
 public:
 	MatIterator(cv::Mat &mat, const unsigned int subsample = 1)
-		: _frameBuffer(mat.data, mat.rows, mat.cols, subsample)
+		: T(mat.data, mat.rows, mat.cols, subsample)
 	{ }
-
-	void getPixel(mote::data::Pixel *pixel, const unsigned int x, const unsigned int y)
-	{
-		this->_frameBuffer->getPixel(pixel, x, y);
-	}
-
-	void getPixel(mote::data::Pixel &pixel, const unsigned int x, const unsigned int y)
-	{
-		this->_frameBuffer->getPixel(pixel, x, y);
-	}
 };
 
 }
