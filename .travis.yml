@@ -1,7 +1,7 @@
 language: cpp
 sudo: required
 compiler:
-- gcc
+- gcc-5
 #- clang
 matrix:
   include:
