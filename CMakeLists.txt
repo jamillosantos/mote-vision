@@ -56,10 +56,12 @@ set(SWS_MD5 "619e34dc172a8fa2ae8385b5dcedd5f4"
 # JSONCPP
 set(JSONCPP_VERSION "1.7.3"
 	CACHE STRING "JSON-CPP library's version")
-set(JSONCPP_REPO_URL "git@github.com:open-source-parsers/jsoncpp.git"
+set(JSONCPP_URL "https://github.com/open-source-parsers/jsoncpp/archive/${JSONCPP_VERSION}.tar.gz"
 	CACHE STRING "JSON-CPP library's git repository URL")
-set(JSONCPP_DIR "${THIRD_PARTY_LIBRARIES}/jsoncpp"
+set(JSONCPP_DIR "${THIRD_PARTY_LIBRARIES}/jsoncpp-${JSONCPP_VERSION}"
 	CACHE STRING "JSON-CPP destiny folder")
+set(JSONCPP_MD5 "aff6bfb5b81d9a28785429faa45839c5"
+	CACHE STRING "JSON-CPP md5")
 
 # GTest
 set(GTEST_VERSION "release-1.7.0"
@@ -157,25 +159,19 @@ message("")
 
 message("JSONCPP")
 if (NOT EXISTS ${JSONCPP_DIR})
-	message("-- Clonning JSON-CPP (${JSONCPP_REPO_URL}) ... into ${JSONCPP_DIR}")
-	execute_process(
-		COMMAND "${GIT_EXECUTABLE}" clone ${JSONCPP_REPO_URL} jsoncpp
-		WORKING_DIRECTORY ${THIRD_PARTY_LIBRARIES}
-		ERROR_VARIABLE GIT_ERROR
-		RESULT_VARIABLE GIT_RESULT
-	)
-	if (${GIT_RESULT} EQUAL 0)                                 # if success
-		message("-- Checking JSON-CPP to ${JSONCPP_VERSION}")
+	set(JSONCPP_TMP_FILE /tmp/jsoncpp.tar.gz)
+	download(JSONCPP_RESULT ${JSONCPP_URL} ${JSONCPP_MD5} ${JSONCPP_TMP_FILE})
+	if ("${JSONCPP_RESULT}" STREQUAL "ERROR")
+		message(FATAL_ERROR "Cannot download JSON-CPP.")
+	else()
+		message("-- Extracting JSON-CPP to '${JSONCPP_DIR}'")
 		execute_process(                                       # checkout to v2.0
-			COMMAND "${GIT_EXECUTABLE}" checkout ${JSONCPP_VERSION}
-			WORKING_DIRECTORY ${JSONCPP_DIR}
-			RESULT_VARIABLE GIT_RESULT
-			ERROR_VARIABLE GIT_ERROR
+			COMMAND tar xf ${JSONCPP_TMP_FILE}
+			WORKING_DIRECTORY ${THIRD_PARTY_LIBRARIES}
+			RESULT_VARIABLE JSON_RESULT
+			ERROR_VARIABLE JSON_ERROR
 			)
-		if (${GIT_RESULT} GREATER 0)                           # git checkout failed
-			file(REMOVE_RECURSE ${JSONCPP_DIR})
-			message(FATAL_ERROR "Cannot checkout JSON-CPP to ${JSONCPP_VERSION}: ${GIT_ERROR}.")
-		else()                                                 # git checkout success
+		if (${JSON_RESULT} EQUAL 0)
 			message("-- CMaking ...")
 			file(MAKE_DIRECTORY "${JSONCPP_DIR}/build")
 			file(MAKE_DIRECTORY "${JSONCPP_DIR}/build/debug")
@@ -205,11 +201,12 @@ if (NOT EXISTS ${JSONCPP_DIR})
 				file(REMOVE_RECURSE ${JSONCPP_DIR})
 				message(FATAL_ERROR "Cannot cmake JSON-CPP.")
 			endif()
+		else()
+			message(FATAL_ERROR "Cannot extract JSON-CPP.")
 		endif()
-	else()
-		message(FATAL_ERROR "Cannot clone JSON-CPP: ${GIT_ERROR}")
 	endif()
 endif()
+
 find_library(jsoncpp jsoncpp
 	HINTS "${JSONCPP_DIR}/install/debug/lib"
 	NO_DEFAULT_PATH

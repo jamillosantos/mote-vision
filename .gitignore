@@ -7,7 +7,7 @@ cmake_install.cmake
 install_manifest.txt
 CTestTestfile.cmake
 /bin/
-/libs/jsoncpp/
+/libs/jsoncpp-*/
 /libs/googletest-*/
 /libs/boost_*/
 /libs/opencv-*/
