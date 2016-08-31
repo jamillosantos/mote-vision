@@ -42,5 +42,5 @@ boost::filesystem::path Lena::png()
 
 boost::filesystem::path SprintMarker::path(const unsigned int index) const
 {
-	return Resources::path() / "sprint_markers" / (std::to_string(index) + std::string(".ppm"));
+	return Resources::path() / "sprint_markers" / (std::to_string(index) + std::string(".png"));
 }
