@@ -387,6 +387,33 @@ GTEST_TEST(data_colour_definition, isMatch_b_success)
 	ASSERT_TRUE(colourDefinition.isMatch(pixel3));
 }
 
+GTEST_TEST(data_colour_definition, isMatch)
+{
+	mote::data::ColourDefinition colourDefinition;
+
+	colourDefinition.min.pixel()->r = 169;
+	colourDefinition.min.pixel()->g = 21;
+	colourDefinition.min.pixel()->b = 118;
+	colourDefinition.min.redGreen = 71;
+	colourDefinition.min.redBlue = 51;
+	colourDefinition.min.greenBlue = -132;
+
+	colourDefinition.max.pixel()->r = 232;
+	colourDefinition.max.pixel()->g = 101;
+	colourDefinition.max.pixel()->b = 155;
+	colourDefinition.max.redGreen = 208;
+	colourDefinition.max.redBlue = 91;
+	colourDefinition.max.greenBlue = -20;
+
+	mote::data::Pixel
+		pixel1(229, 22, 147),
+		pixel2(224, 21, 136),
+		pixel3(231, 50, 142);
+	EXPECT_TRUE(colourDefinition.isMatch(pixel1));
+	EXPECT_TRUE(colourDefinition.isMatch(pixel2));
+	EXPECT_TRUE(colourDefinition.isMatch(pixel3));
+}
+
 GTEST_TEST(data_colour_definition, toJson)
 {
 	mote::data::ColourDefinition colourDefinition(mote::data::ColourRange(1, 2, 3), mote::data::ColourRange(4, 5, 6));
