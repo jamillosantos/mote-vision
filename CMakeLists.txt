@@ -495,6 +495,19 @@ set(SOURCE_FILES
 	src/data/serializable.h
 	src/data/colour_definition.cpp
 	src/data/colour_definition.h
+	src/data/segmentationcolourobject.cpp
+	src/data/segmentationcolourobject.h
+	src/data/pixel.cpp
+	src/data/pixel.h
+	src/data/floodfillstate.cpp
+	src/data/floodfillstate.h
+	src/data/rect.cpp
+	src/data/rect.h
+
+	src/imgprocs/segmentcolour.cpp
+	src/imgprocs/segmentcolour.h
+	src/imgprocs/framebufferiterator.cpp
+	src/imgprocs/framebufferiterator.h
 )
 
 add_executable(vision
@@ -518,10 +531,10 @@ if (${ENABLE_TEST})
 	file(GLOB_RECURSE TEST_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} test/src/*_test.cpp)
 
 	add_executable(run_tests
-		test/src/resources.hpp
+		test/src/resources.h
 		${TEST_SRCS}
 		${SOURCE_FILES}
-		)
+		test/src/resources.cpp)
 	set_target_properties(run_tests PROPERTIES
 		RUNTIME_OUTPUT_DIRECTORY ${TEST_OUTPUT}
 		)
