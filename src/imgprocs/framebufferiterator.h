@@ -31,6 +31,8 @@ public:
 	FrameBufferIterator(unsigned int bytesPerPixel, uint8_t *begin, unsigned int width, unsigned int height,
 		unsigned int subsample);
 
+	const cv::Point2i& cursor() const;
+
 	virtual uint8_t* getAddress(const unsigned int x, const unsigned int y) = 0;
 
 	virtual bool inBounds(const unsigned int x, const unsigned int y);
@@ -50,10 +52,10 @@ public:
 	virtual bool goUp(const unsigned int amount = 1);
 	virtual bool goDown(const unsigned int amount = 1);
 
-	virtual void get(mote::data::Pixel *pixel);
-	virtual void get(mote::data::Pixel *pixel, const int offsetX, const int offsetY);
-	virtual void get(mote::data::Pixel &pixel);
-	virtual void get(mote::data::Pixel &pixel, const int offsetX, const int offsetY);
+	virtual bool get(mote::data::Pixel *pixel);
+	virtual bool get(mote::data::Pixel *pixel, const int offsetX, const int offsetY);
+	virtual bool get(mote::data::Pixel &pixel);
+	virtual bool get(mote::data::Pixel &pixel, const int offsetX, const int offsetY);
 };
 
 class FramBufferIteratorRGB24
@@ -79,7 +81,7 @@ class MatIterator
 {
 public:
 	MatIterator(cv::Mat &mat, const unsigned int subsample = 1)
-		: T(mat.data, mat.rows, mat.cols, subsample)
+		: T(mat.data, mat.cols, mat.rows, subsample)
 	{ }
 };
 
