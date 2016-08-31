@@ -160,6 +160,7 @@ GTEST_TEST(imgprocs_frame_buffer_iterator_rgb24, goDirections)
 	mote::data::Pixel px;
 	mote::imgprocs::FramBufferIteratorRGB24 it(image, 5, 5, 1);
 
+	it.go(0, 0);
 	it.get(px);
 	ASSERT_EQ(0, px.b);
 	ASSERT_EQ(1, px.g);
